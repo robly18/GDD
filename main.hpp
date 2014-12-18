@@ -1,0 +1,12 @@
+#include <SDL.h>
+#include "gddlist.hpp"
+#include "actor.hpp"
+class Mob;
+class Player;
+#include "inv.hpp"
+#include "destructible.hpp"
+#include "ai.hpp"
+#include "attack.hpp"
+#include "mob.hpp"
+#include "map.hpp"
+#include "engine.hpp"
