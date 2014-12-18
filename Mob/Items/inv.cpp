@@ -24,13 +24,16 @@ Item* PlayerInventory::removeItem(Item* i) {
 
 Item* PlayerInventory::removeItem(int index) {
     Item* retitem = items[index];
-    Item* tmpitem = retitem;
-    while (index + tmpitem->size < filled) {
-        tmpitem = items[index];
-        items[index] = items[index + tmpitem->size];
-        index += items[index]->size;
-        if (items[index] == NULL) break;
+    int placeindex = index;
+    int getindex = index + retitem->size;
+    while (placeindex <= filled) {
+        items[placeindex] = items[getindex];
+        if (items[placeindex] == NULL) break;
+        items[getindex] = NULL;
+        getindex += items[placeindex]->size;
+        placeindex += items[placeindex]->size;
     }
+    items[getindex] = NULL;
     filled -= retitem->size;
     return retitem;
 }
