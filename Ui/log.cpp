@@ -1,5 +1,5 @@
 #include "log.hpp"
-#include "engine.hpp"
+
 
 Log::Log(BmpFont* font) :
     font(font) {

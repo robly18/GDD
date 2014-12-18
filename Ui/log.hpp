@@ -2,7 +2,7 @@
 #define LOG_H
 
 #include <SDL.h>
-#include "text.hpp"
+#include "..\Misc\text.hpp"
 
 class Log {
 public:

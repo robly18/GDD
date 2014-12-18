@@ -75,7 +75,6 @@ int Engine::init() {
 
     DEBUGMSG("Engine init done\n");
 
-
     state = State::RUNNING;
     return 0;
 }

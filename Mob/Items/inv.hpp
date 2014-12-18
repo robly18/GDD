@@ -2,7 +2,7 @@
 #define INV_H
 
 #include "item.hpp"
-#include "gddlist.hpp"
+#include "..\..\Misc\gddlist.hpp"
 
 class Item;
 

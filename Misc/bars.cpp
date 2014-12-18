@@ -16,7 +16,7 @@ void NumBar::render(SDL_Surface* surface) {
         SDL_FillRect(surface, &r, fullc);
     }
 }
-#include "main.hpp"
+
 void NumBar::renderName(SDL_Surface* surface) {
     getNumInfo(buffer);
     fontname->setText(font, std::string(buffer));

@@ -3,11 +3,11 @@
 
 #include <iostream>
 #include <SDL.h>
-#include "gddlist.hpp"
-#include "text.hpp"
-#include "ui.hpp"
+#include "..\Misc\gddlist.hpp"
+#include "..\Misc\text.hpp"
+#include "..\Ui\ui.hpp"
 
-#include "main.hpp"
+#include "..\Main\main.hpp"
 
 #define SWIDTH (110+6+16*16)
 #define SHEIGHT (10*16+6+46+23)

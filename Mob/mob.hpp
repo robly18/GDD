@@ -3,10 +3,7 @@
 
 #include <string.h>
 #include <string>
-#include "actor.hpp"
-#include "destructible.hpp"
-#include "ai.hpp"
-#include "inv.hpp"
+#include "..\Main\main.hpp"
 
 #define POSRECT(x, y) (SDL_Rect{x*16,y*16,16,16})
 

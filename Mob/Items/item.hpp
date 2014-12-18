@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-#include "mob.hpp"
+#include "..\mob.hpp"
 
 enum Itemtype {
     NONE = -1,

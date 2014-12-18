@@ -1,5 +1,5 @@
 #include "text.hpp"
-#include "engine.hpp"
+
 const SDL_Rect* BmpFont::computeChars() const {
     SDL_Rect* c =  (SDL_Rect*) malloc(256*sizeof(SDL_Rect));
     for (int x = 0; x != 16; x++) {

@@ -1,7 +1,7 @@
 #ifndef AI_H
 #define AI_H
 
-#include "main.hpp"
+#include "..\Main\main.hpp"
 
 class Ai {
 public:

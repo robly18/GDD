@@ -1,9 +1,7 @@
 #ifndef ATTACK_H
 #define ATTACK_H
 
-#include "map.hpp"
-#include "mob.hpp"
-#include "ai.hpp"
+#include "..\Main\main.hpp"
 
 #include <stdio.h>
 

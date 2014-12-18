@@ -1,9 +1,7 @@
 #ifndef UISTATS_H
 #define UISTATS_H
 
-#include "main.hpp"
-#include "engine.hpp"
-#include "actor.hpp"
+#include "..\Main\main.hpp"
 
 class UiPart {
 public:

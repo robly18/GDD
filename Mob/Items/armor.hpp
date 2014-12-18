@@ -1,7 +1,7 @@
 #ifndef ARMOR_H
 #define ARMOR_H
 
-#include "main.hpp"
+#include "..\..\Main\main.hpp"
 
 
 class Armor : public Item {

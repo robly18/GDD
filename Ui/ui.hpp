@@ -1,13 +1,11 @@
 #ifndef UI_H
 #define UI_H
 
-#include "engine.hpp"
-#include "actor.hpp"
-#include "bars.hpp"
+#include "..\Main\engine.hpp"
+#include "..\Misc\actor.hpp"
+#include "..\Misc\bars.hpp"
 #include "log.hpp"
 #include "uistats.hpp"
-
-#include "gddlist.hpp"
 
 class NumBar;
 class Log;
