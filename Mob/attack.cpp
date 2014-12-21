@@ -42,8 +42,9 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
             (*mob)->destructible &&
             !(!hurtself && *mob == src)) {
             hit = true;
-            int dmg = (*mob)->destructible->damage(damage);
             static char buffer [255];
+            int dmg = (*mob)->destructible->damage(damage);
+
             sprintf(buffer, "%s hit %s for %i dmg %s %i hp",
                     src->name.c_str(),
                     src == *mob ? "themselves in idiocy" : (*mob)->name.c_str(),
@@ -51,6 +52,27 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
                     src == *mob ? "and now have" : "which now has",
                     (*mob)->destructible->hp);
             engine.ui->log->addMessage(buffer);
+
+            if (chances.size()) {
+                std::cout<<chances.size();
+                bool affected = false;
+                sprintf(buffer, "%s was afflicted by", (*mob)->name.c_str());
+                for (std::vector<StatusChance*>::const_iterator s = chances.begin();
+                                    s != chances.end(); s++) {
+                    int num = std::rand() % 100;
+                    if (num < (*s)->chance) {
+                        sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
+                                (*s)->status->name.c_str());
+                        affected = true;
+                        (*mob)->destructible->statusholder->statuses.push_back((*s)->status->clone());
+                    }
+                }
+                if (affected) {
+                    DEBUGMSG("\n"<<buffer);
+                    engine.ui->log->addMessage(buffer);
+                }
+            }
+
             if ((*mob)->destructible->isDead()) {
                 (*mob)->destructible->die(*mob);
             }

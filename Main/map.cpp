@@ -76,8 +76,12 @@ SDL_Surface* Map::render(int mousex, int mousey) {
         }
         SDL_BlitSurface(highlightsurface, NULL, surface, NULL);
     }
-    for (Mob** m = mobs2.begin(); m != mobs2.end(); m++)
+    for (Mob** m = mobs2.begin(); m != mobs2.end(); m++) {
         SDL_BlitSurface((*m)->a->texture, &(*m)->a->r, surface, &(*m)->a->p);
+        if ((*m)->destructible) {
+            (*m)->destructible->statusholder->render(surface, (*m)->a->p);
+        }
+    }
     return surface;
 }
 

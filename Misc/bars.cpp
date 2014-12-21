@@ -4,8 +4,8 @@ NumBar::NumBar(SDL_Rect barmax, Uint32 fullc, Uint32 emptyc, BmpFont* font,
                int maxval, int* valptr,
                std::string name, bool showval) :
     barmax(barmax), emptyc(emptyc), fullc(fullc), name(name),
-    maxval(maxval), valptr(valptr),
-    showval(showval), font(font) {
+    showval(showval), maxval(maxval), valptr(valptr),
+    font(font) {
     fontname = new FontStr(font, MAXSTRLEN, name);
 }
 

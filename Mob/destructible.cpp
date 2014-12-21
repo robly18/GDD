@@ -1,7 +1,8 @@
 #include "destructible.hpp"
 
 Destructible::Destructible(int maxHp, SDL_Rect deadSprite) :
-    maxHp(maxHp), hp(maxHp), deadSprite(deadSprite) {
+    maxHp(maxHp), hp(maxHp), deadSprite(deadSprite),
+    statusholder(new StatusHolder) {
 }
 
 PlayerDestructible::PlayerDestructible(int maxHp, SDL_Rect deadSprite) :

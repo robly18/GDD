@@ -7,26 +7,27 @@
 
 class Mob;
 class Armor;
+class StatusHolder;
 
 class Destructible {
 public:
     Destructible(int, SDL_Rect);
 
-    int maxHp;
-    int hp;
+    int                 maxHp;
+    int                 hp;
 
-    Armor* armor;
+    Armor               *armor;
+    StatusHolder        *statusholder;
 
-    inline bool isDead() {return hp <= 0;}
+    inline bool         isDead() {return hp <= 0;}
+    const SDL_Rect      deadSprite;
 
-    const SDL_Rect deadSprite;
+    virtual void        die(Mob*);
 
-    virtual void die(Mob*);
+    int                 damage(int);
+    bool                heal(int);
 
-    int damage(int);
-    bool heal(int);
-
-    void dropItems(Mob*);
+    void                dropItems(Mob*);
 };
 
 class PlayerDestructible : public Destructible {

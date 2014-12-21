@@ -6,10 +6,12 @@ Log::Log(BmpFont* font) :
 }
 
 void Log::addMessage(const char* msg) {
-    if (strlen(msg) > 26) {
+    if (strlen(msg) >= 47) {
         char buffer [47] = {};
-        for (int i = 0; i != 47; i++) buffer[i] = msg[i];
-       int i = 47;
+        for (int i = 0; i != 47; i++) {
+            buffer[i] = msg[i];
+        }
+        int i = 47;
         for (char* c = buffer+46; c != buffer; c--) {
             if (*c == ' ') {
                 *c = '\0';

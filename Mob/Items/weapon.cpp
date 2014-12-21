@@ -57,9 +57,14 @@ Sword::Sword(std::string n, int attack, int maxmana) :
 }
 
 int Sword::regenMana(int regen) {
-    mana += regen;
-    if (mana > engine.map->player->getMaxMp()) {
-        mana = engine.map->player->getMaxMp();
+    int maxmp = engine.map->player->getMaxMp();
+
+    int manaregen = regen * (maxmp - mana)/maxmp;
+    if (manaregen == 0) manaregen = 1;
+
+    mana += manaregen;
+    if (mana > maxmp) {
+        mana = maxmp;
     }
     return mana;
 }
@@ -69,7 +74,9 @@ int Sword::regenMana(int regen) {
 Bow::Bow(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana) {
     color = 0x12DD12;
-    attacks[0] = new TargetedAttack(2, 3, 3, 10);
+    TargetedAttack* a = new TargetedAttack(2, 3, 3, 10);
+    a->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 50});
+    attacks[0] = a;
     attacks[1] = new TargetedAttack(15, 10, 3, 9, 2);
 }
 

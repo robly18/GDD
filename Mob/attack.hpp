@@ -4,7 +4,16 @@
 #include "..\Main\main.hpp"
 
 #include <stdio.h>
+#include <vector>
 
+#include <random>
+
+class Status;
+
+struct StatusChance {
+    Status              *status;
+    int                 chance; //As a percent
+};
 
 class Attack {
 public:
@@ -42,6 +51,8 @@ public:
 
     bool                target(Mob*, int, int) const;
 
+    std::vector
+        <StatusChance*> chances;
 };
 
 
