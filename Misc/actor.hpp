@@ -3,6 +3,8 @@
 
 #include <SDL.h>
 
+extern bool isInRect(SDL_Rect, int, int);
+
 class Actor {
 public:
     SDL_Surface* texture;

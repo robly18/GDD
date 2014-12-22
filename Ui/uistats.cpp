@@ -1,11 +1,11 @@
 #include "uistats.hpp"
 
+
+
+/***/
+
 UiPart::UiPart(SDL_Surface* s) : surface(s) {
     DEBUGMSG("\n\nCreating new part\n");
-}
-
-inline bool UiPart::isInRect(SDL_Rect r, int x, int y) {
-    return r.x <= x && x <= r.x + r.w && r.y <= y && y <= r.y + r.h;
 }
 
 /***/

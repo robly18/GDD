@@ -3,6 +3,7 @@
 
 #include "..\Main\main.hpp"
 
+
 class UiPart {
 public:
     UiPart(SDL_Surface*);
@@ -14,7 +15,6 @@ public:
     virtual void    checkClick(int mb, int hx, int hy) = 0;
     virtual void    checkUnclick(int hx, int hy, int x, int y) = 0;
 
-    inline bool     isInRect(SDL_Rect, int, int);
 };
 
 class UiButtons : public UiPart {

@@ -75,7 +75,7 @@ Bow::Bow(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana) {
     color = 0x12DD12;
     TargetedAttack* a = new TargetedAttack(2, 3, 3, 10);
-    a->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 50});
+    a->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
     attacks[0] = a;
     attacks[1] = new TargetedAttack(15, 10, 3, 9, 2);
 }

@@ -34,6 +34,7 @@ public:
         DEAD,
         INV,
         MAP,
+        LOG,
     };
     State state = State::INIT;
 

@@ -41,13 +41,23 @@ void Ui::render(SDL_Renderer* renderer) {
 void Ui::checkClick(bool clicking, int button, int x, int y) {
     if (clicking) {
         h = true; hx = x; hy = y;
-        buttons->checkClick(button, x, y);
-        if (engine.state != engine.State::INV) dashboard->checkClick(button, x, y);
-        else inv->checkClick(button, x, y);
+        if (engine.state != engine.State::LOG) {
+            buttons->checkClick(button, x, y);
+            if (engine.state != engine.State::INV) dashboard->checkClick(button, x, y);
+            else inv->checkClick(button, x, y);
+        }
     } else {
         h = false;
-        buttons->checkUnclick(hx, hy, x, y);
-        if (engine.state != engine.State::INV) dashboard->checkUnclick(hx, hy, x, y);
-        else inv->checkUnclick(hx, hy, x, y);
-    }
+        if (engine.state != engine.State::LOG) {
+            buttons->checkUnclick(hx, hy, x, y);
+            if (engine.state != engine.State::INV) dashboard->checkUnclick(hx, hy, x, y);
+            else inv->checkUnclick(hx, hy, x, y);
+        }
+        if (log->checkUnclick(hx, hy, x, y)) {
+            engine.state = engine.State::LOG;
+        } else {
+            if (engine.state == engine.State::LOG)
+                engine.state = engine.State::RUNNING;
+        }
+    } //Ugh would you look at this mess
 }

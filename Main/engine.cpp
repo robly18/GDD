@@ -115,8 +115,23 @@ void Engine::checkEvents() {
             break;
         case SDL_KEYDOWN:
             if (state == State::RUNNING) {
-                lastkey = e.key;
-                state = State::MOVED;
+                switch (e.key.keysym.sym) {
+                case SDLK_DOWN:
+                case SDLK_UP:
+                case SDLK_LEFT:
+                case SDLK_RIGHT:
+                case SDLK_SPACE:
+                    lastkey = e.key;
+                    state = State::MOVED;
+                default:
+                    break;
+                }
+            } else if (state == State::LOG) {
+                switch (e.key.keysym.sym) {
+                case SDLK_UP:   ui->log->moveReadLine(-1);  break;
+                case SDLK_DOWN: ui->log->moveReadLine(1);   break;
+                default: break;
+                }
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
