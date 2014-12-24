@@ -93,6 +93,12 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
                         engine.map->player->weapon->attacks[a-atkbuttons-3]->select(engine.map->player);
                     }
                     break;
+                case AtkButtons::HEAL:
+                    if (engine.state != engine.State::RUNNING) break;
+                    if (engine.map->player->weapon) {
+                        engine.map->player->weapon->defenses[a-atkbuttons]->select(engine.map->player);
+                    }
+                    break;
                 default:
                     break;
             }

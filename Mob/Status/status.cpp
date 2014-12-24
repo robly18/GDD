@@ -3,12 +3,16 @@
 void StatusHolder::render(SDL_Surface* surface, SDL_Rect r) {
     for (std::list<Status*>::iterator s = statuses.begin();
                                         s != statuses.end(); s++) {
-        SDL_BlitSurface(engine.texture, &(*s)->sprite, surface, &r);
+        SDL_Rect renderrect = r;
+        renderrect.x += (*s)->xpos;
+        renderrect.y += (*s)->ypos;
+        SDL_BlitSurface(engine.texture, &(*s)->sprite, surface, &renderrect);
     }
 }
 
 void StatusHolder::update(Mob* mob) {
     poisondmg = 0;
+    healval = 0;
     for (std::list<Status*>::iterator s = statuses.begin();
                                         s != statuses.end(); s++) {
         (*s)->updateHolder(this, mob);
@@ -29,20 +33,18 @@ void StatusHolder::update(Mob* mob) {
             engine.ui->log->addMessage(buffer);
         }
     }
-}
-
-/**Statuses**/
-
-void Poison::updateHolder(StatusHolder* holder, Mob* user) {
-    timeLeft--; //todo experiment with this part
-    int dmg = computePoisonDmg(user);
-    if (holder->poisondmg < dmg) holder->poisondmg = dmg;
-}
-
-int FixedHpPoison::computePoisonDmg(Mob* mob) {
-    return str;
-}
-
-Status* FixedHpPoison::clone() {
-    return new FixedHpPoison(str, name, timeLeft);
+    if (healval) {
+        if (mob->destructible->hp != mob->destructible->maxHp) {
+            if (mob->destructible->hp + healval < mob->destructible->maxHp) {
+                mob->destructible->hp += healval;
+            } else {
+                healval = mob->destructible->maxHp - mob->destructible->hp;
+                mob->destructible->hp = mob->destructible->maxHp;
+            }
+            char buffer [255];
+            sprintf(buffer, "%s regenerated %i health and now has %i health",
+                    mob->name.c_str(), healval, mob->destructible->hp);
+            engine.ui->log->addMessage(buffer);
+        }
+    }
 }

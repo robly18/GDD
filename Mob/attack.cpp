@@ -10,17 +10,37 @@ bool Attack::select(Player* user) {
     return true;
 }
 
-Uint32 Attack::highlightColor(Mob* user, int mx, int my,
+bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char* end) const {
+    if (!chances.size()) return false;
+    bool affected = false;
+    sprintf(buffer, begin, user->name.c_str());
+    for (std::vector<StatusChance*>::const_iterator s = chances.begin();
+                                                    s != chances.end(); s++) {
+        int num = std::rand() % 100;
+        if (num < (*s)->chance) {
+            sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
+                    (*s)->status->name.c_str());
+            affected = true;
+            user->destructible->statusholder->statuses.push_back((*s)->status->clone());
+        }
+    }
+    sprintf(buffer, "%s %s", buffer, end);
+    return affected;
+}
+
+/**TargetedAttack**/
+
+Uint32 TargetedAttack::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
     if (isInRange(user->x, user->y, mousex, mousey)) {
-        if (mousex == mx && mousey == my) return 0xFF2525;
-        if (isHit(user, mousex, mousey, mx, my)) return 0xEE2020;
+        if (mousex == mx && mousey == my) return validMouseOnColor;
+        if (isHit(user, mousex, mousey, mx, my)) return willGetHitColor;
     }
     if (isInRange(user->x, user->y, mx, my)) {
-        return 0xDD1111;
+        return isInRangeColor;
     }
-    if (mousex == mx && mousey == my) return 0xCF1515;
-    return 0xCC0505;
+    if (mousex == mx && mousey == my) return invalidMouseOnColor;
+    return outOfRangeColor;
 }
 
 bool TargetedAttack::isInRange(int px, int py, int mx, int my) const {
@@ -53,30 +73,41 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
                     (*mob)->destructible->hp);
             engine.ui->log->addMessage(buffer);
 
-            if (chances.size()) {
-                std::cout<<chances.size();
-                bool affected = false;
-                sprintf(buffer, "%s was afflicted by", (*mob)->name.c_str());
-                for (std::vector<StatusChance*>::const_iterator s = chances.begin();
-                                    s != chances.end(); s++) {
-                    int num = std::rand() % 100;
-                    if (num < (*s)->chance) {
-                        sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
-                                (*s)->status->name.c_str());
-                        affected = true;
-                        (*mob)->destructible->statusholder->statuses.push_back((*s)->status->clone());
-                    }
-                }
-                if (affected) {
-                    DEBUGMSG("\n"<<buffer);
-                    engine.ui->log->addMessage(buffer);
-                }
-            }
-
+            if (applyChances(*mob, buffer, "%s was afflicted by", "")) engine.ui->log->addMessage(buffer);
             if ((*mob)->destructible->isDead()) {
                 (*mob)->destructible->die(*mob);
             }
         }
     }
     return hit;
+}
+
+/**SelfBuff**/
+
+Uint32 SelfBuff::highlightColor(Mob* user, int mx, int my,
+                              int mousex, int mousey) const {
+    if (user->x == mousex && user->y == mousey) {
+        return validMouseOnColor;
+    }
+    if (isInRange(user->x, user->y, mx, my)) {
+        return isInRangeColor;
+    }
+    if (mousex == mx && mousey == my) return invalidMouseOnColor;
+    return outOfRangeColor;
+}
+
+bool SelfBuff::isInRange(int px, int py, int mx, int my) const {
+    return px == mx && py == my;
+}
+
+bool SelfBuff::isHit(Mob* user, int targetx, int targety, int mx, int my) const {
+    return targetx == mx && targety == my;
+}
+
+bool SelfBuff::target(Mob* src, int x, int y) const {
+    if (!isInRange(src->x, src->y, x, y)) return false;
+    char buffer [255];
+    if (applyChances(src, buffer, "%s has applied", "on themselves"))
+                    engine.ui->log->addMessage(buffer);
+    return true;
 }

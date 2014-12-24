@@ -22,3 +22,6 @@ Maybe enemies,
 HP
 Add map scrolling?
 */
+
+//Who cares about the todo list you chump
+

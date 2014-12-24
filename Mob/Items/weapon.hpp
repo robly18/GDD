@@ -14,6 +14,7 @@ public:
     int             attack;
 
     Attack          *attacks [3];
+    Attack          *defenses [3];
 
     bool            use(Player*);
     bool            unequip(Mob*);

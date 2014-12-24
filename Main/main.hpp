@@ -7,7 +7,7 @@ class Player;
 #include "..\Mob\destructible.hpp"
 #include "..\Mob\ai.hpp"
 #include "..\Mob\attack.hpp"
-#include "..\Mob\status.hpp"
+#include "..\Mob\Status\status.hpp"
 #include "..\Mob\mob.hpp"
 #include "..\Main\map.hpp"
 #include "engine.hpp"

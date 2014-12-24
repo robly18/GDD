@@ -37,6 +37,8 @@ Staff::Staff(std::string n, int attack, int maxmana) :
     color = 0xFFCC88;
     attacks[0] = new TargetedAttack(10, 10, 0, 6);
     attacks[1] = new TargetedAttack(4, 5, 0, 5, 3);
+    defenses[1] = new SelfBuff(20);
+    defenses[1]->chances.push_back(new StatusChance{new FixedHpRegen(5, "Regen", 8), 100});
 }
 
 int Staff::regenMana(int regen) {
