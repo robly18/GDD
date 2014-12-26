@@ -6,7 +6,7 @@
 class Regen : public Status {
 public:
     Regen(std::string name, int timeLeft, SDL_Rect r) :
-        Status(name, timeLeft, r, 12, 4) {}
+        Status(name, timeLeft, r, 3, 1, false) {}
 
     void                updateHolder(StatusHolder*, Mob*);
 

@@ -21,7 +21,7 @@ bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char
             sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
                     (*s)->status->name.c_str());
             affected = true;
-            user->destructible->statusholder->statuses.push_back((*s)->status->clone());
+            user->destructible->statusholder->pushStatus((*s)->status->clone());
         }
     }
     sprintf(buffer, "%s %s", buffer, end);
@@ -86,15 +86,15 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
 
 Uint32 SelfBuff::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
-    if (user->x == mousex && user->y == mousey) {
-        return validMouseOnColor;
-    }
     if (isInRange(user->x, user->y, mx, my)) {
+        if (user->x == mousex && user->y == mousey) {
+            return validMouseOnColor;
+        }
         return isInRangeColor;
     }
     if (mousex == mx && mousey == my) return invalidMouseOnColor;
     return outOfRangeColor;
-}
+} //MERRY CHRISTMAS FROM 24 DEC 2014
 
 bool SelfBuff::isInRange(int px, int py, int mx, int my) const {
     return px == mx && py == my;

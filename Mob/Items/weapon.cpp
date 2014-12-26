@@ -56,6 +56,8 @@ Sword::Sword(std::string n, int attack, int maxmana) :
     color = 0x2222DD;
     attacks[0] = new TargetedAttack(20, 15, 0, 1);
     attacks[1] = new TargetedAttack(15, 10, 0, 0, 3, false);
+    defenses[1] = new SelfBuff(20);
+    defenses[1]->chances.push_back(new StatusChance{new FixedHpRegen(5, "Regen", 8), 100});
 }
 
 int Sword::regenMana(int regen) {
@@ -76,10 +78,11 @@ int Sword::regenMana(int regen) {
 Bow::Bow(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana) {
     color = 0x12DD12;
-    TargetedAttack* a = new TargetedAttack(2, 3, 3, 10);
-    a->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
-    attacks[0] = a;
+    attacks[0] = new TargetedAttack(2, 3, 3, 10);
+    attacks[0]->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
     attacks[1] = new TargetedAttack(15, 10, 3, 9, 2);
+    defenses[1] = new SelfBuff(20);
+    defenses[1]->chances.push_back(new StatusChance{new FixedHpRegen(5, "Regen", 8), 100});
 }
 
 int Bow::regenMana(int regen) {
