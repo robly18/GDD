@@ -5,7 +5,7 @@
 
 #include "..\mob.hpp"
 
-enum Itemtype {
+enum class Itemtype {
     NONE = -1,
     USE = 0,
     ARMOR,
@@ -20,7 +20,7 @@ public:
     Item(std::string n) : name(n) {}
     std::string     name;
     int             size = 1;
-    int             type = Itemtype::NONE;
+    Itemtype        type = Itemtype::NONE;
 
     Uint32          color = 0xAAAAAA;
 

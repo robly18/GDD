@@ -66,7 +66,7 @@ int Engine::init() {
     Mob* m = new Mob(3,2,SDL_Rect{0,8,8,8}, texture,"AI Test Mob");
     m->ai = new TestAi();
     m->destructible = new MobDestructible(100, SDL_Rect{0,0,10,10});
-    m->destructible->armor = new Armor("Testarmr", 10, 20);
+    m->destructible->armor = new Armor("Testarmr", 4, 20);
     m->attack = testattack;
     m->inventory = new MobInventory;
     m->inventory->addItem(new HpPotion("HPPot?", 100));
@@ -164,11 +164,14 @@ void Engine::doTick() {
         do {
             for (Mob** mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
                 if ((*mob)->ai)
+                if (time % (*mob)->getSwiftness() == 0)
+                if ((*mob)->destructible)
+                    (*mob)->destructible->statusholder->update(*mob);
+            }
+            for (Mob** mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
+                if ((*mob)->ai)
                 if (time % (*mob)->getSwiftness() == 0) {
                     (*mob)->ai->update(*mob);
-                    if ((*mob)->destructible) {
-                        (*mob)->destructible->statusholder->update(*mob);
-                    }
                 }
             }
             time++;

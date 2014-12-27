@@ -83,17 +83,18 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
         if (isInRect((*a)->p, hx, hy)) {
             if (isInRect((*a)->p, x, y))
                 switch ((int) (a - atkbuttons)) {
-                case AtkButtons::TARGETED:
+                case (int) AtkButtons::TARGETED:
                     if (!engine.map->player->weapon) {
                         engine.map->player->attack = engine.map->player->defaultattack;
                     }
-                case AtkButtons::AOE:
+                case (int) AtkButtons::AOE:
                     if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->attacks[a-atkbuttons-3]->select(engine.map->player);
                     }
                     break;
-                case AtkButtons::HEAL:
+                case (int) AtkButtons::BLOCK:
+                case (int) AtkButtons::HEAL:
                     if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->defenses[a-atkbuttons]->select(engine.map->player);
@@ -236,8 +237,8 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
         }
     }
     if (selecteditem) {
-        if (isInRect(slots[selecteditem->type]->p, hx, hy) &&
-            isInRect(slots[selecteditem->type]->p, x, y)) {
+        if (isInRect(slots[(int) selecteditem->type]->p, hx, hy) &&
+            isInRect(slots[(int) selecteditem->type]->p, x, y)) {
             if (selecteditem->use(engine.map->player)) {
                 engine.map->player->inventory->removeItem(selecteditem);
                 engine.state = engine.State::USED;
@@ -249,12 +250,12 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
             if (isInRect(slots[i]->p, hx, hy) &&
                 isInRect(slots[i]->p, x, y)) {
                 switch (i) {
-                case Itemtype::ARMOR:
+                case (int) Itemtype::ARMOR:
                     if (engine.map->player->destructible->armor)
                         if (engine.map->player->destructible->armor->unequip(engine.map->player))
                             engine.map->player->destructible->armor = NULL;
                     break;
-                case Itemtype::WEAPON:
+                case (int) Itemtype::WEAPON:
                     if (engine.map->player->weapon)
                         if (engine.map->player->weapon->unequip(engine.map->player))
                             engine.map->player->weapon = NULL;

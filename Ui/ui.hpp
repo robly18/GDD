@@ -23,7 +23,7 @@ public:
 
     Log* log;
 
-    enum Buttons {
+    enum class Buttons {
         BLOCK,
         REGEN,
         QUIRKDEF,

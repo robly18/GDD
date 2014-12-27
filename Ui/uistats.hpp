@@ -43,7 +43,7 @@ public:
 
     Actor           *atkbuttons [6];
 
-    enum AtkButtons {
+    enum class AtkButtons {
         BLOCK,
         HEAL,
         QUIRKDEF,

@@ -20,6 +20,13 @@ Curse (more vulnerable to attacks)
 */
 class Status;
 
+enum SideEffect {
+    NONE = 0,
+    BLOCK = 0x01,
+    THORN = 0x02,
+    FREEZE = 0x04,
+};
+
 class StatusHolder { //todo add stackable attribute?
 public:
     StatusHolder() {}
@@ -34,7 +41,9 @@ public:
     int                 poisondmg = 0;
     int                 healval = 0;
 
+    SideEffect          sideeffect = SideEffect::NONE;
 private:
+    void                resetStats();
     std::list<Status*>  statuses;
 };
 

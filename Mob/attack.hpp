@@ -17,10 +17,11 @@ struct StatusChance {
 
 class Attack {
 public:
-    Attack(int cost) : cost(cost) {};
+    Attack(int cost, bool physical) : cost(cost), physical(physical) {};
     virtual             ~Attack() {};
 
     int                 cost;
+    bool                physical;
 
     virtual bool        target(Mob*, int, int) const = 0;
     bool                select(Player*);
@@ -39,8 +40,9 @@ public:
 class TargetedAttack : public Attack {
 public:
     TargetedAttack(int damage, int cost,
-              int minrange, int maxrange, int radius = 0, bool hurtself = true) :
-        Attack(cost), damage(damage), minrange(minrange), maxrange(maxrange),
+              int minrange, int maxrange,
+              int radius = 0, bool physical = true, bool hurtself = false) :
+        Attack(cost, physical), damage(damage), minrange(minrange), maxrange(maxrange),
         radius(radius), hurtself(hurtself) {}
 
     int                 damage;
@@ -69,7 +71,7 @@ private:
 class SelfBuff : public Attack {
 public:
     SelfBuff(int cost) :
-        Attack(cost) {}
+        Attack(cost, false) {}
 
     bool                target(Mob*, int, int) const;
 

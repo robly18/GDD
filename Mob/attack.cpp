@@ -77,6 +77,17 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
             if ((*mob)->destructible->isDead()) {
                 (*mob)->destructible->die(*mob);
             }
+
+            if (physical)
+            if ((int) (*mob)->destructible->statusholder->sideeffect &
+                (int) SideEffect::THORN) {
+                dmg = src->destructible->damage(dmg);
+                sprintf(buffer, "%s's thorns caused %s to be damaged for %i hp",
+                        (*mob)->name.c_str(),
+                        src->name.c_str(),
+                        dmg);
+                engine.ui->log->addMessage(buffer);
+            }
         }
     }
     return hit;

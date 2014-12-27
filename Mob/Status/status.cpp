@@ -10,9 +10,15 @@ void StatusHolder::render(SDL_Surface* surface, SDL_Rect r) {
     }
 }
 
-void StatusHolder::update(Mob* mob) {
+void StatusHolder::resetStats() {
     poisondmg = 0;
     healval = 0;
+    sideeffect = SideEffect::NONE;
+}
+
+void StatusHolder::update(Mob* mob) {
+    resetStats();
+
     for (std::list<Status*>::iterator s = statuses.begin();
                                         s != statuses.end(); s++) {
         (*s)->updateHolder(this, mob);
@@ -47,6 +53,7 @@ void StatusHolder::update(Mob* mob) {
             engine.ui->log->addMessage(buffer);
         }
     }
+
 }
 
 bool StatusHolder::pushStatus(Status* s) {
