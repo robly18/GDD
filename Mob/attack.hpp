@@ -24,6 +24,8 @@ public:
     bool                physical;
 
     virtual bool        target(Mob*, int, int) const = 0;
+    virtual bool        hit(Mob*, Mob*) const = 0;
+
     bool                select(Player*);
     bool                applyChances(Mob*, char*, const char*, const char*) const;
 
@@ -56,6 +58,7 @@ public:
     bool                isHit(Mob*, int, int, int, int) const;
 
     bool                target(Mob*, int, int) const;
+    bool                hit(Mob*, Mob*) const;
 
     Uint32              highlightColor(Mob*, int mobx, int moby,
                                        int mousex, int mousey) const;
@@ -70,10 +73,11 @@ private:
 
 class SelfBuff : public Attack {
 public:
-    SelfBuff(int cost) :
-        Attack(cost, false) {}
+    SelfBuff(int cost, Status* s) :
+        Attack(cost, false) {chances.push_back(new StatusChance{s, 100});}
 
     bool                target(Mob*, int, int) const;
+    bool                hit(Mob*, Mob*) const;
 
     bool                isInRange(int, int, int, int) const;
     bool                isHit(Mob*, int, int, int, int) const;

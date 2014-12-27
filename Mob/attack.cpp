@@ -56,41 +56,57 @@ bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) 
 
 bool TargetedAttack::target(Mob* src, int x, int y) const {
     if (!isInRange(src->x, src->y, x, y)) return false;
-    bool hit = false;
+    bool didhit = false;
     for (Mob** mob = engine.map->mobs2.begin(); mob != engine.map->mobs2.end(); mob++) {
         if (isHit(src, x, y, (*mob)->x, (*mob)->y) &&
             (*mob)->destructible &&
             !(!hurtself && *mob == src)) {
-            hit = true;
-            static char buffer [255];
-            int dmg = (*mob)->destructible->damage(damage);
+            didhit = true;
+            hit(src, *mob);
+        }
+    }
+    return didhit;
+}
 
-            sprintf(buffer, "%s hit %s for %i dmg %s %i hp",
-                    src->name.c_str(),
-                    src == *mob ? "themselves in idiocy" : (*mob)->name.c_str(),
-                    dmg,
-                    src == *mob ? "and now have" : "which now has",
-                    (*mob)->destructible->hp);
-            engine.ui->log->addMessage(buffer);
+bool TargetedAttack::hit(Mob* src, Mob* target) const {
+    static char buffer [255];
 
-            if (applyChances(*mob, buffer, "%s was afflicted by", "")) engine.ui->log->addMessage(buffer);
-            if ((*mob)->destructible->isDead()) {
-                (*mob)->destructible->die(*mob);
-            }
+    if (damage) {
+        int dmg = target->destructible->damage(damage);
 
-            if (physical)
-            if ((int) (*mob)->destructible->statusholder->sideeffect &
+        sprintf(buffer, "%s hit %s for %i dmg %s %i hp",
+                src->name.c_str(),
+                src == target ? "themselves in idiocy" : target->name.c_str(),
+                dmg,
+                src == target ? "and now have" : "which now has",
+                target->destructible->hp);
+        engine.ui->log->addMessage(buffer);
+
+        if (physical) {
+            if ((int) target->destructible->statusholder->sideeffect &
                 (int) SideEffect::THORN) {
                 dmg = src->destructible->damage(dmg);
                 sprintf(buffer, "%s's thorns caused %s to be damaged for %i hp",
-                        (*mob)->name.c_str(),
+                        target->name.c_str(),
                         src->name.c_str(),
                         dmg);
                 engine.ui->log->addMessage(buffer);
             }
+
+            std::shared_ptr<Status>
+                counterdebuff = target->destructible->statusholder->counterdebuff;
+            if (counterdebuff) {
+                src->destructible->statusholder->pushStatus((*counterdebuff).clone());
+            }
         }
     }
-    return hit;
+
+    if (applyChances(target, buffer, "%s was afflicted by", "")) engine.ui->log->addMessage(buffer);
+    if (target->destructible->isDead()) {
+        target->destructible->die(target);
+    }
+
+    return true;
 }
 
 /**SelfBuff**/
@@ -117,6 +133,11 @@ bool SelfBuff::isHit(Mob* user, int targetx, int targety, int mx, int my) const 
 
 bool SelfBuff::target(Mob* src, int x, int y) const {
     if (!isInRange(src->x, src->y, x, y)) return false;
+    hit(src, src);
+    return true;
+}
+
+bool SelfBuff::hit(Mob* src, Mob* target) const {
     char buffer [255];
     if (applyChances(src, buffer, "%s has applied", "on themselves"))
                     engine.ui->log->addMessage(buffer);

@@ -3,11 +3,12 @@
 
 #include "..\..\Main\main.hpp"
 #include <list>
+#include <memory>
 /*
 Have a few types of statuses, some good, some bad.
 
 Good:
-Block, Reflect(?), Ice skin
+Block, Thorns, Ice skin
 Regens
 Quirks?
 Potion effects
@@ -15,19 +16,21 @@ Potion effects
 Bad:
 Poison,
 Frozen,
+Fire?,
 Stunned (can't attack),
 Curse (more vulnerable to attacks)
 */
 class Status;
+class Attack;
 
 enum SideEffect {
     NONE = 0,
     BLOCK = 0x01,
     THORN = 0x02,
-    FREEZE = 0x04,
+    FROZEN = 0x04,
 };
 
-class StatusHolder { //todo add stackable attribute?
+class StatusHolder {
 public:
     StatusHolder() {}
 
@@ -42,6 +45,8 @@ public:
     int                 healval = 0;
 
     SideEffect          sideeffect = SideEffect::NONE;
+    std::shared_ptr
+        <Status>        counterdebuff;
 private:
     void                resetStats();
     std::list<Status*>  statuses;
