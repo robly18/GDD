@@ -45,6 +45,8 @@ public:
     int                 healval = 0;
 
     SideEffect          sideeffect = SideEffect::NONE;
+    bool                hasEffect(SideEffect);
+
     std::shared_ptr
         <Status>        counterdebuff;
 private:
@@ -75,6 +77,7 @@ public:
 };
 
 #include "poison.hpp"
+#include "frozen.hpp"
 #include "regen.hpp"
 #include "blockingbuffs.hpp"
 

@@ -84,7 +84,7 @@ Bow::Bow(std::string n, int attack, int maxmana) :
     attacks[0]->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
     attacks[1] = new TargetedAttack(15, 10, 3, 9, 2, false, true);
     defenses[0] = new SelfBuff(35, new CounterDebuffBuff("IceSkin", 5,
-                                        std::shared_ptr<Status>(new FixedHpPoison(10, "tmppsn", 4)),
+                                        std::shared_ptr<Status>(new Frozen("Freeze", 5)),
                                         0, 0));
     defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
 }

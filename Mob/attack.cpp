@@ -83,8 +83,7 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
         engine.ui->log->addMessage(buffer);
 
         if (physical) {
-            if ((int) target->destructible->statusholder->sideeffect &
-                (int) SideEffect::THORN) {
+            if (target->destructible->statusholder->hasEffect(SideEffect::THORN)) {
                 dmg = src->destructible->damage(dmg);
                 sprintf(buffer, "%s's thorns caused %s to be damaged for %i hp",
                         target->name.c_str(),
@@ -96,7 +95,10 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
             std::shared_ptr<Status>
                 counterdebuff = target->destructible->statusholder->counterdebuff;
             if (counterdebuff) {
-                src->destructible->statusholder->pushStatus((*counterdebuff).clone());
+                sprintf(buffer, "%s was Frozen by %s's IceSkin",
+                        src->name.c_str(), target->name.c_str());
+                engine.ui->log->addMessage(buffer);
+                src->destructible->statusholder->pushStatus(counterdebuff->clone());
             }
         }
     }

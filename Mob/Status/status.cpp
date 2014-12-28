@@ -14,6 +14,7 @@ void StatusHolder::resetStats() {
     poisondmg = 0;
     healval = 0;
     sideeffect = SideEffect::NONE;
+    counterdebuff.reset();
 }
 
 void StatusHolder::update(Mob* mob) {
@@ -53,7 +54,6 @@ void StatusHolder::update(Mob* mob) {
             engine.ui->log->addMessage(buffer);
         }
     }
-
 }
 
 bool StatusHolder::pushStatus(Status* s) {
@@ -77,4 +77,8 @@ bool StatusHolder::statusAt(int x, int y, std::list<Status*>::iterator* changing
         }
     }
     return false;
+}
+
+bool StatusHolder::hasEffect(SideEffect e) {
+    return (int)sideeffect & (int)e;
 }

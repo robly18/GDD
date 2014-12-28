@@ -15,7 +15,7 @@ MobDestructible::MobDestructible(int maxHp, SDL_Rect deadSprite) :
 
 int Destructible::damage(int dmg) {
     int defense = armor ? armor->defense : 0;
-    if (!((int)statusholder->sideeffect & (int)SideEffect::BLOCK) &&
+    if (!statusholder->hasEffect(SideEffect::BLOCK) &&
         dmg > defense) {
         hp -= dmg - defense;
         return dmg - defense;
