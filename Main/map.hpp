@@ -1,6 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
+#define SCREENTILEW 16
+#define SCREENTILEH 10
 #define MAPWIDTH 64
 #define MAPHEIGHT 40
 
@@ -17,7 +19,7 @@ struct Tile {
 
 class Map {
 public:
-    Map() { surface = SDL_CreateRGBSurface(0, 16*16, 10*16, 24, 0, 0, 0, 0);
+    Map() { surface = SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0);
             highlightsurface = SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
                                                     0x0000FF,
                                                     0x00FF00,
@@ -25,19 +27,21 @@ public:
                                                     0xFFFFFF);
             SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);};
 
-    Tile tiles[MAPWIDTH*MAPHEIGHT];
-    bool isWall(int x, int y) {return x < 0 || x >= MAPWIDTH/4 ||
-                                        y < 0 || y >= MAPHEIGHT/4 ||
-                                        tiles[x+y*MAPWIDTH].blocking;}
-    void setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
+    Tile                        tiles[MAPWIDTH*MAPHEIGHT];
+    bool                        isWall(int x, int y) {return x < 0 || x >= MAPWIDTH ||
+                                                                y < 0 || y >= MAPHEIGHT ||
+                                                                tiles[x+y*MAPWIDTH].blocking;}
+    void                        setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
 
-    bool canMoveTo(int, int);
+    bool                        canMoveTo(int, int);
 
     gdd::List<Mob*>             mobs1;
     gdd::List<FloorInventory*>  items;
     gdd::List<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
 
-    Player*                     player;
+    Player*                     player = NULL;
+    int                         camerax = 0, cameray = 0;
+    void                        resetCamera();
 
     FloorInventory*             getInvAt(int, int);
     FloorInventory*             addInvTo(Inventory*, int, int);
@@ -49,6 +53,16 @@ public:
     SDL_Surface*                highlightsurface;
 
     SDL_Surface*                render(int mousex, int mousey);
+
+    void                        generateMap();
+
+private:
+    void                        makePlayer();
+
+    void                        populateDungeon();
+    void                        generateDungeon();
+
+    SDL_Rect                    renderMobActor(Actor*);
 };
 
 #endif

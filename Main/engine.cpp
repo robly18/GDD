@@ -42,36 +42,14 @@ int Engine::init() {
 
 
     map = new Map();
-    Player* player = new Player(5,5,SDL_Rect{0, 0, 16, 16}, texture,"Player");
-    player->ai = new PlayerAi;
-    player->destructible = new PlayerDestructible(50, SDL_Rect{0,8,4,4});
-    player->inventory = new PlayerInventory;
-    //player->inventory->addItem(new Armor("TestArmr", 8, -80));
-    player->inventory->addItem(new Staff("Tststaff", 10, 10));
-    player->inventory->addItem(new Sword("SORD....", 10, 3));
-    player->inventory->addItem(new Bow("BowB4Me", 10, 7));
-    map->mobs2.push(player);
-    map->player = player;
+    map->generateMap();
+
 
     DEBUGMSG("Map and player made\n");
 
     ui = new Ui();
 
     DEBUGMSG("UI Created\n");
-
-
-    testattack = new TargetedAttack(10, 0, 0, 10);
-
-    map->setWall(0,0,true);
-    Mob* m = new Mob(3,2,SDL_Rect{0,8,8,8}, texture,"AI Test Mob");
-    m->ai = new TestAi();
-    m->destructible = new MobDestructible(100, SDL_Rect{0,0,10,10});
-    m->destructible->armor = new Armor("Testarmr", 4, 20);
-    m->attack = testattack;
-    m->inventory = new MobInventory;
-    m->inventory->addItem(new HpPotion("HPPot?", 100));
-    map->mobs2.push(m);
-    map->mobs2.push(new Mob(2,5,SDL_Rect{8,8,8,8}, texture,"Lazy bum"));
 
     DEBUGMSG("Engine init done\n");
 
@@ -114,37 +92,60 @@ void Engine::checkEvents() {
             state = State::QUIT;
             break;
         case SDL_KEYDOWN:
-            if (state == State::RUNNING) {
-                switch (e.key.keysym.sym) {
-                case SDLK_DOWN:
-                case SDLK_UP:
-                case SDLK_LEFT:
-                case SDLK_RIGHT:
-                case SDLK_SPACE:
-                    lastkey = e.key;
-                    state = State::MOVED;
-                default:
-                    break;
+            if (e.key.keysym.sym == SDLK_c) {
+                camera = !camera;
+                if (!camera) map->resetCamera();
+            }
+            switch (state) {
+            case State::RUNNING:
+                if (!camera) {
+                    switch (e.key.keysym.sym) {
+                    case SDLK_DOWN:
+                    case SDLK_UP:
+                    case SDLK_LEFT:
+                    case SDLK_RIGHT:
+                    case SDLK_SPACE:
+                        lastkey = e.key;
+                        state = State::MOVED;
+                        break;
+                    default:
+                        break;
+                    }
+                } else {
+                    switch (e.key.keysym.sym) {
+                    case SDLK_DOWN: map->cameray++; break;
+                    case SDLK_UP: map->cameray--; break;
+                    case SDLK_LEFT: map->camerax--; break;
+                    case SDLK_RIGHT: map->camerax++; break;
+                    case SDLK_SPACE: lastkey = e.key; state = State::MOVED; break;
+                    default: break;
+                    }
                 }
-            } else if (state == State::LOG) {
+                break;
+            case State::LOG:
                 switch (e.key.keysym.sym) {
                 case SDLK_UP:   ui->log->moveReadLine(-1);  break;
                 case SDLK_DOWN: ui->log->moveReadLine(1);   break;
                 default: break;
                 }
+                break;
+            default: break;
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (state == State::RUNNING) {
                 if (map->player->attack) {
-                    if (map->player->attack->target(map->player, (mx-2)/16, (my-2)/16)) {
-                        state = State::ATTACKED;
-                        if (!map->player->attack->select(map->player))
+                    int atkx = (mx-2)/16, atky = (my-2)/16;
+                    if (0 <= atkx && atkx < 16 && 0 <= atky && atky < 16) {
+                        if (map->player->attack->target(map->player, atkx+map->camerax, atky+map->cameray)) {
+                            state = State::ATTACKED;
+                            if (!map->player->attack->select(map->player))
+                                map->player->attack = NULL;
+                        } else if (map->player->weapon) {
+                            map->player->weapon->cancelAttack(map->player);
+                        } else {
                             map->player->attack = NULL;
-                    } else if (map->player->weapon) {
-                        map->player->weapon->cancelAttack(map->player);
-                    } else {
-                        map->player->attack = NULL;
+                        }
                     }
                 }
             }

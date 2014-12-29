@@ -20,6 +20,7 @@ void PlayerAi::update(Mob* mob) {
 void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
     if (engine.map->canMoveTo(mob->x + dx, mob->y + dy)) {
         mob->move(dx, dy);
+        engine.map->resetCamera();
     }
 }
 

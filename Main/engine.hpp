@@ -37,6 +37,7 @@ public:
         LOG,
     };
     State state = State::INIT;
+    bool camera = false;
 
     int init();
 
@@ -55,8 +56,6 @@ public:
     Map* map;
 
     SDL_KeyboardEvent lastkey;
-
-    Attack* testattack;
 
     enum Mouse {
         LMB,
