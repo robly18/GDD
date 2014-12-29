@@ -6,12 +6,14 @@
 #define MAPWIDTH 64
 #define MAPHEIGHT 40
 
-#include "main.hpp"
+#include "..\Main\main.hpp"
+#include "mapgenerator.hpp"
 
 class Inventory;
 class FloorInventory;
 class Item;
 class Player;
+class MapGenerator;
 
 struct Tile {
     bool blocking = false;
@@ -53,14 +55,13 @@ public:
     SDL_Surface*                highlightsurface;
 
     SDL_Surface*                render(int mousex, int mousey);
+    SDL_Surface*                mapview();
 
     void                        generateMap();
 
 private:
     void                        makePlayer();
-
-    void                        populateDungeon();
-    void                        generateDungeon();
+    MapGenerator                *generator;
 
     SDL_Rect                    renderMobActor(Actor*);
 };

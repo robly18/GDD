@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <SDL.h>
+#include <random>
+#include <time.h>
 #include "..\Misc\gddlist.hpp"
 #include "..\Misc\text.hpp"
 #include "..\Ui\ui.hpp"

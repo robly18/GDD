@@ -9,5 +9,5 @@ class Player;
 #include "..\Mob\attack.hpp"
 #include "..\Mob\Status\status.hpp"
 #include "..\Mob\mob.hpp"
-#include "..\Main\map.hpp"
+#include "..\Map\map.hpp"
 #include "engine.hpp"

@@ -98,13 +98,28 @@ void Map::resetCamera() {
     cameray = ((player->y - SCREENTILEH/2 + 7) & ~7) - 3;
 }
 
+SDL_Surface* Map::mapview() {
+    static SDL_Rect floor = {0,16,4,4};
+    static SDL_Rect wall = {0,32,4,4};
+    for (int x = 0; x != MAPWIDTH; x++)
+    for (int y = 0; y != MAPHEIGHT; y++) {
+        SDL_Rect r = SDL_Rect{x*4, y*4, 4, 4};
+        SDL_BlitSurface(engine.texture, !isWall(x,y) ? &floor : &wall,
+                        surface, &r);
+    }
+    return surface;
+}
+
 /**Map Generation**/
 
 void Map::generateMap() {
-    generateDungeon();
-
+    generator = new MapGenerator();
     makePlayer();
-    populateDungeon();
+
+
+    generator->generateMap(this);
+
+    generator->populateMap(this);
 
     //player->inventory->addItem(new Armor("TestArmr", 8, -80));
     player->inventory->addItem(new Staff("Tststaff", 10, 10));
@@ -123,21 +138,3 @@ void Map::makePlayer() {
         mobs2.push(player);
     }
 }
-
-void Map::populateDungeon() {
-    Mob* m = new Mob(3,2,SDL_Rect{0,8,8,8}, engine.texture,"AI Test Mob");
-    m->ai = new TestAi();
-    m->destructible = new MobDestructible(100, SDL_Rect{0,0,10,10});
-    m->destructible->armor = new Armor("Testarmr", 4, 20);
-    m->attack = new TargetedAttack(10, 0, 0, 10);
-    m->inventory = new MobInventory;
-    m->inventory->addItem(new HpPotion("HPPot?", 100));
-    mobs2.push(m);
-
-    mobs2.push(new Mob(2,5,SDL_Rect{8,8,8,8}, engine.texture,"Lazy bum"));
-}
-
-void Map::generateDungeon() {
-    setWall(8,8,true);
-}
-

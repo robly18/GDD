@@ -18,6 +18,8 @@ int Engine::init() {
 
     if (SDL_Init( SDL_INIT_EVERYTHING )) LOGERROR()
 
+    std::srand(::time(NULL));
+
     window = SDL_CreateWindow("Generic Dungeon Dweller", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                               SWIDTH*2, SHEIGHT*2, SDL_WINDOW_SHOWN);
     if (!window) LOGERROR()
@@ -71,6 +73,11 @@ void Engine::render() {
         SDL_RenderCopy(renderer, t, NULL, &maprect);
         SDL_DestroyTexture(t);
         break;
+    case State::MAP:
+        t = SDL_CreateTextureFromSurface(renderer, map->mapview());
+        SDL_RenderCopy(renderer, t, NULL, &maprect);
+        SDL_DestroyTexture(t);
+        break;
     case State::INV:
         break;
     default: break;
@@ -108,6 +115,9 @@ void Engine::checkEvents() {
                         lastkey = e.key;
                         state = State::MOVED;
                         break;
+                    case SDLK_m:
+                        state = State::MAP;
+                        break;
                     default:
                         break;
                     }
@@ -127,6 +137,11 @@ void Engine::checkEvents() {
                 case SDLK_UP:   ui->log->moveReadLine(-1);  break;
                 case SDLK_DOWN: ui->log->moveReadLine(1);   break;
                 default: break;
+                }
+                break;
+            case State::MAP:
+                if (e.key.keysym.sym == SDLK_m) {
+                    state = State::RUNNING;
                 }
                 break;
             default: break;
