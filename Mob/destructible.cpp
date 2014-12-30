@@ -53,7 +53,8 @@ void Destructible::die(Mob* mob) {
 
 void Destructible::dropItems(Mob* mob) {
     if (!mob->inventory) return;
-    engine.map->addInvTo(mob->inventory, mob->x, mob->y);
+    if (mob->inventory->itemNo() > 0)
+        engine.map->addInvTo(mob->inventory, mob->x, mob->y);
     delete mob->inventory;
 }
 

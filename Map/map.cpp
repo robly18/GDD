@@ -1,5 +1,16 @@
 #include "map.hpp"
 
+Map::Map () {
+    surface = SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0);
+    highlightsurface = SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
+                                                    0x0000FF,
+                                                    0x00FF00,
+                                                    0xFF0000,
+                                                    0xFFFFFF);
+    SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);
+    fovcomputer = new FovComputer(MAPWIDTH, MAPHEIGHT);
+};
+
 bool Map::canMoveTo(int x, int y) {
     if (isWall(x, y)) return false;
     for (Mob** m = mobs2.begin(); m != mobs2.end(); m++) {
@@ -8,6 +19,16 @@ bool Map::canMoveTo(int x, int y) {
         }
     }
     return true;
+}
+
+void Map::updateFovData() {
+    for (int x = -4; x != 4; x++)
+    for (int y = -4; y != 4; y++) {
+        int cx = player->x + x;
+        int cy = player->y + y;
+        tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y);
+        if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
+    }
 }
 
 FloorInventory* Map::getInvAt(int x, int y) {
@@ -54,11 +75,17 @@ FloorInventory* Map::removeInvAt(int x, int y) {
 SDL_Surface* Map::render(int mousex, int mousey) {
     static SDL_Rect floor = {0,16,16,16};
     static SDL_Rect wall = {0,32,16,16};
+    static SDL_Rect unseen = wall;
     for (int x = 0; x != SCREENTILEW; x++)
     for (int y = 0; y != SCREENTILEH; y++) {
         SDL_Rect r = SDL_Rect{x*16, y*16, 16, 16};
-        SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
-                        surface, &r);
+        if (hasBeenSeen(x+camerax, y+cameray)) {
+            SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
+                            surface, &r);
+        } else {
+            SDL_BlitSurface(engine.texture, &unseen,
+                            surface, &r);
+        }
     }
     for (Mob** m = mobs1.begin(); m != mobs1.end(); m++)
         renderMobActor((*m)->a);
@@ -101,11 +128,16 @@ void Map::resetCamera() {
 SDL_Surface* Map::mapview() {
     static SDL_Rect floor = {0,16,4,4};
     static SDL_Rect wall = {0,32,4,4};
+    static SDL_Rect unseen = {0,31,4,4};
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         SDL_Rect r = SDL_Rect{x*4, y*4, 4, 4};
-        SDL_BlitSurface(engine.texture, !isWall(x,y) ? &floor : &wall,
-                        surface, &r);
+        if (hasBeenSeen(x, y))
+            SDL_BlitSurface(engine.texture, !isWall(x,y) ? &floor : &wall,
+                            surface, &r);
+        else
+            SDL_BlitSurface(engine.texture, &unseen,
+                            surface, &r);
     }
     return surface;
 }
@@ -113,20 +145,31 @@ SDL_Surface* Map::mapview() {
 /**Map Generation**/
 
 void Map::generateMap() {
+    DEBUGMSG("Generating new map\n");
+
     generator = new MapGenerator();
     makePlayer();
 
 
     generator->generateMap(this);
+    DEBUGMSG("Populating...\n");
 
     generator->populateMap(this);
+    DEBUGMSG("Done.\n");
 
     //player->inventory->addItem(new Armor("TestArmr", 8, -80));
     player->inventory->addItem(new Staff("Tststaff", 10, 10));
     player->inventory->addItem(new Sword("SORD....", 10, 3));
     player->inventory->addItem(new Bow("BowB4Me", 10, 7));
 
+    for (int x = 0; x != MAPWIDTH; x++)
+    for (int y = 0; y != MAPHEIGHT; y++) {
+        fovcomputer->tiledata[x+y*MAPWIDTH] = isWall(x, y);
+    }
+
     resetCamera();
+
+    updateFovData();
 }
 
 void Map::makePlayer() {

@@ -22,6 +22,7 @@ void MapGenerator::generateMap(Map* map) {
         prevx = newx;
         prevy = newy;
 
+        newpos:
         r.w = (std::rand() % 6) + 4;
         r.h = (std::rand() % 6) + 4;
         r.x = std::rand() % (MAPWIDTH-r.w);
@@ -29,6 +30,11 @@ void MapGenerator::generateMap(Map* map) {
 
         newx = r.x + r.w/2;
         newy = r.y + r.h/2;
+        if ((newx - prevx < 16 && newx - prevx > -16) ||
+            (newy - prevy < 10 && newy - prevy > -10)) {
+            DEBUGMSG("Rejected room\n");
+            goto newpos;
+        }
         makeRect(r, false, map->tiles);
         for (int x = newx; x != prevx; newx<prevx?x++:x--) {
             map->tiles[x+MAPWIDTH*newy].blocking = false;
@@ -41,7 +47,10 @@ void MapGenerator::generateMap(Map* map) {
 
 /* Algorithm overview:
 
-Make a bunch of rectangles and connect every subsequent one by a path
+Make a bunch of rectangles and connect every subsequent one by a path.
+First is the player's spawn and last is the exit.
+
+Addendum: if a room is too close to the previously created one, drop it and try again.
 */
 
 void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
@@ -52,15 +61,32 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
 }
 
 void MapGenerator::populateMap(Map* map) {
-    Mob* m = new Mob(3,2,SDL_Rect{0,8,8,8}, engine.texture,"AI Test Mob");
-    m->ai = new TestAi();
-    m->destructible = new MobDestructible(100, SDL_Rect{0,0,10,10});
-    m->destructible->armor = new Armor("Testarmr", 4, 20);
-    m->attack = new TargetedAttack(10, 0, 0, 10);
-    m->inventory = new MobInventory;
-    m->inventory->addItem(new HpPotion("HPPot?", 100));
-    map->mobs2.push(m);
+    Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
+    int posnum = 0; //Number of such
 
-    map->mobs2.push(new Mob(2,5,SDL_Rect{8,8,8,8}, engine.texture,"Lazy bum"));
+    for (int x = 0; x != MAPWIDTH; x++)
+    for (int y = 0; y != MAPHEIGHT; y++) {
+        if (!map->isWall(x, y) &&
+            !map->isWall(x, y+1) &&
+            !map->isWall(x, y-1) &&
+            !map->isWall(x+1, y) &&
+            !map->isWall(x-1, y)) {
+            positions[posnum++] = {x, y};
+        }
+    }
+
+    TargetedAttack* a = new TargetedAttack(10, 0, 0, 10);
+
+    for (int n = 0; n != 20; n++) {
+        int pos = std::rand() % posnum;
+        Mob* m = new Mob(positions[pos].x, positions[pos].y,
+                         SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");
+        m->ai = new TestAi();
+        m->destructible = new MobDestructible(100, SDL_Rect{0, 30, 16, 16});
+        m->attack = a;
+        m->inventory = new MobInventory;
+        m->inventory->addItem(new HpPotion("Potfin", 30));
+        map->mobs2.push(m);
+    }
 }
 

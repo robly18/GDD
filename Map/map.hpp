@@ -8,32 +8,36 @@
 
 #include "..\Main\main.hpp"
 #include "mapgenerator.hpp"
+#include "fovcomputer.hpp"
 
 class Inventory;
 class FloorInventory;
 class Item;
 class Player;
 class MapGenerator;
+class FovComputer;
 
 struct Tile {
     bool blocking = false;
+    bool seeThrough = true;
+
+    bool isSeen = false;
+    bool hasBeenSeen = false;
 };
 
 class Map {
 public:
-    Map() { surface = SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0);
-            highlightsurface = SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
-                                                    0x0000FF,
-                                                    0x00FF00,
-                                                    0xFF0000,
-                                                    0xFFFFFF);
-            SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);};
+    Map();
 
     Tile                        tiles[MAPWIDTH*MAPHEIGHT];
     bool                        isWall(int x, int y) {return x < 0 || x >= MAPWIDTH ||
                                                                 y < 0 || y >= MAPHEIGHT ||
                                                                 tiles[x+y*MAPWIDTH].blocking;}
     void                        setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
+
+    bool                        hasBeenSeen(int x, int y) {return tiles[x+y*MAPWIDTH].hasBeenSeen;}
+
+    FovComputer                 *fovcomputer;
 
     bool                        canMoveTo(int, int);
 
@@ -58,6 +62,7 @@ public:
     SDL_Surface*                mapview();
 
     void                        generateMap();
+    void                        updateFovData();
 
 private:
     void                        makePlayer();

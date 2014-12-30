@@ -8,7 +8,8 @@ SDL_Texture* Engine::loadTexture(char* filename, short r, short g, short b) {
     return t;
 }
 
-#define LOGERROR() { \
+#define LOGERROR() \
+    { \
         std::cout<<"An error has occurred: "<<SDL_GetError(); \
         return 1; \
     }
@@ -195,6 +196,7 @@ void Engine::doTick() {
             time++;
             if (map->player->destructible->isDead()) return;
         } while (time % map->player->getSwiftness());
+        map->updateFovData();
         if (state != State::ATTACKED &&
             state != State::USED &&
             map->player->weapon) map->player->weapon->regenMana(map->player->str);

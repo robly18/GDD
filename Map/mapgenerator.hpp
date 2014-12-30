@@ -7,6 +7,11 @@
 class Map;
 struct Tile;
 
+struct Pos {
+    int x;
+    int y;
+};
+
 class MapGenerator {
 public:
     void            generateMap(Map*);
