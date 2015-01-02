@@ -13,7 +13,7 @@ Map::Map () {
 
 bool Map::canMoveTo(int x, int y) {
     if (isWall(x, y)) return false;
-    for (Mob** m = mobs2.begin(); m != mobs2.end(); m++) {
+    for (std::list<Mob*>::iterator m = mobs2.begin(); m != mobs2.end(); m++) {
         if ((*m)->x == x && (*m)->y == y) {
             return false;
         }
@@ -22,17 +22,34 @@ bool Map::canMoveTo(int x, int y) {
 }
 
 void Map::updateFovData() {
-    for (int x = -4; x != 4; x++)
-    for (int y = -4; y != 4; y++) {
+    for (int x = -LOSRANGE-1; x != LOSRANGE+1; x++)
+    for (int y = -LOSRANGE-1; y != LOSRANGE+1; y++) {
         int cx = player->x + x;
         int cy = player->y + y;
-        tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y);
-        if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
+        if (INBOUNDS(cx, cy)) {
+            tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y);
+            if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
+        }
     }
 }
 
+bool Map::hasBeenSeen(int x, int y) {
+    if (!INBOUNDS(x, y)) return false;
+    return tiles[x+y*MAPWIDTH].hasBeenSeen;
+}
+
+bool Map::isBeingSeen(int x, int y) {
+    if (!INBOUNDS(x, y)) return false;
+    return tiles[x+y*MAPWIDTH].isSeen;
+}
+
+bool Map::canSeeThrough(int x, int y) {
+    if (!INBOUNDS(x, y)) return false;
+    return tiles[x+y*MAPWIDTH].seeThrough;
+}
+
 FloorInventory* Map::getInvAt(int x, int y) {
-    for (FloorInventory** inv = items.begin(); inv != items.end(); inv++) {
+    for (std::list<FloorInventory*>::iterator inv = items.begin(); inv != items.end(); inv++) {
         if ((*inv)->x == x && (*inv)->y == y) {
             return *inv;
         }
@@ -44,7 +61,7 @@ FloorInventory* Map::addInvTo(Inventory* inv, int x, int y) {
     FloorInventory* finv = getInvAt(x, y);
     if (!finv) {
         finv = new FloorInventory(engine.texture, x,y);
-        items.push(finv);
+        items.push_back(finv);
     }
     for (int n = 0; n != inv->itemNo(); n++) {
         finv->items.addItem(inv->itemAtSlot(n));
@@ -56,16 +73,16 @@ FloorInventory* Map::dropItem(Item* i, int x, int y) {
     FloorInventory* finv = getInvAt(x, y);
     if (!finv) {
         finv = new FloorInventory(engine.texture, x,y);
-        items.push(finv);
+        items.push_back(finv);
     }
     finv->items.addItem(i);
     return finv;
 }
 
 FloorInventory* Map::removeInvAt(int x, int y) {
-    for (FloorInventory** inv = items.begin(); inv != items.end(); inv++) {
+    for (std::list<FloorInventory*>::iterator inv = items.begin(); inv != items.end(); inv++) {
         if ((*inv)->x == x && (*inv)->y == y) {
-            items.remove(inv);
+            items.remove(*inv);
             return *inv;
         }
     }
@@ -73,23 +90,28 @@ FloorInventory* Map::removeInvAt(int x, int y) {
 }
 
 SDL_Surface* Map::render(int mousex, int mousey) {
-    static SDL_Rect floor = {0,16,16,16};
-    static SDL_Rect wall = {0,32,16,16};
-    static SDL_Rect unseen = wall;
+    static SDL_Rect floor = {0,16,16,16}, flooroos = {16,16,16,16};
+    static SDL_Rect wall = {0,32,16,16}, walloos = {16,32,16,16};
+    static SDL_Rect unseen = {0, 48, 16, 16};
     for (int x = 0; x != SCREENTILEW; x++)
     for (int y = 0; y != SCREENTILEH; y++) {
         SDL_Rect r = SDL_Rect{x*16, y*16, 16, 16};
-        if (hasBeenSeen(x+camerax, y+cameray)) {
-            SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
-                            surface, &r);
+        if (INBOUNDS(x+camerax, y+cameray) && hasBeenSeen(x+camerax, y+cameray)) {
+            if (isBeingSeen(x+camerax, y+cameray)) {
+                SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
+                                surface, &r);
+            } else {
+                SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &flooroos : &walloos,
+                                surface, &r);
+            }
         } else {
             SDL_BlitSurface(engine.texture, &unseen,
                             surface, &r);
         }
     }
-    for (Mob** m = mobs1.begin(); m != mobs1.end(); m++)
+    for (std::list<Mob*>::iterator m = mobs1.begin(); m != mobs1.end(); m++)
         renderMobActor((*m)->a);
-    for (FloorInventory** m = items.begin(); m != items.end(); m++)
+    for (std::list<FloorInventory*>::iterator m = items.begin(); m != items.end(); m++)
         renderMobActor((*m)->a);
     if (player->attack) {
         for (int x = 0; x != SCREENTILEW; x++)
@@ -103,7 +125,7 @@ SDL_Surface* Map::render(int mousex, int mousey) {
         }
         SDL_BlitSurface(highlightsurface, NULL, surface, NULL);
     }
-    for (Mob** m = mobs2.begin(); m != mobs2.end(); m++) {
+    for (std::list<Mob*>::iterator m = mobs2.begin(); m != mobs2.end(); m++) {
         SDL_Rect pos = renderMobActor((*m)->a);
         if ((*m)->destructible) {
             (*m)->destructible->statusholder->render(surface, pos);
@@ -128,7 +150,7 @@ void Map::resetCamera() {
 SDL_Surface* Map::mapview() {
     static SDL_Rect floor = {0,16,4,4};
     static SDL_Rect wall = {0,32,4,4};
-    static SDL_Rect unseen = {0,31,4,4};
+    static SDL_Rect unseen = {0, 48, 4, 4};
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         SDL_Rect r = SDL_Rect{x*4, y*4, 4, 4};
@@ -178,6 +200,6 @@ void Map::makePlayer() {
         player->ai = new PlayerAi;
         player->destructible = new PlayerDestructible(50, SDL_Rect{0,8,4,4});
         player->inventory = new PlayerInventory;
-        mobs2.push(player);
+        mobs2.push_back(player);
     }
 }

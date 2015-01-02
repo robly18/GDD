@@ -38,13 +38,8 @@ void Destructible::die(Mob* mob) {
     mob->ai = NULL;
     dropItems(mob);
 
-    for (Mob** m = engine.map->mobs2.begin(); m != engine.map->mobs2.end(); m++) {
-        if (*m == mob) {
-            engine.map->mobs2.remove(m);
-            break;
-        }
-    }
-    engine.map->mobs1.push(mob);
+    //engine.map->mobs2.remove(mob);
+    engine.map->mobs1.push_back(mob);
 
     char buffer [64];
     sprintf(buffer, "The %s died!", mob->name.c_str());

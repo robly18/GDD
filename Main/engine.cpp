@@ -179,13 +179,13 @@ void Engine::doTick() {
         state == State::ATTACKED ||
         state == State::USED) {
         do {
-            for (Mob** mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
+            for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
                 if ((*mob)->getSwiftness())
                 if (time % (*mob)->getSwiftness() == 0)
                 if ((*mob)->destructible)
                     (*mob)->destructible->statusholder->update(*mob);
             }
-            for (Mob** mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
+            for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
                 if ((*mob)->getSwiftness())
                 if (time % (*mob)->getSwiftness() == 0)
                 if ((*mob)->destructible &&
@@ -193,6 +193,7 @@ void Engine::doTick() {
                     (*mob)->ai->update(*mob);
                 }
             }
+            map->mobs2.remove_if([](Mob* m){return m->destructible->isDead();});
             time++;
             if (map->player->destructible->isDead()) return;
         } while (time % map->player->getSwiftness());

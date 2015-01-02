@@ -25,8 +25,8 @@ void MapGenerator::generateMap(Map* map) {
         newpos:
         r.w = (std::rand() % 6) + 4;
         r.h = (std::rand() % 6) + 4;
-        r.x = std::rand() % (MAPWIDTH-r.w);
-        r.y = std::rand() % (MAPHEIGHT-r.h);
+        r.x = std::rand() % (MAPWIDTH-r.w-2)+1;
+        r.y = std::rand() % (MAPHEIGHT-r.h-2)+1;
 
         newx = r.x + r.w/2;
         newy = r.y + r.h/2;
@@ -86,7 +86,7 @@ void MapGenerator::populateMap(Map* map) {
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("Potfin", 30));
-        map->mobs2.push(m);
+        map->mobs2.push_back(m);
     }
 }
 

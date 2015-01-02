@@ -57,7 +57,7 @@ bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) 
 bool TargetedAttack::target(Mob* src, int x, int y) const {
     if (!isInRange(src->x, src->y, x, y)) return false;
     bool didhit = false;
-    for (Mob** mob = engine.map->mobs2.begin(); mob != engine.map->mobs2.end(); mob++) {
+    for (std::list<Mob*>::iterator mob = engine.map->mobs2.begin(); mob != engine.map->mobs2.end(); mob++) {
         if (isHit(src, x, y, (*mob)->x, (*mob)->y) &&
             (*mob)->destructible &&
             !(!hurtself && *mob == src)) {

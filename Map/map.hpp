@@ -9,6 +9,7 @@
 #include "..\Main\main.hpp"
 #include "mapgenerator.hpp"
 #include "fovcomputer.hpp"
+#include <list>
 
 class Inventory;
 class FloorInventory;
@@ -25,6 +26,8 @@ struct Tile {
     bool hasBeenSeen = false;
 };
 
+#define INBOUNDS(x, y) (0<=x && x<MAPWIDTH && 0<=y && y<MAPHEIGHT)
+
 class Map {
 public:
     Map();
@@ -35,15 +38,17 @@ public:
                                                                 tiles[x+y*MAPWIDTH].blocking;}
     void                        setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
 
-    bool                        hasBeenSeen(int x, int y) {return tiles[x+y*MAPWIDTH].hasBeenSeen;}
+    bool                        canSeeThrough(int x, int y);
+    bool                        hasBeenSeen(int x, int y);
+    bool                        isBeingSeen(int x, int y);
 
     FovComputer                 *fovcomputer;
 
     bool                        canMoveTo(int, int);
 
-    gdd::List<Mob*>             mobs1;
-    gdd::List<FloorInventory*>  items;
-    gdd::List<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
+    std::list<Mob*>             mobs1;
+    std::list<FloorInventory*>  items;
+    std::list<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
 
     Player*                     player = NULL;
     int                         camerax = 0, cameray = 0;
