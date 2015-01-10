@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#define LOSRANGE 6
-
 class FovComputer {
 public:
     FovComputer(int, int);
@@ -15,7 +13,7 @@ public:
     bool        *tiledata;
     int         w, h;
 
-    bool        isInSight(int, int, int, int);
+    bool        isInSight(int, int, int, int, int);
 };
 
 

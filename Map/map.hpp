@@ -11,6 +11,8 @@
 #include "fovcomputer.hpp"
 #include <list>
 
+#define LOSRANGE 6
+
 class Inventory;
 class FloorInventory;
 class Item;

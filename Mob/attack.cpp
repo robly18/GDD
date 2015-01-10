@@ -32,6 +32,8 @@ bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char
 
 Uint32 TargetedAttack::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
+    int dx = std::abs(user->x-mx);
+    int dy = std::abs(user->y-my);
     if (isInRange(user->x, user->y, mousex, mousey)) {
         if (mousex == mx && mousey == my) return validMouseOnColor;
         if (isHit(user, mousex, mousey, mx, my)) return willGetHitColor;
@@ -44,9 +46,11 @@ Uint32 TargetedAttack::highlightColor(Mob* user, int mx, int my,
 }
 
 bool TargetedAttack::isInRange(int px, int py, int mx, int my) const {
-    int dx = (px-mx) * ((px>mx) * 2 - 1);
-    int dy = (py-my) * ((py>my) * 2 - 1);
-    return minrange<=(dx+dy) && (dx+dy)<=maxrange;
+    int dx = std::abs(px-mx);
+    int dy = std::abs(py-my);
+    return engine.map->hasBeenSeen(mx, my) &&
+            minrange<=(dx+dy) &&
+            engine.map->fovcomputer->isInSight(px, py, mx, my, maxrange);
 }
 
 bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) const {

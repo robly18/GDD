@@ -9,8 +9,8 @@ void MapGenerator::generateMap(Map* map) {
 
     r.w = (std::rand() % 6) + 4;
     r.h = (std::rand() % 6) + 4;
-    r.x = std::rand() % (MAPWIDTH-r.w);
-    r.y = std::rand() % (MAPHEIGHT-r.h);
+    r.x = std::rand() % (MAPWIDTH-r.w-2) + 1;
+    r.y = std::rand() % (MAPHEIGHT-r.h-2) + 1;
 
     newx = r.x + r.w/2;
     newy = r.y + r.h/2;
@@ -77,7 +77,7 @@ void MapGenerator::populateMap(Map* map) {
 
     TargetedAttack* a = new TargetedAttack(10, 0, 0, 10);
 
-    for (int n = 0; n != 20; n++) {
+    for (int n = 0; n != 0; n++) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
                          SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");

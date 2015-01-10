@@ -22,12 +22,12 @@ bool Map::canMoveTo(int x, int y) {
 }
 
 void Map::updateFovData() {
-    for (int x = -LOSRANGE-1; x != LOSRANGE+1; x++)
-    for (int y = -LOSRANGE-1; y != LOSRANGE+1; y++) {
+    for (int x = -LOSRANGE-1; x != LOSRANGE+2; x++)
+    for (int y = -LOSRANGE-1; y != LOSRANGE+2; y++) {
         int cx = player->x + x;
         int cy = player->y + y;
         if (INBOUNDS(cx, cy)) {
-            tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y);
+            tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y, LOSRANGE);
             if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
         }
     }
