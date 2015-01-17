@@ -32,8 +32,6 @@ bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char
 
 Uint32 TargetedAttack::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
-    int dx = std::abs(user->x-mx);
-    int dy = std::abs(user->y-my);
     if (isInRange(user->x, user->y, mousex, mousey)) {
         if (mousex == mx && mousey == my) return validMouseOnColor;
         if (isHit(user, mousex, mousey, mx, my)) return willGetHitColor;

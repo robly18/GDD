@@ -9,6 +9,7 @@ Map::Map () {
                                                     0xFFFFFF);
     SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);
     fovcomputer = new FovComputer(MAPWIDTH, MAPHEIGHT);
+    pathfinder = new Pathfinder(MAPWIDTH, MAPHEIGHT);
 };
 
 bool Map::canMoveTo(int x, int y) {
@@ -44,8 +45,7 @@ bool Map::isBeingSeen(int x, int y) {
 }
 
 bool Map::canSeeThrough(int x, int y) {
-    if (!INBOUNDS(x, y)) return false;
-    return tiles[x+y*MAPWIDTH].seeThrough;
+    return INBOUNDS(x, y) && tiles[x+y*MAPWIDTH].seeThrough;
 }
 
 FloorInventory* Map::getInvAt(int x, int y) {
@@ -186,7 +186,8 @@ void Map::generateMap() {
 
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
-        fovcomputer->tiledata[x+y*MAPWIDTH] = isWall(x, y);
+        fovcomputer->tiledata[x+y*MAPWIDTH] = !canSeeThrough(x, y);
+        pathfinder->tiledata[x+y*MAPWIDTH] = isWall(x, y);
     }
 
     resetCamera();

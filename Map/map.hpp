@@ -19,6 +19,7 @@ class Item;
 class Player;
 class MapGenerator;
 class FovComputer;
+class Pathfinder;
 
 struct Tile {
     bool blocking = false;
@@ -45,6 +46,7 @@ public:
     bool                        isBeingSeen(int x, int y);
 
     FovComputer                 *fovcomputer;
+    Pathfinder                  *pathfinder;
 
     bool                        canMoveTo(int, int);
 

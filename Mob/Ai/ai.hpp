@@ -1,7 +1,8 @@
 #ifndef AI_H
 #define AI_H
 
-#include "..\Main\main.hpp"
+#include "..\..\Main\main.hpp"
+#include "pathfinder.hpp"
 
 class Ai {
 public:

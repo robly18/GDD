@@ -38,9 +38,11 @@ void MapGenerator::generateMap(Map* map) {
         makeRect(r, false, map->tiles);
         for (int x = newx; x != prevx; newx<prevx?x++:x--) {
             map->tiles[x+MAPWIDTH*newy].blocking = false;
+            map->tiles[x+MAPWIDTH*newy].seeThrough = true;
         }
         for (int y = newy; y != prevy; newy<prevy?y++:y--) {
             map->tiles[prevx+MAPWIDTH*y].blocking = false;
+            map->tiles[prevx+MAPWIDTH*y].seeThrough = true;
         }
     }
 }
@@ -57,6 +59,7 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     for (int x = r.x; x != r.x+r.w; x++)
     for (int y = r.y; y != r.y+r.h; y++) {
         tiles[x+MAPWIDTH*y].blocking = w;
+        tiles[x+MAPWIDTH*y].seeThrough = !w;
     }
 }
 

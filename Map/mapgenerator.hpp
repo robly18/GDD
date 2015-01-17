@@ -2,15 +2,11 @@
 #define MAPGENERATOR_H
 
 #include "map.hpp"
+#include "../Misc/posstruct.hpp"
 #include <random>
 
 class Map;
 struct Tile;
-
-struct Pos {
-    int x;
-    int y;
-};
 
 class MapGenerator {
 public:
