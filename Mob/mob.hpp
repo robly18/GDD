@@ -26,6 +26,9 @@ public:
 
     Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
     void            setPos(int, int);
+    void            setPos(Pos);
+    Pos             getPos();
+
     void            move(int, int);
 
     int             getSwiftness(); //Misleading name :( Actually faster if swiftness is lower

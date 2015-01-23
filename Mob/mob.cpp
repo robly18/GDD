@@ -12,6 +12,16 @@ void Mob::setPos(int x, int y) {
     a->p = POSRECT(x, y);
 }
 
+void Mob::setPos(Pos p) {
+    Mob::x = p.x;
+    Mob::y = p.y;
+    a->p = POSRECT(p.x, p.y);
+}
+
+Pos Mob::getPos() {
+    return Pos{x, y};
+}
+
 void Mob::move(int mx, int my) {
     setPos(x+mx, y+my);
 }

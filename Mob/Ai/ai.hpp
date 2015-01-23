@@ -24,7 +24,7 @@ class TestAi : public Ai {
 public:
     void update(Mob*);
 protected:
-    int dir = 1;
+    std::list<Pos> path;
 };
 
 #endif

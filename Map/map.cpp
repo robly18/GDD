@@ -22,6 +22,10 @@ bool Map::canMoveTo(int x, int y) {
     return true;
 }
 
+bool Map::canMoveTo(Pos p) {
+    return canMoveTo(p.x, p.y);
+}
+
 void Map::updateFovData() {
     for (int x = -LOSRANGE-1; x != LOSRANGE+2; x++)
     for (int y = -LOSRANGE-1; y != LOSRANGE+2; y++) {
@@ -187,7 +191,7 @@ void Map::generateMap() {
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         fovcomputer->tiledata[x+y*MAPWIDTH] = !canSeeThrough(x, y);
-        pathfinder->tiledata[x+y*MAPWIDTH] = isWall(x, y);
+        pathfinder->tiledata[x+y*MAPWIDTH] = !isWall(x, y);
     }
 
     resetCamera();

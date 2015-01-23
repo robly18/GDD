@@ -49,6 +49,7 @@ public:
     Pathfinder                  *pathfinder;
 
     bool                        canMoveTo(int, int);
+    bool                        canMoveTo(Pos);
 
     std::list<Mob*>             mobs1;
     std::list<FloorInventory*>  items;

@@ -3,6 +3,7 @@
 
 #include "../../Misc/posstruct.hpp"
 #include <list>
+#include <stdlib.h>
 
 class Pathfinder {
 public:
@@ -12,8 +13,11 @@ public:
     int             w, h;
 
     void            setPosData(Pos, bool);
+    bool            canGoThrough(Pos);
 
     void            computePath(Pos, Pos, std::list<Pos>&);
+private:
+    bool            *computedata;
 };
 
 #endif

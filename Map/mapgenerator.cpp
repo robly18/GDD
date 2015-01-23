@@ -1,6 +1,11 @@
 #include "mapgenerator.hpp"
 
+#define BLANKMAPNOT
+
 void MapGenerator::generateMap(Map* map) {
+    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, false, map->tiles);
+
+    #ifndef BLANKMAP
     makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, true, map->tiles);
 
     int prevx, prevy;
@@ -45,6 +50,7 @@ void MapGenerator::generateMap(Map* map) {
             map->tiles[prevx+MAPWIDTH*y].seeThrough = true;
         }
     }
+    #endif
 }
 
 /* Algorithm overview:
@@ -63,6 +69,8 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     }
 }
 
+#define MAXMOBS 1
+
 void MapGenerator::populateMap(Map* map) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
     int posnum = 0; //Number of such
@@ -80,7 +88,7 @@ void MapGenerator::populateMap(Map* map) {
 
     TargetedAttack* a = new TargetedAttack(10, 0, 0, 10);
 
-    for (int n = 0; n != 0; n++) {
+    for (int n = 0; n != MAXMOBS; n++) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
                          SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");

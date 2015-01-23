@@ -25,10 +25,8 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
 }
 
 void TestAi::update(Mob* mob) {
-    if (engine.map->canMoveTo(mob->x, mob->y+dir)) {
-        mob->move(0, dir);
-    } else {
-        if (mob->attack) mob->attack->target(mob, mob->x, mob->y+dir);
-        dir = -dir;
+    engine.map->pathfinder->computePath(mob->getPos(), engine.map->player->getPos(), path);
+    if (engine.map->canMoveTo(path.front())) {
+        mob->setPos(path.front());
     }
 }
