@@ -14,8 +14,6 @@
 #define SWIDTH (110+6+16*16)
 #define SHEIGHT (10*16+6+46+23)
 
-#define DEBUGMSG(s) std::cout<<s
-
 class Map;
 class Mob;
 class Attack;

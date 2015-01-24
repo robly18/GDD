@@ -25,7 +25,10 @@ bool Weapon::selectAttack(Player* user, int atk) {
 
 void Weapon::cancelAttack(Player* user) {
     if (user->attack) {
-        engine.map->player->weapon->mana += engine.map->player->attack->cost;
+        mana += engine.map->player->attack->cost;
+        if (mana > engine.map->player->getMaxMp()) {
+            mana = engine.map->player->getMaxMp();
+        }
         engine.map->player->attack = NULL;
     }
 }

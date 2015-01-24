@@ -69,7 +69,7 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     }
 }
 
-#define MAXMOBS 1
+#define MAXMOBS 100
 
 void MapGenerator::populateMap(Map* map) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
@@ -81,7 +81,8 @@ void MapGenerator::populateMap(Map* map) {
             !map->isWall(x, y+1) &&
             !map->isWall(x, y-1) &&
             !map->isWall(x+1, y) &&
-            !map->isWall(x-1, y)) {
+            !map->isWall(x-1, y) &&
+            !posEq({x, y}, map->player->getPos())) {
             positions[posnum++] = {x, y};
         }
     }
@@ -98,6 +99,8 @@ void MapGenerator::populateMap(Map* map) {
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("Potfin", 30));
         map->mobs2.push_back(m);
+
+        positions[pos] = positions[--posnum];
     }
 }
 

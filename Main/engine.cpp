@@ -178,13 +178,25 @@ void Engine::doTick() {
     if (state == State::MOVED ||
         state == State::ATTACKED ||
         state == State::USED) {
+
+        DEBUGMSG("Tickbegin\n");
         do {
+            DEBUGMSG("Destructiblesing\n");
             for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
-                if ((*mob)->getSwiftness())
-                if (time % (*mob)->getSwiftness() == 0)
-                if ((*mob)->destructible)
-                    (*mob)->destructible->statusholder->update(*mob);
+                DEBUGMSG("a\n");
+                int swiftness = (*mob)->getSwiftness();
+                DEBUGMSG("swiftnessgot\n");
+                if (swiftness) {
+                    DEBUGMSG("swiftness\n");
+                    if (time % swiftness == 0) {
+                        DEBUGMSG("8luh\n");
+                        if ((*mob)->destructible)
+                            (*mob)->destructible->statusholder->update(*mob);
+                    }
+                }
+                DEBUGMSG("b\n");
             }
+            DEBUGMSG("Destructibles done\n");
             for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
                 if ((*mob)->getSwiftness())
                 if (time % (*mob)->getSwiftness() == 0)
@@ -193,10 +205,12 @@ void Engine::doTick() {
                     (*mob)->ai->update(*mob);
                 }
             }
+            DEBUGMSG("8luh\n");
             map->mobs2.remove_if([](Mob* m){return m->destructible->isDead();});
             time++;
             if (map->player->destructible->isDead()) return;
         } while (time % map->player->getSwiftness());
+
         map->updateFovData();
         if (state != State::ATTACKED &&
             state != State::USED &&

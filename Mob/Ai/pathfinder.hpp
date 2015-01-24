@@ -2,7 +2,11 @@
 #define PATHFINDER_H
 
 #include "../../Misc/posstruct.hpp"
+#include "../../Misc/logging.hpp"
+
 #include <list>
+#include <vector>
+#include <algorithm>
 #include <stdlib.h>
 
 class Pathfinder {

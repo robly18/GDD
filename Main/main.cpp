@@ -9,8 +9,11 @@ Engine engine;
 int main(int argn, char* argv []) {
     if (!engine.init())
     while (engine.state != Engine::State::QUIT) {
+        DEBUGMSG("Ticking\n");
         engine.doTick();
+        DEBUGMSG("Rendering\n");
         engine.render();
+        DEBUGMSG("Checking\n");
         engine.checkEvents();
     }
     return 0;

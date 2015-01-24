@@ -28,14 +28,14 @@ void Pathfinder::computePath(const Pos start, const Pos end,
     std::list<PosNode> availablenodes;
     availablenodes.push_back(PosNode{start, nullptr, 0});
 
-    static Pos dirs [4] = {{1,0}, {0,1}, {-1, 0}, {0, -1}};
+    static std::vector<Pos> dirs = {{1,0}, {0,1}, {-1, 0}, {0, -1}};
 
-    //std::cout<<"Starting path computation\n";
+    DEBUGMSG("Starting path computation\n");
 
     while (true) {
-        //std::cout<<"Iterating...\n";
+        DEBUGMSG("Iterating...\n");
         std::list<PosNode>::iterator nextnode = availablenodes.begin();
-        //std::cout<<"Picking node...\n";
+        DEBUGMSG("Picking node...\n");
         int mincost = GETCOST(*nextnode, end);
 
         //This selects the minimum possible cost node
@@ -53,13 +53,19 @@ void Pathfinder::computePath(const Pos start, const Pos end,
 
         nextnode = nodes.begin();
 
-        if (nextnode->pos.x == end.x &&
-            nextnode->pos.y == end.y) {
+        if ((nextnode->pos.x == end.x &&
+            nextnode->pos.y == end.y) ||
+            nodes.size() >= 200) {
+            if (nodes.size() >= 200) {
+                nodes.begin()->prev->prev = nullptr;
+                std::cout<<"\nNODE FAILED YO\n\n";
+            }
             break;
         }
 
-        //std::cout<<nextnode->pos.x<<";"<<end.x<<";"<<nextnode->pos.y<<";"<<end.y<<"\n";
-        for (Pos* adding = dirs; adding != dirs + 4; adding++) {
+        DEBUGMSG(nextnode->pos.x<<";"<<end.x<<";"<<nextnode->pos.y<<";"<<end.y<<"\n");
+        std::random_shuffle(dirs.begin(), dirs.end());
+        for (auto adding = dirs.begin(); adding != dirs.end(); adding++) {
             //std::cout<<"Itr..\n";
             Pos npos = addPos(nextnode->pos, *adding);
             if (canGoThrough(npos)) {

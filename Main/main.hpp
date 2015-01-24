@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include "..\Misc\gddlist.hpp"
+#include "..\Misc\logging.hpp"
 #include "..\Misc\posstruct.hpp"
 #include "..\Misc\actor.hpp"
 class Mob;

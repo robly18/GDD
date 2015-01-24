@@ -27,10 +27,16 @@ void Mob::move(int mx, int my) {
 }
 
 int Mob::getSwiftness() {
+    DEBUGMSG("___");
     if (!ai) return 0;
+    DEBUGMSG("---");
     if (destructible && destructible->armor) {
+        DEBUGMSG("wuh");
+        DEBUGMSG(ai->swiftness);
+        DEBUGMSG(destructible->armor->swiftness);
         return ai->swiftness + destructible->armor->swiftness;
     } else {
+        DEBUGMSG("wat");
         return ai->swiftness;
     }
 }

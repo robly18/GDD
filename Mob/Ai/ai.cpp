@@ -26,6 +26,8 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
 
 void TestAi::update(Mob* mob) {
     engine.map->pathfinder->computePath(mob->getPos(), engine.map->player->getPos(), path);
+
+    if (path.size())
     if (engine.map->canMoveTo(path.front())) {
         mob->setPos(path.front());
     }
