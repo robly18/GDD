@@ -3,6 +3,7 @@
 
 #include "..\..\Main\main.hpp"
 #include "pathfinder.hpp"
+#include <random>
 
 class Ai {
 public:
@@ -22,9 +23,12 @@ protected:
 
 class TestAi : public Ai {
 public:
-    void update(Mob*);
+    void            update(Mob*);
 protected:
-    std::list<Pos> path;
+    Pos             seekingPos;
+    bool            sawPlayer;
+
+    std::list<Pos>  path;
 };
 
 #endif

@@ -20,7 +20,7 @@ bool Pathfinder::canGoThrough(Pos pos) {
 
 #define GETCOST(n, destination) ((n).cost + posDiff((n).pos, destination))
 
-#include <iostream>
+#define MAXNODENUM 500
 
 void Pathfinder::computePath(const Pos start, const Pos end,
                              std::list<Pos> &path) {
@@ -53,36 +53,32 @@ void Pathfinder::computePath(const Pos start, const Pos end,
 
         nextnode = nodes.begin();
 
-        if ((nextnode->pos.x == end.x &&
-            nextnode->pos.y == end.y) ||
-            nodes.size() >= 200) {
-            if (nodes.size() >= 200) {
-                nodes.begin()->prev->prev = nullptr;
-                std::cout<<"\nNODE FAILED YO\n\n";
-            }
+        if (nextnode->pos.x == end.x &&
+            nextnode->pos.y == end.y) {
+            break;
+        }
+        if (nodes.size() >= MAXNODENUM) {
+            nodes.begin()->prev->prev = nullptr;
             break;
         }
 
         DEBUGMSG(nextnode->pos.x<<";"<<end.x<<";"<<nextnode->pos.y<<";"<<end.y<<"\n");
+
         std::random_shuffle(dirs.begin(), dirs.end());
+
         for (auto adding = dirs.begin(); adding != dirs.end(); adding++) {
-            //std::cout<<"Itr..\n";
             Pos npos = addPos(nextnode->pos, *adding);
             if (canGoThrough(npos)) {
-                //std::cout<<"Cangothru...\n";
                 availablenodes.push_front(PosNode{
                                           npos,
                                           &*nextnode, nextnode->cost+1});
             }
-            //std::cout<<"Dn.\n";
+
         }
 
-        //std::cout<<"Done iterating.\n\n";
     }
-    //std::cout<<"Done.\n\n";
 
-    for (PosNode *p = nodes.begin()->prev; p->prev != nullptr; p = p->prev) {
+    for (PosNode *p = &*nodes.begin(); p->prev != nullptr; p = p->prev) {
         path.push_front(p->pos);
     }
-    //std::cout<<"Donedone.\n\n";
 }

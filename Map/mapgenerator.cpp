@@ -69,7 +69,7 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     }
 }
 
-#define MAXMOBS 100
+#define MAXMOBS 15
 
 void MapGenerator::populateMap(Map* map) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs

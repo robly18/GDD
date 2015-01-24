@@ -24,11 +24,36 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
     }
 }
 
-void TestAi::update(Mob* mob) {
-    engine.map->pathfinder->computePath(mob->getPos(), engine.map->player->getPos(), path);
+#define MOBSIGHTRANGE 3
 
-    if (path.size())
-    if (engine.map->canMoveTo(path.front())) {
-        mob->setPos(path.front());
+void TestAi::update(Mob* mob) {
+    Pos mobpos = mob->getPos();
+    if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
+                                           engine.map->player->x,
+                                           engine.map->player->y,
+                                           MOBSIGHTRANGE)) {
+        seekingPos = engine.map->player->getPos();
+        path.clear();
+        engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
+        sawPlayer = true;
+    }
+
+    if (path.size()) { //If we have places to go, go there
+        if (engine.map->canMoveTo(path.front())) {
+            mob->setPos(path.front());
+            path.pop_front();
+        }
+    } else { //If not, wander randomly
+        Pos movingTo = mob->getPos();
+
+        int randomNum = std::rand();
+        movingTo = addPos(movingTo, (randomNum & 1) ? Pos {0, (randomNum & 2) - 1} :
+                                                        Pos {(randomNum & 2) - 1, 0});
+
+        if (engine.map->canMoveTo(movingTo)) {
+            mob->setPos(movingTo);
+        }
+
+        sawPlayer = false;
     }
 }
