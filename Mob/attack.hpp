@@ -24,6 +24,9 @@ public:
     bool                physical;
 
     virtual bool        target(Mob*, int, int) const = 0;
+    bool                target(Mob* mob, const Pos p) const
+                                {return target(mob,p.x,p.y);}
+
     virtual bool        hit(Mob*, Mob*) const = 0;
 
     bool                select(Player*);

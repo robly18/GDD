@@ -28,3 +28,8 @@ Add map scrolling?
 
 //Who cares about the todo list you chump
 
+//woah this is like so old holy crap
+//but yeah past me is right nobody cares about the todo list
+//its all done now anyway
+//well not all but
+//you get the point

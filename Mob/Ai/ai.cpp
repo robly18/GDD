@@ -26,7 +26,7 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
 
 #define MOBSIGHTRANGE 3
 
-void TestAi::update(Mob* mob) {
+void BasicAi::update(Mob* mob) {
     Pos mobpos = mob->getPos();
     if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
                                            engine.map->player->x,
@@ -42,13 +42,15 @@ void TestAi::update(Mob* mob) {
         if (engine.map->canMoveTo(path.front())) {
             mob->setPos(path.front());
             path.pop_front();
+        } else if (posEq(path.front(), engine.map->player->getPos())) {
+            mob->attack->target(mob, path.front());
         }
     } else { //If not, wander randomly
         Pos movingTo = mob->getPos();
 
         int randomNum = std::rand();
-        movingTo = addPos(movingTo, (randomNum & 1) ? Pos {0, (randomNum & 2) - 1} :
-                                                        Pos {(randomNum & 2) - 1, 0});
+        movingTo = addPos(movingTo, (randomNum&1) ? Pos {0, (randomNum & 2) - 1} :
+                                                    Pos {(randomNum & 2) - 1, 0});
 
         if (engine.map->canMoveTo(movingTo)) {
             mob->setPos(movingTo);

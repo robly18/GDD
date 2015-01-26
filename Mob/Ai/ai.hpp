@@ -21,7 +21,7 @@ protected:
     void tryMoving(Mob*, int, int);
 };
 
-class TestAi : public Ai {
+class BasicAi : public Ai {
 public:
     void            update(Mob*);
 protected:
