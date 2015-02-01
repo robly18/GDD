@@ -44,6 +44,7 @@ int Mob::getSwiftness() {
 Player::Player (int x, int y, SDL_Rect r, SDL_Surface *t, std::string n) :
         Mob(x, y, r, t, n) {
     defaultattack = new TargetedAttack(1, 0, 0, 1);
+    xpholder = new XpHolder;
 }
 
 

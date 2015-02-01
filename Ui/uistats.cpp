@@ -110,6 +110,24 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
 
 /***/
 
+UiXP::UiXP(SDL_Surface* s) :
+    UiPart(s) {
+    holder = engine.map->player->xpholder;
+}
+
+SDL_Surface* UiXP::render(bool clicked, int hx, int hy) {
+    for (XpBar** b = holder->bars; b != holder->bars+10; b++) {
+        (*b)->bar->render(surface);
+    }
+    return surface;
+}
+
+void UiXP::checkClick(int mb, int hx, int hy) {}
+
+void UiXP::checkUnclick(int hx, int hy, int x, int y) {}
+
+/***/
+
 UiInv::UiInv(SDL_Surface* s) :
     UiPart(s) {
     for (int x = 0; x != 3; x++)

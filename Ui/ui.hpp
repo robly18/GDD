@@ -14,6 +14,7 @@ class Actor;
 class UiButtons;
 class UiDashboard;
 class UiInv;
+class UiXP;
 
 class Ui {
 public:
@@ -36,9 +37,10 @@ public:
     };
 
 
-    UiButtons* buttons;
-    UiDashboard* dashboard;
-    UiInv* inv;
+    UiButtons       *buttons;
+    UiDashboard     *dashboard;
+    UiInv           *inv;
+    UiXP            *xp;
 
     int hx = 0, hy = 0; //Mouse clicked position
     bool h = false; //Is mouse clicked?

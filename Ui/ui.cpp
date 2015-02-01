@@ -14,6 +14,8 @@ Ui::Ui() {
     DEBUGMSG("\n\n"<<sizeof(FontStr)<<"\n\n");
     buttons = new UiButtons(barsurface);
 
+    xp = new UiXP(barsurface);
+
     DEBUGMSG("Buttons created\n");
 
     log = new Log(engine.font);
@@ -27,6 +29,7 @@ void Ui::render(SDL_Renderer* renderer) {
 
     if (engine.state != engine.State::INV) {
         dashboard->render(h, hx, hy);
+        xp->render(h, hx, hy);
     } else {
         inv->render(h, hx, hy);
     }
@@ -43,14 +46,20 @@ void Ui::checkClick(bool clicking, int button, int x, int y) {
         h = true; hx = x; hy = y;
         if (engine.state != engine.State::LOG) {
             buttons->checkClick(button, x, y);
-            if (engine.state != engine.State::INV) dashboard->checkClick(button, x, y);
+            if (engine.state != engine.State::INV) {
+                dashboard->checkClick(button, x, y);
+                xp->checkClick(button, x, y);
+            }
             else inv->checkClick(button, x, y);
         }
     } else {
         h = false;
         if (engine.state != engine.State::LOG) {
             buttons->checkUnclick(hx, hy, x, y);
-            if (engine.state != engine.State::INV) dashboard->checkUnclick(hx, hy, x, y);
+            if (engine.state != engine.State::INV) {
+                dashboard->checkUnclick(hx, hy, x, y);
+                xp->checkClick(button, x, y);
+            }
             else inv->checkUnclick(hx, hy, x, y);
         }
         if (log->checkUnclick(hx, hy, x, y)) {

@@ -10,6 +10,7 @@ class Player;
 #include "..\Mob\Ai\ai.hpp"
 #include "..\Mob\attack.hpp"
 #include "..\Mob\Status\status.hpp"
+#include "..\Mob\XP\xp.hpp"
 #include "..\Mob\mob.hpp"
 #include "..\Map\map.hpp"
 #include "engine.hpp"

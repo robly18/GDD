@@ -14,7 +14,7 @@
 
 class NumBar {
 public:
-    NumBar(SDL_Rect, Uint32, Uint32, BmpFont*,
+    NumBar(SDL_Rect, Uint32 fullc, Uint32 emptyc, BmpFont*,
            int maxval, int* valptr, std::string name, bool showval = true);
     SDL_Rect barmax;
 

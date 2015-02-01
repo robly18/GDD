@@ -2,6 +2,7 @@
 #define UISTATS_H
 
 #include "..\Main\main.hpp"
+#include <memory>
 
 
 class UiPart {
@@ -51,6 +52,20 @@ public:
         AOE,
         QUIRKATK
     };
+};
+
+class XpHolder;
+
+class UiXP : public UiPart {
+public:
+    UiXP(SDL_Surface*);
+
+    XpHolder        *holder;
+
+
+    SDL_Surface     *render(bool clicked, int hx, int hy);
+    void            checkClick(int mb, int hx, int hy);
+    void            checkUnclick(int hx, int hy, int x, int y);
 };
 
 typedef struct {

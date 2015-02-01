@@ -43,6 +43,8 @@ public:
 
     Attack          *defaultattack;
 
+    XpHolder        *xpholder;
+
     int             str = 10;
     int             getMaxMp() const;
 };
