@@ -9,8 +9,8 @@ PlayerDestructible::PlayerDestructible(int maxHp, SDL_Rect deadSprite) :
     Destructible(maxHp, deadSprite) {
 }
 
-MobDestructible::MobDestructible(int maxHp, SDL_Rect deadSprite) :
-    Destructible(maxHp, deadSprite) {
+MobDestructible::MobDestructible(int maxHp, SDL_Rect deadSprite, int xp) :
+    Destructible(maxHp, deadSprite), xp(xp) {
 }
 
 int Destructible::damage(int dmg) {
@@ -32,20 +32,6 @@ bool Destructible::heal(int heal) {
     return true;
 }
 
-void Destructible::die(Mob* mob) {
-    mob->a->r = deadSprite;
-    delete mob->ai;
-    mob->ai = NULL;
-    dropItems(mob);
-
-    //engine.map->mobs2.remove(mob);
-    engine.map->mobs1.push_back(mob);
-
-    char buffer [64];
-    sprintf(buffer, "The %s died!", mob->name.c_str());
-    engine.ui->log->addMessage(buffer);
-}
-
 void Destructible::dropItems(Mob* mob) {
     if (!mob->inventory) return;
     if (mob->inventory->itemNo() > 0)
@@ -59,3 +45,27 @@ void PlayerDestructible::die(Mob* mob) {
     mob->ai = NULL;
     engine.state = engine.State::DEAD;
 }
+
+void MobDestructible::die(Mob* mob) {
+    mob->a->r = deadSprite;
+    delete mob->ai;
+    mob->ai = NULL;
+    dropItems(mob);
+
+    engine.map->mobs1.push_back(mob);
+
+    char buffer [64];
+    sprintf(buffer, "The %s died!", mob->name.c_str());
+    engine.ui->log->addMessage(buffer);
+
+    engine.map->player->xpholder->levelUp(xp,
+                                          engine.map->player->weapon->weapontype);
+
+    sprintf(buffer, "The player gained %i XP!", xp);
+    engine.ui->log->addMessage(buffer);
+}
+
+
+
+
+

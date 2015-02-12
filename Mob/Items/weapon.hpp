@@ -5,10 +5,16 @@
 
 class Attack;
 
+enum {
+    WEAPONSWRD = 0,
+    WEAPONSTFF = 1,
+    WEAPONBOW = 2,
+};
+
 class Weapon : public Item {
 public:
-    Weapon(std::string n, int attack, int maxmana) : Item(n), attack(attack),
-                    maxmana(maxmana) {type = Itemtype::WEAPON;
+    Weapon(std::string n, int attack, int maxmana, int w) : Item(n), attack(attack),
+                    maxmana(maxmana), weapontype(w) {type = Itemtype::WEAPON;
                                         size = 8;}
 
     int             attack;
@@ -25,6 +31,8 @@ public:
     int             maxmana = 0;
 
     virtual int     regenMana(int regen) = 0; //todo fix
+
+    int             weapontype;
 };
 
 class Staff : public Weapon {

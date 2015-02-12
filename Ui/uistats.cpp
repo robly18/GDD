@@ -122,7 +122,16 @@ SDL_Surface* UiXP::render(bool clicked, int hx, int hy) {
     return surface;
 }
 
-void UiXP::checkClick(int mb, int hx, int hy) {}
+void UiXP::checkClick(int mb, int hx, int hy) {
+    if (mb == engine.LMB) {
+        for (int i = 0; i != 10; i++) {
+            if (isInRect(holder->bars[i]->bar->barmax, hx, hy)) {
+                holder->setFocus(i);
+                break;
+            }
+        }
+    }
+}
 
 void UiXP::checkUnclick(int hx, int hy, int x, int y) {}
 
@@ -141,14 +150,14 @@ UiInv::UiInv(SDL_Surface* s) :
     for (int y = 0; y != FINVPGSIZE; y++) {
         floorinv[y] = new InvActor {
                             new Actor(engine.texture, SDL_Rect{0,0,1,1},
-                                      SDL_Rect{262, 4 + 16*y, 106, 14}),
+                                      SDL_Rect{261, 4 + 16*y, 108, 14}),
                             new FontStr(engine.font, 8, "Nothing"),
                             NOITEMCOL};
     }
     prevpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
-                         SDL_Rect{262, 132, 52, 14});
+                         SDL_Rect{261, 132, 53, 14});
     nextpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
-                         SDL_Rect{262+52+2, 132, 52, 14});
+                         SDL_Rect{261+53+2, 132, 53, 14});
     SDL_Rect rects [4] = {
             {0,0,10,10},
             {10,10,10,10},

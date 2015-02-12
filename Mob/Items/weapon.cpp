@@ -36,7 +36,7 @@ void Weapon::cancelAttack(Player* user) {
 /**Staff**/
 
 Staff::Staff(std::string n, int attack, int maxmana) :
-    Weapon(n, attack, maxmana) {
+    Weapon(n, attack, maxmana, WEAPONSTFF) {
     color = 0xFFCC88;
     attacks[0] = new TargetedAttack(10, 10, 0, 6, 0, false, true);
     attacks[1] = new TargetedAttack(4, 5, 0, 5, 3, false, true);
@@ -56,7 +56,7 @@ int Staff::regenMana(int regen) {
 /**Sword**/
 
 Sword::Sword(std::string n, int attack, int maxmana) :
-    Weapon(n, attack, maxmana) {
+    Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
     attacks[0] = new TargetedAttack(20, 15, 0, 1);
     attacks[1] = new TargetedAttack(15, 10, 0, 0, 3, true, false);
@@ -81,7 +81,7 @@ int Sword::regenMana(int regen) {
 /**Bow**/
 
 Bow::Bow(std::string n, int attack, int maxmana) :
-    Weapon(n, attack, maxmana) {
+    Weapon(n, attack, maxmana, WEAPONBOW) {
     color = 0x12DD12;
     attacks[0] = new TargetedAttack(2, 3, 3, 10, 0, false, false);
     attacks[0]->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});

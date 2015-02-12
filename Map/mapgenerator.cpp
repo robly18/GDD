@@ -94,7 +94,7 @@ void MapGenerator::populateMap(Map* map) {
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
                          SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");
         m->ai = new BasicAi();
-        m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16});
+        m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16}, 6);
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("Potfin", 30));

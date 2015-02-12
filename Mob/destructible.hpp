@@ -22,7 +22,7 @@ public:
     inline bool         isDead() {return hp <= 0;}
     const SDL_Rect      deadSprite;
 
-    virtual void        die(Mob*);
+    virtual void        die(Mob*) = 0;
 
     int                 damage(int);
     bool                heal(int);
@@ -39,7 +39,10 @@ public:
 
 class MobDestructible : public Destructible {
 public:
-    MobDestructible(int, SDL_Rect);
+    int             xp;
+    void            die(Mob*);
+
+    MobDestructible(int hp, SDL_Rect, int xp);
 };
 
 #endif
