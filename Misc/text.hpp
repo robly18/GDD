@@ -31,7 +31,7 @@ public:
     FontStr(const BmpFont*, int maxlen, std::string);
     ~FontStr();
 
-    void render(SDL_Surface*, SDL_Surface*, int x, int y);
+    void render(SDL_Surface* targetsurface , SDL_Surface* texture, int x, int y);
     void setText(const BmpFont *font, std::string);
 };
 

@@ -2,6 +2,8 @@
 #define XP_H
 
 #include "..\..\Main\main.hpp"
+#include <memory>
+#include <string>
 
 #define BARCOLF 0x22DDDD
 #define BARCOLE 0x22AAAA
@@ -12,23 +14,27 @@ class NumBar;
 
 class XpBar {
 public:
-    XpBar(SDL_Rect, std::string, int);
+    XpBar(SDL_Rect pos, std::string name, int max, int namelen);
 
-    NumBar          *bar;
-    void            focus(bool);
-    bool            isFocus();
+    NumBar                      *bar;
+    void                        focus(bool);
+    bool                        isFocus();
 
-    void            addXp(int);
+    void                        addXp(int);
 
-    std::string     name;
+    std::string                 name;
+    std::unique_ptr<FontStr>    screenname;
 
-    int             xpval = 0;
-    int             maxxp;
+    int                         xpval = 0;
+    int                         maxxp;
 
-    int             lvl = 0;
+    int                         lvl = 0;
+
+    void                        render(SDL_Surface*);
 
 private:
-    bool            f;
+    bool                        f;
+    Pos                         numpos;
 };
 
 /*Xp bars for:

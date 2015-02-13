@@ -27,10 +27,10 @@ FontStr::~FontStr() {
     free(chars);
 }
 
-void FontStr::render(SDL_Surface* targetsurface, SDL_Surface* surface, int x, int y) {
+void FontStr::render(SDL_Surface* targetsurface, SDL_Surface* texture, int x, int y) {
     SDL_Rect p = {x,y, 8, 8};
     for (const SDL_Rect** r = chars; *r != NULL; r++) {
-        SDL_BlitSurface(surface, *r, targetsurface, &p);
+        SDL_BlitSurface(texture, *r, targetsurface, &p);
         p.x += 8;
     }
 }

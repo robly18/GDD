@@ -117,7 +117,7 @@ UiXP::UiXP(SDL_Surface* s) :
 
 SDL_Surface* UiXP::render(bool clicked, int hx, int hy) {
     for (XpBar** b = holder->bars; b != holder->bars+10; b++) {
-        (*b)->bar->render(surface);
+        (*b) ->render(surface);
     }
     return surface;
 }

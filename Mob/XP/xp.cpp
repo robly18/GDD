@@ -1,9 +1,12 @@
 #include "xp.hpp"
 
-XpBar::XpBar(SDL_Rect r, std::string name, int startmaxval) :
-    name(name), maxxp(startmaxval) {
+XpBar::XpBar(SDL_Rect r, std::string name, int startmaxval, int namelen) :
+    name(name), screenname(new FontStr(engine.font, 4, "0")),
+    maxxp(startmaxval) {
     bar = new NumBar(r, BARCOLF, BARCOLE, engine.font,
-                     maxxp, &xpval, name, false);
+                     maxxp, &xpval, name+":", false);
+    numpos.x = r.x + 2 + 8*namelen;
+    numpos.y = r.y + (r.h-8)/2;
 }
 
 void XpBar::focus(bool foc) {
@@ -29,6 +32,10 @@ void XpBar::addXp(int xp) {
         xpval-=maxxp;
 
         char buffer[64];
+
+        sprintf(buffer, "%i", lvl);
+        screenname->setText(engine.font, std::string(buffer));
+
         sprintf(buffer, "Player leveled up %s to lvl %i!", name.c_str(), lvl);
         engine.ui->log->addMessage(buffer);
 
@@ -36,6 +43,13 @@ void XpBar::addXp(int xp) {
         bar->maxval = maxxp;
     }
 
+}
+
+void XpBar::render(SDL_Surface* surface) {
+    bar->render(surface);
+    bar->renderName(surface);
+
+    screenname->render(surface, engine.font->font, numpos.x, numpos.y);
 }
 
 /**/
@@ -46,16 +60,16 @@ XpHolder::XpHolder() {
         "STR", "STMN", "SPD", "SGHT", "ACCY"};
 
     for (int i = 0; i != 3; i++) {
-        bars[i] = new XpBar(SDL_Rect{261, 4+16*i, 108, 14}, names[i], 10);
+        bars[i] = new XpBar(SDL_Rect{261, 4+16*i, 108, 14}, names[i], 10, 5);
     }
 
-    bars[3] = new XpBar(SDL_Rect{261, 4+16*3, 108/2-1, 14}, names[3], 10);
+    bars[3] = new XpBar(SDL_Rect{261, 4+16*3, 108/2-1, 14}, names[3], 10, 4);
     bars[3]->focus(true);
 
-    bars[4] = new XpBar(SDL_Rect{261+108/2+1, 4+16*3, 108/2-1, 14}, names[4], 10);
+    bars[4] = new XpBar(SDL_Rect{261+108/2+1, 4+16*3, 108/2-1, 14}, names[4], 10, 4);
 
     for (int i = 5; i != 10; i++) {
-        bars[i] = new XpBar(SDL_Rect{261, 4+16*(i-1), 108, 14}, names[i], 10);
+        bars[i] = new XpBar(SDL_Rect{261, 4+16*(i-1), 108, 14}, names[i], 10, 5);
     }
 }
 
