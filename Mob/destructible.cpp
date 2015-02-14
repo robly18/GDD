@@ -59,7 +59,8 @@ void MobDestructible::die(Mob* mob) {
     engine.ui->log->addMessage(buffer);
 
     engine.map->player->xpholder->levelUp(xp,
-                                          engine.map->player->weapon->weapontype);
+                                          engine.map->player->weapon ?
+                                            engine.map->player->weapon->weapontype : -1);
 
     sprintf(buffer, "The player gained %i XP!", xp);
     engine.ui->log->addMessage(buffer);

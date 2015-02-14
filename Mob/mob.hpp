@@ -7,6 +7,10 @@
 
 #define POSRECT(x, y) (SDL_Rect{x*16,y*16,16,16})
 
+
+#define STARTSTR 10
+#define STARTSTMN 10
+
 class Ai;
 class Destructible;
 class Attack;
@@ -45,8 +49,11 @@ public:
 
     XpHolder        *xpholder;
 
-    int             str = 10;
+    int             str = STARTSTR;
+    int             stmn = STARTSTMN;
     int             getMaxMp() const;
+
+    void            levelUp(int type);
 };
 
 #endif

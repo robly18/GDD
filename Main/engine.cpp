@@ -119,6 +119,17 @@ void Engine::checkEvents() {
                     case SDLK_m:
                         state = State::MAP;
                         break;
+                    //debugging controls:
+                    {
+                    static int debug_xp = 1;
+                    case SDLK_p:
+                        map->player->xpholder->levelUp(debug_xp, -1);
+                        break;
+                    case SDLK_o:
+                        std::cin>>debug_xp;
+                        break;
+                    }
+
                     default:
                         break;
                     }
@@ -129,6 +140,7 @@ void Engine::checkEvents() {
                     case SDLK_LEFT: map->camerax--; break;
                     case SDLK_RIGHT: map->camerax++; break;
                     case SDLK_SPACE: lastkey = e.key; state = State::MOVED; break;
+
                     default: break;
                     }
                 }

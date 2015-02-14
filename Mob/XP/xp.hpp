@@ -14,16 +14,17 @@ class NumBar;
 
 class XpBar {
 public:
-    XpBar(SDL_Rect pos, std::string name, int max, int namelen);
+    XpBar(SDL_Rect pos, std::string name, int type, int max, int namelen);
 
-    NumBar                      *bar;
+    std::unique_ptr<NumBar>     bar;
     void                        focus(bool);
     bool                        isFocus();
 
-    void                        addXp(int);
+    int                         addXp(int);
 
     std::string                 name;
     std::unique_ptr<FontStr>    screenname;
+    int                         type;
 
     int                         xpval = 0;
     int                         maxxp;

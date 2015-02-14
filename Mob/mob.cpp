@@ -27,16 +27,10 @@ void Mob::move(int mx, int my) {
 }
 
 int Mob::getSwiftness() {
-    DEBUGMSG("___");
     if (!ai) return 0;
-    DEBUGMSG("---");
     if (destructible && destructible->armor) {
-        DEBUGMSG("wuh");
-        DEBUGMSG(ai->swiftness);
-        DEBUGMSG(destructible->armor->swiftness);
         return ai->swiftness + destructible->armor->swiftness;
     } else {
-        DEBUGMSG("wat");
         return ai->swiftness;
     }
 }
@@ -49,5 +43,17 @@ Player::Player (int x, int y, SDL_Rect r, SDL_Surface *t, std::string n) :
 
 
 int Player::getMaxMp() const {
-    return str * (weapon ? weapon->maxmana : 0);
+    return stmn * (weapon ? weapon->maxmana : 0);
+}
+
+void Player::levelUp(int type) {
+    switch (type) {
+    case XpHolder::STR:
+        str = str*5/4;
+        break;
+    case XpHolder::STMN:
+        stmn = stmn*5/4;
+        engine.ui->buttons->mpbar->maxval = getMaxMp();
+        break;
+    }
 }

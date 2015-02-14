@@ -5,8 +5,6 @@ FovComputer::FovComputer(int w, int h) :
     tiledata = new bool[w*h];
 }
 
-#define PT(x, y) x<<", "<<y
-
 bool FovComputer::isInSight(int x1, int y1, int x2, int y2, int range) {
     if (y1 > y2) { //Now we know 1 is now lower than 2
         std::swap(x1, x2);
@@ -38,11 +36,9 @@ bool FovComputer::isInSight(int x1, int y1, int x2, int y2, int range) {
     if (slope < -1 || slope > 1) y++;
     else x += xdir;
 
-    //std::cout<<"\n\nNew points: "<<PT(dx, dy)<<"\n";
 
     while (x != x2 || y != y2) {
         int newdy = y-y1, newdx = x-x1;
-        //std::cout<<PT(newdx, newdy)<<"\n";
 
         if (tiledata[x+y*w]) {
             return false;

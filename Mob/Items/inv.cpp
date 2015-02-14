@@ -3,7 +3,6 @@
 bool PlayerInventory::addItem(Item* i) {
     if (filled != 0) {
         if (30 - filled + 1 <= i->size) {
-            std::cout<<"bluh";
             return false;
         }
     }
