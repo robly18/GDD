@@ -74,7 +74,7 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
     static char buffer [255];
 
     if (damage) {
-        int dmg = target->destructible->damage(damage);
+        int dmg = target->destructible->damage(damage + damage * src->atk /10);
 
         sprintf(buffer, "%s hit %s for %i dmg %s %i hp",
                 src->name.c_str(),

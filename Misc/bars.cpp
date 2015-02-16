@@ -24,6 +24,6 @@ void NumBar::renderName(SDL_Surface* surface) {
 }
 
 void NumBar::getNumInfo(char* str) {
-    sprintf(str, showval ? "%s: %i/%i" : "%s", name.c_str(),
+    sprintf(str, showval ? "%s:%i/%i" : "%s", name.c_str(),
             valptr ? (*valptr) : 0, maxval);
 }

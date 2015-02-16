@@ -48,12 +48,26 @@ int Player::getMaxMp() const {
 
 void Player::levelUp(int type) {
     switch (type) {
+    case XpHolder::ATK:
+        atk += 1;
+        break;
+    case XpHolder::DEF:
+        destructible->maxHp += 5;
+        destructible->heal(5);
+        engine.ui->buttons->hpbar->maxval = destructible->maxHp;
+        break;
     case XpHolder::STR:
-        str = str*5/4;
+        str = str + 1;
         break;
     case XpHolder::STMN:
-        stmn = stmn*5/4;
+        stmn = stmn + 1;
         engine.ui->buttons->mpbar->maxval = getMaxMp();
+        break;
+    case XpHolder::SGHT:
+        if (xpholder->bars[type]->lvl % 14 == 0) {
+            sght++; //Only up sight once every 14 levels
+            engine.map->updateFovData();
+        }
         break;
     }
 }

@@ -1,6 +1,6 @@
 #include "mapgenerator.hpp"
 
-#define BLANKMAPNOT
+//#define BLANKMAP
 
 void MapGenerator::generateMap(Map* map) {
     makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, false, map->tiles);
@@ -93,7 +93,7 @@ void MapGenerator::populateMap(Map* map) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
                          SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");
-        m->ai = new BasicAi();
+        m->ai = new BasicAi(120);
         m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16}, 6);
         m->attack = a;
         m->inventory = new MobInventory;

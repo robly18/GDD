@@ -9,13 +9,18 @@ class Ai {
 public:
     virtual void update(Mob*) = 0;
 
+    Ai(int s, int o);
+
     virtual ~Ai() {}
 
-    int swiftness = 100;
+    unsigned int swiftness;
+    unsigned int timeoffset;
 };
 
 class PlayerAi : public Ai {
 public:
+    PlayerAi();
+
     void update(Mob*);
 protected:
     void tryMoving(Mob*, int, int);
@@ -23,6 +28,8 @@ protected:
 
 class BasicAi : public Ai {
 public:
+    BasicAi(int swiftness);
+
     void            update(Mob*);
 protected:
     Pos             seekingPos;

@@ -27,12 +27,13 @@ bool Map::canMoveTo(Pos p) {
 }
 
 void Map::updateFovData() {
-    for (int x = -LOSRANGE-1; x != LOSRANGE+2; x++)
-    for (int y = -LOSRANGE-1; y != LOSRANGE+2; y++) {
+    int losrange = player->sght;
+    for (int x = -losrange-1; x != losrange+2; x++)
+    for (int y = -losrange-1; y != losrange+2; y++) {
         int cx = player->x + x;
         int cy = player->y + y;
         if (INBOUNDS(cx, cy)) {
-            tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y, LOSRANGE);
+            tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y, losrange);
             if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
         }
     }
@@ -183,10 +184,10 @@ void Map::generateMap() {
     generator->populateMap(this);
     DEBUGMSG("Done.\n");
 
-    //player->inventory->addItem(new Armor("TestArmr", 8, -80));
+    player->inventory->addItem(new Armor("TestArmr", 8, -80));
     player->inventory->addItem(new Staff("Tststaff", 10, 10));
     player->inventory->addItem(new Sword("SORD....", 10, 3));
-    player->inventory->addItem(new Bow("BowB4Me", 10, 7));
+    //player->inventory->addItem(new Bow("BowB4Me", 10, 7));
 
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {

@@ -10,6 +10,8 @@
 
 #define STARTSTR 10
 #define STARTSTMN 10
+#define STARTATK 10
+#define STARTSGHT 3
 
 class Ai;
 class Destructible;
@@ -27,6 +29,10 @@ public:
     Destructible    *destructible = NULL;
     Attack          *attack = NULL;
     Inventory       *inventory = NULL;
+
+
+    int             atk = STARTATK;
+    int             sght = STARTSGHT;
 
     Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
     void            setPos(int, int);
@@ -49,6 +55,7 @@ public:
 
     XpHolder        *xpholder;
 
+    int             weplvls[3] = {STARTATK, STARTATK, STARTATK};
     int             str = STARTSTR;
     int             stmn = STARTSTMN;
     int             getMaxMp() const;

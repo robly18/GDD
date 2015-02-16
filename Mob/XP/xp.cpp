@@ -35,26 +35,29 @@ int XpBar::addXp(int xp) {
 
 
     while (xpval >= maxxp) {
-        lvl++;
-        xpval-=maxxp;
+        if (lvl < 99) {
+            lvl++;
+            xpval-=maxxp;
 
-        maxxp += maxxp / 20 + 5;
-        bar->maxval = maxxp;
+            maxxp += maxxp / 20 + 5;
+            bar->maxval = maxxp;
 
 
 
-        char buffer[64];
+            char buffer[64];
 
-        sprintf(buffer, "%i", lvl);
-        screenname->setText(engine.font, std::string(buffer));
+            sprintf(buffer, "%i", lvl);
+            screenname->setText(engine.font, std::string(buffer));
 
-        sprintf(buffer, "Player leveled up %s to lvl %i!", name.c_str(), lvl);
-        engine.ui->log->addMessage(buffer);
+            sprintf(buffer, "Player leveled up %s to lvl %i!", name.c_str(), lvl);
+            engine.ui->log->addMessage(buffer);
 
-        engine.map->player->levelUp(type);
+            engine.map->player->levelUp(type);
+        } else {
+            xpval = maxxp;
+            break;
+        }
     }
-
-    std::cout<<name<<": "<<xpval<<"; "<<(float)xpval/maxxp<<"\n";
 
     return lvl - oldlvl;
 }

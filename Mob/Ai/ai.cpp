@@ -1,5 +1,11 @@
 #include "ai.hpp"
 
+Ai::Ai(int s, int offset) :
+    swiftness(s), timeoffset(offset) {}
+
+PlayerAi::PlayerAi() :
+    Ai(100, 0) {}
+
 void PlayerAi::update(Mob* mob) {
     if (engine.state == engine.State::MOVED) {
         switch (engine.lastkey.keysym.sym) {
@@ -24,14 +30,17 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
     }
 }
 
-#define MOBSIGHTRANGE 3
+
+
+BasicAi::BasicAi(int s) :
+    Ai(s, std::rand() % s) {}
 
 void BasicAi::update(Mob* mob) {
     Pos mobpos = mob->getPos();
     if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
                                            engine.map->player->x,
                                            engine.map->player->y,
-                                           MOBSIGHTRANGE)) {
+                                           mob->sght)) {
         seekingPos = engine.map->player->getPos();
         path.clear();
         engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
