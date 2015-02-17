@@ -42,7 +42,9 @@ public:
     void            checkClick(int mb, int hx, int hy);
     void            checkUnclick(int hx, int hy, int x, int y);
 
-    Actor           *atkbuttons [6];
+    FontStr         *atknames[6];
+    SDL_Rect        atkicons[6];
+    Actor           *atkbuttons[6];
 
     enum class AtkButtons {
         BLOCK,
@@ -52,6 +54,8 @@ public:
         AOE,
         QUIRKATK
     };
+
+    void            refreshButtons();
 };
 
 class XpHolder;

@@ -34,7 +34,7 @@ public:
     void                        render(SDL_Surface*);
 
 private:
-    bool                        f;
+    bool                        f = false;
     Pos                         numpos;
 };
 

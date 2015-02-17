@@ -58,11 +58,12 @@ int Staff::regenMana(int regen) {
 Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
-    attacks[0] = new TargetedAttack(20, 15, 0, 1);
-    attacks[1] = new TargetedAttack(15, 10, 0, 0, 0, 0, 3, true, false);
-    defenses[0] = new SelfBuff(10, new SideEffectBuff("Block", 5, SideEffect::BLOCK,
-                                                      0, 30));
-    defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
+    attacks[0] = (new TargetedAttack(20, 15, 0, 1))->setName("HIT")->setIcon(SDL_Rect{16,0,8,8});
+    attacks[1] = (new TargetedAttack(15, 10, 0, 0, 0, 0, 3, true, false))
+                    ->setName("SPIN");
+    defenses[0] = (new SelfBuff(10, new SideEffectBuff("Block", 5, SideEffect::BLOCK,
+                                                      0, 30)))->setName("BLOCK");
+    defenses[1] = (new SelfBuff(20, new FixedHpRegen(5, "Regen", 3)))->setName("REGEN");
 }
 
 int Sword::regenMana(int regen) {
@@ -89,7 +90,7 @@ Bow::Bow(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     defenses[0] = new SelfBuff(35, new CounterDebuffBuff("IceSkin", 5,
                                         std::shared_ptr<Status>(new Frozen("Freeze", 5)),
                                         0, 0));
-    defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
+    defenses[1] = new SelfBuff(40, new FixedHpRegen(1, "Regen", 20));
 }
 
 int Bow::regenMana(int regen) {

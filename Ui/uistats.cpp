@@ -66,12 +66,19 @@ UiDashboard::UiDashboard(SDL_Surface* s) :
     for (int y = 0; y != 2; y++) {
         atkbuttons[x+3*y] = new Actor(engine.texture, SDL_Rect{0,0,1,1},
                                       SDL_Rect{101+68*x, 164+12*y, 67, 10});
+        atknames[x+3*y] = new FontStr(engine.font, 7, "");
     }
 }
 
 SDL_Surface* UiDashboard::render(bool clicked, int hx, int hy) {
-    for (Actor** a = atkbuttons; a != atkbuttons+6; a++) {
-        SDL_FillRect(surface, &(*a)->p, clicked && isInRect((*a)->p, hx, hy) ? 0x885512 : 0xDDAA22);
+    for (int i = 0; i != 6; i++) {
+        SDL_Rect p = atkbuttons[i]->p;
+        SDL_Rect iconp = {p.x + 1, p.y + 1, 8, 8};
+
+        SDL_FillRect(surface, &p,
+                     clicked && isInRect(p, hx, hy) ? 0x885512 : 0xDDAA22);
+        atknames[i]->render(surface, engine.font->font, p.x+1+8+1, p.y+1);
+        SDL_BlitSurface(engine.texture, atkicons+i, surface, &iconp);
     }
     return surface;
 }
@@ -104,6 +111,19 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
                     break;
             }
             return;
+        }
+    }
+}
+
+
+void UiDashboard::refreshButtons() {
+    if (engine.map->player->weapon) {
+        for (int x = 0; x != 3; x++) {
+            if (x==2) break; //Because I ain't added 3rd atk or def yet
+            atknames[x]->setText(engine.font, engine.map->player->weapon->defenses[x]->name);
+            atkicons[x] = engine.map->player->weapon->defenses[x]->icon;
+            atknames[x+3]->setText(engine.font, engine.map->player->weapon->attacks[x]->name);
+            atkicons[x+3] = engine.map->player->weapon->attacks[x]->icon;
         }
     }
 }
@@ -269,6 +289,7 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
             if (selecteditem->use(engine.map->player)) {
                 engine.map->player->inventory->removeItem(selecteditem);
                 engine.state = engine.State::USED;
+                engine.ui->dashboard->refreshButtons();
             }
         }
         selecteditem = NULL;
@@ -283,9 +304,12 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
                             engine.map->player->destructible->armor = NULL;
                     break;
                 case (int) Itemtype::WEAPON:
-                    if (engine.map->player->weapon)
-                        if (engine.map->player->weapon->unequip(engine.map->player))
+                    if (engine.map->player->weapon) {
+                        if (engine.map->player->weapon->unequip(engine.map->player)) {
                             engine.map->player->weapon = NULL;
+                            engine.ui->dashboard->refreshButtons();
+                        }
+                    }
                     break;
                 default: break;
                 }

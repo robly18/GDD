@@ -22,6 +22,12 @@ public:
         minAccy(minAccy), maxAccy(maxAccy) {};
     virtual             ~Attack() {};
 
+    std::string         name = "";
+    Attack* setName(std::string n) {name = n; return this;}
+
+    SDL_Rect            icon = {0, 0, 0, 0};
+    Attack* setIcon(SDL_Rect i) {icon = i; return this;}
+
     int                 cost;
     bool                physical;
 
