@@ -63,11 +63,19 @@ void Player::levelUp(int type) {
         stmn = stmn + 1;
         engine.ui->buttons->mpbar->maxval = getMaxMp();
         break;
+    case XpHolder::SPD:
+        ai->swiftness--;
+        if (xpholder->bars[type]->lvl == 99) ai->swiftness--;
+        //If you reach the top level, bonus buff to round it to 50 instead of 51
+        break;
     case XpHolder::SGHT:
         if (xpholder->bars[type]->lvl % 14 == 0) {
             sght++; //Only up sight once every 14 levels
             engine.map->updateFovData();
         }
+        break;
+    case XpHolder::ACCY:
+        accy++;
         break;
     }
 }

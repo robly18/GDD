@@ -17,11 +17,16 @@ struct StatusChance {
 
 class Attack {
 public:
-    Attack(int cost, bool physical) : cost(cost), physical(physical) {};
+    Attack(int cost, bool physical, int minAccy = 0, int maxAccy = 0) :
+        cost(cost), physical(physical),
+        minAccy(minAccy), maxAccy(maxAccy) {};
     virtual             ~Attack() {};
 
     int                 cost;
     bool                physical;
+
+    int                 minAccy;
+    int                 maxAccy;
 
     virtual bool        target(Mob*, int, int) const = 0;
     bool                target(Mob* mob, const Pos p) const
@@ -32,7 +37,7 @@ public:
     bool                select(Player*);
     bool                applyChances(Mob*, char*, const char*, const char*) const;
 
-    virtual bool        isInRange(int, int, int, int) const = 0;
+    virtual bool        isInRange(int, int, int, int, int) const = 0;
     virtual bool        isHit(Mob*, int, int, int, int) const = 0;
 
     virtual Uint32      highlightColor(Mob*, int mobx, int moby,
@@ -45,9 +50,9 @@ public:
 class TargetedAttack : public Attack {
 public:
     TargetedAttack(int damage, int cost,
-              int minrange, int maxrange,
+              int minrange, int maxrange, int minAccy = 0, int maxAccy = 0,
               int radius = 0, bool physical = true, bool hurtself = false) :
-        Attack(cost, physical), damage(damage), minrange(minrange), maxrange(maxrange),
+        Attack(cost, physical, minAccy, maxAccy), damage(damage), minrange(minrange), maxrange(maxrange),
         radius(radius), hurtself(hurtself) {}
 
     int                 damage;
@@ -57,7 +62,7 @@ public:
     int                 radius;
     bool                hurtself;
 
-    bool                isInRange(int, int, int, int) const;
+    bool                isInRange(int, int, int, int, int) const;
     bool                isHit(Mob*, int, int, int, int) const;
 
     bool                target(Mob*, int, int) const;
@@ -82,7 +87,7 @@ public:
     bool                target(Mob*, int, int) const;
     bool                hit(Mob*, Mob*) const;
 
-    bool                isInRange(int, int, int, int) const;
+    bool                isInRange(int, int, int, int, int) const;
     bool                isHit(Mob*, int, int, int, int) const;
 
     Uint32              highlightColor(Mob*, int mobx, int moby,

@@ -11,6 +11,7 @@
 #define STARTSTR 10
 #define STARTSTMN 10
 #define STARTATK 10
+#define STARTACCY 1
 #define STARTSGHT 3
 
 class Ai;
@@ -33,6 +34,7 @@ public:
 
     int             atk = STARTATK;
     int             sght = STARTSGHT;
+    int             accy = STARTACCY;
 
     Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
     void            setPos(int, int);
@@ -58,6 +60,7 @@ public:
     int             weplvls[3] = {STARTATK, STARTATK, STARTATK};
     int             str = STARTSTR;
     int             stmn = STARTSTMN;
+
     int             getMaxMp() const;
 
     void            levelUp(int type);

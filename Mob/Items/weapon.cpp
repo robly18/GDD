@@ -35,11 +35,11 @@ void Weapon::cancelAttack(Player* user) {
 
 /**Staff**/
 
-Staff::Staff(std::string n, int attack, int maxmana) :
+Staff::Staff(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     Weapon(n, attack, maxmana, WEAPONSTFF) {
     color = 0xFFCC88;
-    attacks[0] = new TargetedAttack(10, 10, 0, 6, 0, false, true);
-    attacks[1] = new TargetedAttack(4, 5, 0, 5, 3, false, true);
+    attacks[0] = new TargetedAttack(10, 10, 0, 6, minaccy, maxaccy, 0, false, true);
+    attacks[1] = new TargetedAttack(4, 5, 0, 5, minaccy, maxaccy, 3, false, true);
     defenses[0] = new SelfBuff(10, new SideEffectBuff("Thorn", 5, SideEffect::THORN,
                                                       14, 32));
     defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
@@ -59,7 +59,7 @@ Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
     attacks[0] = new TargetedAttack(20, 15, 0, 1);
-    attacks[1] = new TargetedAttack(15, 10, 0, 0, 3, true, false);
+    attacks[1] = new TargetedAttack(15, 10, 0, 0, 0, 0, 3, true, false);
     defenses[0] = new SelfBuff(10, new SideEffectBuff("Block", 5, SideEffect::BLOCK,
                                                       0, 30));
     defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
@@ -80,12 +80,12 @@ int Sword::regenMana(int regen) {
 
 /**Bow**/
 
-Bow::Bow(std::string n, int attack, int maxmana) :
+Bow::Bow(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     Weapon(n, attack, maxmana, WEAPONBOW) {
     color = 0x12DD12;
-    attacks[0] = new TargetedAttack(2, 3, 3, 10, 0, false, false);
+    attacks[0] = new TargetedAttack(2, 3, 3, 10, minaccy, maxaccy, 0, false, false);
     attacks[0]->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
-    attacks[1] = new TargetedAttack(15, 10, 3, 9, 2, false, true);
+    attacks[1] = new TargetedAttack(15, 10, 3, 9, minaccy, maxaccy, 2, false, true);
     defenses[0] = new SelfBuff(35, new CounterDebuffBuff("IceSkin", 5,
                                         std::shared_ptr<Status>(new Frozen("Freeze", 5)),
                                         0, 0));

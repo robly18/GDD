@@ -184,10 +184,10 @@ void Map::generateMap() {
     generator->populateMap(this);
     DEBUGMSG("Done.\n");
 
-    player->inventory->addItem(new Armor("TestArmr", 8, -80));
-    player->inventory->addItem(new Staff("Tststaff", 10, 10));
+    //player->inventory->addItem(new Armor("TestArmr", 8, -80));
+    player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
     player->inventory->addItem(new Sword("SORD....", 10, 3));
-    //player->inventory->addItem(new Bow("BowB4Me", 10, 7));
+    player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
@@ -202,7 +202,7 @@ void Map::generateMap() {
 
 void Map::makePlayer() {
     if (!player ) {
-        player = new Player(5,5,SDL_Rect{0, 0, 16, 16}, engine.texture,"Player");
+        player = new Player(5,5,SDL_Rect{0, 64, 16, 16}, engine.texture,"Player");
         player->ai = new PlayerAi;
         player->destructible = new PlayerDestructible(50, SDL_Rect{0,8,4,4});
         player->inventory = new PlayerInventory;

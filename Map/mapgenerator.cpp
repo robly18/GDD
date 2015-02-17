@@ -3,9 +3,11 @@
 //#define BLANKMAP
 
 void MapGenerator::generateMap(Map* map) {
-    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, false, map->tiles);
 
-    #ifndef BLANKMAP
+    #ifdef BLANKMAP
+    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, false, map->tiles);
+    #else
+
     makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, true, map->tiles);
 
     int prevx, prevy;
@@ -87,14 +89,14 @@ void MapGenerator::populateMap(Map* map) {
         }
     }
 
-    TargetedAttack* a = new TargetedAttack(10, 0, 0, 10);
+    TargetedAttack* a = new TargetedAttack(10, 0, 0, 10, 0, 0, 0, true, false);
 
     for (int n = 0; n != MAXMOBS; n++) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
-                         SDL_Rect{0, 8, 8, 8}, engine.texture, "Somefin");
+                         SDL_Rect{16, 64, 16, 16}, engine.texture, "Somefin");
         m->ai = new BasicAi(120);
-        m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16}, 6);
+        m->destructible = new MobDestructible(30, SDL_Rect{0, 30, 16, 16}, 6);
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("Potfin", 30));

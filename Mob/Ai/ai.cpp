@@ -4,7 +4,7 @@ Ai::Ai(int s, int offset) :
     swiftness(s), timeoffset(offset) {}
 
 PlayerAi::PlayerAi() :
-    Ai(100, 0) {}
+    Ai(150, 0) {}
 
 void PlayerAi::update(Mob* mob) {
     if (engine.state == engine.State::MOVED) {

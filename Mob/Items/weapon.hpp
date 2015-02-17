@@ -37,7 +37,7 @@ public:
 
 class Staff : public Weapon {
 public:
-    Staff(std::string n, int attack, int maxmana);
+    Staff(std::string n, int attack, int maxmana, int minaccy = 0, int maxaccy = 0);
 
     int regenMana(int regen);
 };
@@ -51,7 +51,7 @@ public:
 
 class Bow : public Weapon {
 public:
-    Bow(std::string n, int attack, int maxmana);
+    Bow(std::string n, int attack, int maxmana, int minaccy = 0, int maxaccy = 0);
 
     int regenMana(int regen);
 };
