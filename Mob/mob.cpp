@@ -49,7 +49,7 @@ int Player::getMaxMp() const {
 void Player::levelUp(int type) {
     switch (type) {
     case XpHolder::ATK:
-        atk += 1;
+        atk++;
         break;
     case XpHolder::DEF:
         destructible->maxHp += 5;

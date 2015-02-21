@@ -89,14 +89,14 @@ void MapGenerator::populateMap(Map* map) {
         }
     }
 
-    TargetedAttack* a = new TargetedAttack(10, 0, 0, 10, 0, 0, 0, true, false);
+    TargetedAttack* a = new TargetedAttack(7, 0, 0, 10, 0, 0, 0, true, false);
 
     for (int n = 0; n != MAXMOBS; n++) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
                          SDL_Rect{16, 64, 16, 16}, engine.texture, "Somefin");
-        m->ai = new BasicAi(120);
-        m->destructible = new MobDestructible(30, SDL_Rect{0, 30, 16, 16}, 6);
+        m->ai = new BasicAi(130);
+        m->destructible = new MobDestructible(20, SDL_Rect{0, 30, 16, 16}, 6);
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("Potfin", 30));

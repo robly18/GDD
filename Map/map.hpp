@@ -29,6 +29,7 @@ struct Tile {
 };
 
 #define INBOUNDS(x, y) (0<=x && x<MAPWIDTH && 0<=y && y<MAPHEIGHT)
+#define POSINBOUNDS(p) INBOUNDS(p.x, p.y)
 
 class Map {
 public:
@@ -40,9 +41,9 @@ public:
                                                                 tiles[x+y*MAPWIDTH].blocking;}
     void                        setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
 
-    bool                        canSeeThrough(int x, int y);
-    bool                        hasBeenSeen(int x, int y);
-    bool                        isBeingSeen(int x, int y);
+    bool                        canSeeThrough(int x, int y) const;
+    bool                        hasBeenSeen(int x, int y) const;
+    bool                        isBeingSeen(int x, int y) const;
 
     FovComputer                 *fovcomputer;
     Pathfinder                  *pathfinder;
@@ -58,7 +59,9 @@ public:
     int                         camerax = 0, cameray = 0;
     void                        resetCamera();
 
-    FloorInventory*             getInvAt(int, int);
+    void                        inspect(Pos) const;
+
+    FloorInventory*             getInvAt(int, int) const;
     FloorInventory*             addInvTo(Inventory*, int, int);
     FloorInventory*             dropItem(Item*, int, int);
 

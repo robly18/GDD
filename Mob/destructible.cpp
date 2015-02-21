@@ -58,6 +58,8 @@ void MobDestructible::die(Mob* mob) {
     sprintf(buffer, "The %s died!", mob->name.c_str());
     engine.ui->log->addMessage(buffer);
 
+    mob->name+="(DEAD)";
+
     engine.map->player->xpholder->levelUp(xp,
                                           engine.map->player->weapon ?
                                             engine.map->player->weapon->weapontype : -1);

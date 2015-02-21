@@ -143,7 +143,7 @@ SDL_Surface* UiXP::render(bool clicked, int hx, int hy) {
 }
 
 void UiXP::checkClick(int mb, int hx, int hy) {
-    if (mb == engine.LMB) {
+    if (mb == SDL_BUTTON_LEFT) {
         for (int i = 0; i != 10; i++) {
             if (isInRect(holder->bars[i]->bar->barmax, hx, hy)) {
                 holder->setFocus(i);

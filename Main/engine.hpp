@@ -57,11 +57,6 @@ public:
 
     SDL_KeyboardEvent lastkey;
 
-    enum Mouse {
-        LMB,
-        RMB,
-        MMB
-    };
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;

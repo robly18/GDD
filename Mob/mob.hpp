@@ -10,7 +10,7 @@
 
 #define STARTSTR 10
 #define STARTSTMN 10
-#define STARTATK 10
+#define STARTATK 20
 #define STARTACCY 1
 #define STARTSGHT 3
 

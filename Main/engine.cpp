@@ -162,25 +162,32 @@ void Engine::checkEvents() {
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (state == State::RUNNING) {
-                if (map->player->attack) {
-                    int atkx = (mx-2)/16, atky = (my-2)/16;
-                    if (0 <= atkx && atkx < 16 && 0 <= atky && atky < 16) {
-                        if (map->player->attack->target(map->player, atkx+map->camerax, atky+map->cameray)) {
-                            state = State::ATTACKED;
-                            if (!map->player->attack->select(map->player))
+                int atkx = (mx-2)/16 + map->camerax;
+                int atky = (my-2)/16 + map->cameray; //The pos of mouse on the map
+
+                if (e.button.button == SDL_BUTTON_LEFT) {
+                    if (map->player->attack) { //todo delegate this mess to map class
+                        if (0 <= atkx-map->camerax && atkx-map->camerax < 16 &&
+                            0 <= atky-map->cameray && atky-map->cameray < 16) {
+                            if (map->player->attack->target(map->player, atkx, atky)) {
+                                state = State::ATTACKED;
+                                if (!map->player->attack->select(map->player))
+                                    map->player->attack = NULL;
+                            } else if (map->player->weapon) {
+                                map->player->weapon->cancelAttack(map->player);
+                            } else {
                                 map->player->attack = NULL;
-                        } else if (map->player->weapon) {
-                            map->player->weapon->cancelAttack(map->player);
-                        } else {
-                            map->player->attack = NULL;
+                            }
                         }
                     }
+                } else if (e.button.button == SDL_BUTTON_RIGHT) {
+                    map->inspect(Pos{atkx, atky});
                 }
             }
-            ui->checkClick(true, Mouse::LMB, mx, my);
+            ui->checkClick(true, e.button.button, mx, my);
             break;
         case SDL_MOUSEBUTTONUP:
-            ui->checkClick(false, Mouse::LMB, mx, my);
+            ui->checkClick(false, e.button.button, mx, my);
             break;
         }
     }

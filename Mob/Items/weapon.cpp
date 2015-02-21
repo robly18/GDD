@@ -58,12 +58,12 @@ int Staff::regenMana(int regen) {
 Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
-    attacks[0] = (new TargetedAttack(20, 15, 0, 1))->setName("HIT")->setIcon(SDL_Rect{16,0,8,8});
-    attacks[1] = (new TargetedAttack(15, 10, 0, 0, 0, 0, 3, true, false))
+    attacks[0] = (new TargetedAttack(5, 15, 0, 1))->setName("HIT")->setIcon(SDL_Rect{16,0,8,8});
+    attacks[1] = (new TargetedAttack(3, 20, 0, 0, 0, 0, 3, true, false))
                     ->setName("SPIN");
-    defenses[0] = (new SelfBuff(10, new SideEffectBuff("Block", 5, SideEffect::BLOCK,
+    defenses[0] = (new SelfBuff(12, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
                                                       0, 30)))->setName("BLOCK");
-    defenses[1] = (new SelfBuff(20, new FixedHpRegen(5, "Regen", 3)))->setName("REGEN");
+    defenses[1] = (new SelfBuff(20, new FixedHpRegen(7, "Regen", 2)))->setName("REGEN");
 }
 
 int Sword::regenMana(int regen) {

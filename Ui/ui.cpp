@@ -43,7 +43,9 @@ void Ui::render(SDL_Renderer* renderer) {
 
 void Ui::checkClick(bool clicking, int button, int x, int y) {
     if (clicking) {
-        h = true; hx = x; hy = y;
+        if (button == SDL_BUTTON_LEFT) {
+            h = true; hx = x; hy = y;
+        }
         if (engine.state != engine.State::LOG) {
             buttons->checkClick(button, x, y);
             if (engine.state != engine.State::INV) {
@@ -52,7 +54,7 @@ void Ui::checkClick(bool clicking, int button, int x, int y) {
             }
             else inv->checkClick(button, x, y);
         }
-    } else {
+    } else if (button == SDL_BUTTON_LEFT) {
         h = false;
         if (engine.state != engine.State::LOG) {
             buttons->checkUnclick(hx, hy, x, y);

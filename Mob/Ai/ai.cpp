@@ -37,15 +37,6 @@ BasicAi::BasicAi(int s) :
 
 void BasicAi::update(Mob* mob) {
     Pos mobpos = mob->getPos();
-    if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
-                                           engine.map->player->x,
-                                           engine.map->player->y,
-                                           mob->sght)) {
-        seekingPos = engine.map->player->getPos();
-        path.clear();
-        engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
-        sawPlayer = true;
-    }
 
     if (path.size()) { //If we have places to go, go there
         if (engine.map->canMoveTo(path.front())) {
@@ -66,5 +57,16 @@ void BasicAi::update(Mob* mob) {
         }
 
         sawPlayer = false;
+    }
+
+    mobpos = mob->getPos();
+    if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
+                                           engine.map->player->x,
+                                           engine.map->player->y,
+                                           mob->sght)) {
+        seekingPos = engine.map->player->getPos();
+        path.clear();
+        engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
+        sawPlayer = true;
     }
 }

@@ -39,24 +39,24 @@ void Map::updateFovData() {
     }
 }
 
-bool Map::hasBeenSeen(int x, int y) {
+bool Map::hasBeenSeen(int x, int y) const {
     if (!INBOUNDS(x, y)) return false;
     return tiles[x+y*MAPWIDTH].hasBeenSeen;
 }
 
-bool Map::isBeingSeen(int x, int y) {
+bool Map::isBeingSeen(int x, int y) const {
     if (!INBOUNDS(x, y)) return false;
     return tiles[x+y*MAPWIDTH].isSeen;
 }
 
-bool Map::canSeeThrough(int x, int y) {
+bool Map::canSeeThrough(int x, int y) const {
     return INBOUNDS(x, y) && tiles[x+y*MAPWIDTH].seeThrough;
 }
 
-FloorInventory* Map::getInvAt(int x, int y) {
-    for (std::list<FloorInventory*>::iterator inv = items.begin(); inv != items.end(); inv++) {
-        if ((*inv)->x == x && (*inv)->y == y) {
-            return *inv;
+FloorInventory* Map::getInvAt(int x, int y) const {
+    for (auto inv : items) {
+        if (inv->x == x && inv->y == y) {
+            return inv;
         }
     }
     return NULL;
@@ -147,9 +147,9 @@ SDL_Rect Map::renderMobActor(Actor* a) {
     return pos;
 }
 
-void Map::resetCamera() {
+void Map::resetCamera() { //wtf was i on when i wrote this code
     camerax = ((player->x - SCREENTILEW/2 + 7) & ~7) - 3;
-    cameray = ((player->y - SCREENTILEH/2 + 7) & ~7) - 3;
+    cameray = ((player->y - SCREENTILEH/2 + 3) & ~3) - 1;
 }
 
 SDL_Surface* Map::mapview() {
@@ -207,5 +207,44 @@ void Map::makePlayer() {
         player->destructible = new PlayerDestructible(50, SDL_Rect{0,8,4,4});
         player->inventory = new PlayerInventory;
         mobs2.push_back(player);
+    }
+}
+
+/** Map inspection **/
+
+void Map::inspect(Pos p) const {
+    if (isBeingSeen(p.x, p.y)) {
+        std::cout<<"In this tile, there are:\n";
+        for (auto mob : mobs1) {
+            if (mob->x == p.x && mob->y == p.y) {
+                std::cout<<mob->name<<"\n";
+            }
+        }
+        auto inv = getInvAt(p.x, p.y);
+        if (inv) {
+            std::cout<<"An inv containing:\n";
+            for (int i = 0; i != inv->items.itemNo(); i++) {
+                std::cout<<inv->items.getItem(i)->name<<"\n";
+            }
+        }
+        for (auto mob : mobs2) {
+            if (mob->x == p.x && mob->y == p.y) {
+                /*Important data about a mob:
+                 *Name (duh)
+                 *Hp
+                 *ATK power<-
+                 *DEFense <--these 2 are for later
+                 *Swiftness (Relative)
+                 *Offset
+                 *Sight
+                 **Maybe more later... TODO make some of these shenanigans up to the mob
+                **/
+                std::cout<<mob->name<<'\n';
+                std::cout<<"Hp: "<<mob->destructible->hp<<"/"<<mob->destructible->maxHp<<'\n';
+                std::cout<<"Sight: "<<mob->sght<<'\n';
+                std::cout<<"Swiftness: "<<mob->getSwiftness()<<" ("<<player->getSwiftness() - mob->getSwiftness()<<")"<<'\n';
+                std::cout<<"Time until next move: "<<mob->getSwiftness() - (engine.time - mob->ai->timeoffset - 1) % mob->getSwiftness() - 1<<'\n';
+            }
+        }
     }
 }
