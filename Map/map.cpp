@@ -239,11 +239,21 @@ void Map::inspect(Pos p) const {
                  *Sight
                  **Maybe more later... TODO make some of these shenanigans up to the mob
                 **/
-                std::cout<<mob->name<<'\n';
-                std::cout<<"Hp: "<<mob->destructible->hp<<"/"<<mob->destructible->maxHp<<'\n';
-                std::cout<<"Sight: "<<mob->sght<<'\n';
-                std::cout<<"Swiftness: "<<mob->getSwiftness()<<" ("<<player->getSwiftness() - mob->getSwiftness()<<")"<<'\n';
-                std::cout<<"Time until next move: "<<mob->getSwiftness() - (engine.time - mob->ai->timeoffset - 1) % mob->getSwiftness() - 1<<'\n';
+                char buffer[255];
+                engine.ui->log->addMessage(buffer,
+                            "Inspecting mob: %s", mob->name.c_str());
+                engine.ui->log->addMessage(buffer,
+                            "SGHT: %i", mob->sght);
+                engine.ui->log->addMessage(buffer,
+                            "HP: %i/%i", mob->destructible->hp, mob->destructible->maxHp);
+                engine.ui->log->addMessage(buffer,
+                            "Swiftness: %i (%i)",
+                                    mob->getSwiftness(),
+                                    player->getSwiftness() - mob->getSwiftness());
+                engine.ui->log->addMessage(buffer,//I'll be honest with you:
+                            "Time until next move: %i", //I'm not completely sure what
+                            mob->getSwiftness() - //this does but it works so keep it
+                            (engine.time - mob->ai->timeoffset - 1) % mob->getSwiftness() - 1);
             }
         }
     }
