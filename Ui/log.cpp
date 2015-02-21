@@ -26,6 +26,16 @@ void Log::addMessage(const char* msg) {
     }
 }
 
+void Log::addMessage(char* buffer, const char* msg, ...) {
+    va_list args;
+    va_start(args, msg);
+
+    vsprintf(buffer, msg, args);
+    addMessage(buffer);
+
+    va_end(args);
+}
+
 void Log::addLine(const char* msg) {
     messages.push_back(new FontStr(font, 47, std::string(msg)));
 }

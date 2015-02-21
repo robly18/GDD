@@ -35,9 +35,9 @@ void StatusHolder::update(Mob* mob) {
                 mob->destructible->hp = 1;
             }
             char buffer [255];
-            sprintf(buffer, "%s took %i poison damage and now has %i health",
+            engine.ui->log->addMessage(buffer,
+                    "%s took %i poison damage and now has %i health",
                     mob->name.c_str(), poisondmg, mob->destructible->hp);
-            engine.ui->log->addMessage(buffer);
         }
     }
     if (healval) {
@@ -49,9 +49,9 @@ void StatusHolder::update(Mob* mob) {
                 mob->destructible->hp = mob->destructible->maxHp;
             }
             char buffer [255];
-            sprintf(buffer, "%s regenerated %i health and now has %i health",
+            engine.ui->log->addMessage(buffer,
+                    "%s regenerated %i health and now has %i health",
                     mob->name.c_str(), healval, mob->destructible->hp);
-            engine.ui->log->addMessage(buffer);
         }
     }
 }

@@ -87,22 +87,21 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
     if (damage) {
         int dmg = target->destructible->damage(damage * src->atk /STARTATK);
 
-        sprintf(buffer, "%s hit %s for %i dmg %s %i hp",
+        engine.ui->log->addMessage(buffer, "%s hit %s for %i dmg %s %i hp",
                 src->name.c_str(),
                 src == target ? "themselves in idiocy" : target->name.c_str(),
                 dmg,
                 src == target ? "and now have" : "which now has",
                 target->destructible->hp);
-        engine.ui->log->addMessage(buffer);
 
         if (physical) {
             if (target->destructible->statusholder->hasEffect(SideEffect::THORN)) {
                 dmg = src->destructible->damage(dmg);
-                sprintf(buffer, "%s's thorns caused %s to be damaged for %i hp",
+                engine.ui->log->addMessage(buffer,
+                        "%s's thorns caused %s to be damaged for %i hp",
                         target->name.c_str(),
                         src->name.c_str(),
                         dmg);
-                engine.ui->log->addMessage(buffer);
                 if (src->destructible->isDead()) {
                     src->destructible->die(src);
                 }
@@ -111,15 +110,18 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
             std::shared_ptr<Status>
                 counterdebuff = target->destructible->statusholder->counterdebuff;
             if (counterdebuff) {
-                sprintf(buffer, "%s was Frozen by %s's IceSkin",
+                engine.ui->log->addMessage(buffer,
+                        "%s was Frozen by %s's IceSkin",
                         src->name.c_str(), target->name.c_str());
-                engine.ui->log->addMessage(buffer);
                 src->destructible->statusholder->pushStatus(counterdebuff->clone());
             }
         }
     }
 
-    if (applyChances(target, buffer, "%s was afflicted by", "")) engine.ui->log->addMessage(buffer);
+    if (applyChances(target, buffer, "%s was afflicted by", "")) {
+        engine.ui->log->addMessage(buffer);
+    }
+
     if (target->destructible->isDead()) {
         target->destructible->die(target);
     }

@@ -199,22 +199,21 @@ void Engine::doTick() {
         state == State::USED) {
 
         do {
-            for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
-                int swiftness = (*mob)->getSwiftness();
+            for (auto mob : map->mobs2) {
+                int swiftness = mob->getSwiftness();
                 if (swiftness) {
-                    if (time % swiftness == (*mob)->ai->timeoffset) {
-                        if ((*mob)->destructible)
-                            (*mob)->destructible->statusholder->update(*mob);
+                    if (time % swiftness == mob->ai->timeoffset) {
+                        if (mob->destructible)
+                            mob->destructible->statusholder->update(mob);
                     }
                 }
             }
-
-            for (std::list<Mob*>::iterator mob = map->mobs2.begin(); mob != map->mobs2.end(); mob++) {
-                if ((*mob)->getSwiftness())
-                if (time % (*mob)->getSwiftness() == (*mob)->ai->timeoffset)
-                if ((*mob)->destructible &&
-                    !(*mob)->destructible->statusholder->hasEffect(SideEffect::FROZEN)) {
-                    (*mob)->ai->update(*mob);
+            for (auto mob : map->mobs2) {
+                if (mob->getSwiftness())
+                if (time % mob->getSwiftness() == mob->ai->timeoffset)
+                if (mob->destructible &&
+                    !mob->destructible->statusholder->hasEffect(SideEffect::FROZEN)) {
+                    mob->ai->update(mob);
                 }
             }
             map->mobs2.remove_if([](Mob* m){return m->destructible->isDead();});

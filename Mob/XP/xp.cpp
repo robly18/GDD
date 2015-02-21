@@ -49,8 +49,8 @@ int XpBar::addXp(int xp) {
             sprintf(buffer, "%i", lvl);
             screenname->setText(engine.font, std::string(buffer));
 
-            sprintf(buffer, "Player leveled up %s to lvl %i!", name.c_str(), lvl);
-            engine.ui->log->addMessage(buffer);
+            engine.ui->log->addMessage(buffer,
+                    "Player leveled up %s to lvl %i!", name.c_str(), lvl);
 
             engine.map->player->levelUp(type);
         } else {

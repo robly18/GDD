@@ -44,6 +44,7 @@ void BasicAi::update(Mob* mob) {
             path.pop_front();
         } else if (posEq(path.front(), engine.map->player->getPos())) {
             mob->attack->target(mob, path.front());
+            if (mob->destructible->isDead()) return;
         }
     } else { //If not, wander randomly
         Pos movingTo = mob->getPos();

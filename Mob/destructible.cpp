@@ -42,7 +42,7 @@ void Destructible::dropItems(Mob* mob) {
 void PlayerDestructible::die(Mob* mob) {
     mob->a->r = deadSprite;
     delete mob->ai;
-    mob->ai = NULL;
+    mob->ai = nullptr;
     engine.state = engine.State::DEAD;
 }
 

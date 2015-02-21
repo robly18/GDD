@@ -3,6 +3,8 @@
 
 #include <SDL.h>
 #include <vector>
+#include <stdarg.h>
+
 #include "..\Misc\text.hpp"
 
 extern bool isInRect(SDL_Rect, int, int);
@@ -14,6 +16,9 @@ public:
     std::vector<FontStr*>   messages; //0 = oldest; messages.size() - 1 = newest
 
     void                    addMessage(const char*);
+    void                    addMessage(char*, const char*, ...);
+                            //For printf like syntax
+                            //Additional char* required to be passed as a buffer
 
     void                    render(SDL_Surface*);
 
