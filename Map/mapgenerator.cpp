@@ -71,7 +71,8 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     }
 }
 
-#define MAXMOBS 15
+#define MAXCLUBGUYS 10
+#define MAXROGUEIMPS 20
 
 void MapGenerator::populateMap(Map* map) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
@@ -90,16 +91,32 @@ void MapGenerator::populateMap(Map* map) {
     }
 
     TargetedAttack* a = new TargetedAttack(7, 0, 0, 10, 0, 0, 0, true, false);
-
-    for (int n = 0; n != MAXMOBS; n++) {
+    for (int n = 0; n != MAXCLUBGUYS; n++) {
         int pos = std::rand() % posnum;
         Mob* m = new Mob(positions[pos].x, positions[pos].y,
-                         SDL_Rect{16, 64, 16, 16}, engine.texture, "Somefin");
+                         SDL_Rect{16, 64, 16, 16}, engine.texture, "CLUBGUY");
+        m->sght = 2;
         m->ai = new BasicAi(130);
-        m->destructible = new MobDestructible(20, SDL_Rect{0, 30, 16, 16}, 6);
+        m->destructible = new MobDestructible(20, SDL_Rect{0, 30, 16, 16}, 14);
         m->attack = a;
         m->inventory = new MobInventory;
-        m->inventory->addItem(new HpPotion("Potfin", 30));
+        m->inventory->addItem(new HpPotion("HPPot", 40));
+        map->mobs2.push_back(m);
+
+        positions[pos] = positions[--posnum];
+    }
+
+    a = new TargetedAttack(5, 0, 0, 10);
+    for (int n = 0; n != MAXROGUEIMPS; n++) {
+        int pos = std::rand() % posnum;
+        Mob* m = new Mob(positions[pos].x, positions[pos].y,
+                         SDL_Rect{32, 64, 16, 16}, engine.texture, "ROGUEIMP");
+        m->sght = 4;
+        m->ai = new BasicAi(142);
+        m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16}, 6);
+        m->attack = a;
+        m->inventory = new MobInventory;
+        m->inventory->addItem(new HpPotion("CrapPot", 25));
         map->mobs2.push_back(m);
 
         positions[pos] = positions[--posnum];

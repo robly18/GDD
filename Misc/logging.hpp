@@ -3,6 +3,6 @@
 
 #include <iostream>
 
-#define DEBUGMSG(msg) /*std::cout<<msg*/
+#define DEBUGMSG(msg) /*std::cout<<msg<<'\n'*/
 
 #endif
