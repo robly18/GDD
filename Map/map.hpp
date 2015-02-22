@@ -11,6 +11,8 @@
 #include "fovcomputer.hpp"
 #include <list>
 
+#define SEEALLMOBS
+
 
 class Inventory;
 class FloorInventory;

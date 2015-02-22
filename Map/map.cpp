@@ -114,10 +114,16 @@ SDL_Surface* Map::render(int mousex, int mousey) {
                             surface, &r);
         }
     }
-    for (std::list<Mob*>::iterator m = mobs1.begin(); m != mobs1.end(); m++)
-        renderMobActor((*m)->a);
-    for (std::list<FloorInventory*>::iterator m = items.begin(); m != items.end(); m++)
-        renderMobActor((*m)->a);
+    for (auto m : mobs1) {
+        if (isBeingSeen(m->x, m->y)) {
+            renderMobActor(m->a);
+        }
+    }
+    for (auto m : items) {
+        if (isBeingSeen(m->x, m->y)) {
+            renderMobActor(m->a);
+        }
+    }
     if (player->attack) {
         for (int x = 0; x != SCREENTILEW; x++)
         for (int y = 0; y != SCREENTILEH; y++) {
@@ -130,10 +136,15 @@ SDL_Surface* Map::render(int mousex, int mousey) {
         }
         SDL_BlitSurface(highlightsurface, NULL, surface, NULL);
     }
-    for (std::list<Mob*>::iterator m = mobs2.begin(); m != mobs2.end(); m++) {
-        SDL_Rect pos = renderMobActor((*m)->a);
-        if ((*m)->destructible) {
-            (*m)->destructible->statusholder->render(surface, pos);
+    for (auto m : mobs2) {
+        #ifndef SEEALLMOBS
+        if (isBeingSeen(m->x, m->y))
+        #endif
+        {
+            SDL_Rect pos = renderMobActor(m->a);
+            if (m->destructible) {
+                m->destructible->statusholder->render(surface, pos);
+            }
         }
     }
     return surface;
