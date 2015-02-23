@@ -48,6 +48,11 @@ int Player::getMaxMp() const {
 
 void Player::levelUp(int type) {
     switch (type) {
+    case XpHolder::SWRD:
+    case XpHolder::BOW:
+    case XpHolder::STFF:
+        weplvls[type]++;
+        break;
     case XpHolder::ATK:
         atk++;
         break;
@@ -57,7 +62,7 @@ void Player::levelUp(int type) {
         engine.ui->buttons->hpbar->maxval = destructible->maxHp;
         break;
     case XpHolder::STR:
-        str = str + 1;
+        destructible->def++;
         break;
     case XpHolder::STMN:
         stmn = stmn + 1;

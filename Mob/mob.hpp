@@ -3,16 +3,19 @@
 
 #include <string.h>
 #include <string>
-#include "..\Main\main.hpp"
 
-#define POSRECT(x, y) (SDL_Rect{x*16,y*16,16,16})
-
-
-#define STARTSTR 10
+#define STARTWEPLVL 10
+#define STARTDEF 10
 #define STARTSTMN 10
 #define STARTATK 20
 #define STARTACCY 1
 #define STARTSGHT 3
+
+
+#include "..\Main\main.hpp"
+
+#define POSRECT(x, y) (SDL_Rect{x*16,y*16,16,16})
+
 
 class Ai;
 class Destructible;
@@ -43,6 +46,7 @@ public:
 
     void            move(int, int);
 
+
     int             getSwiftness(); //Misleading name :( Actually faster if swiftness is lower
 };
 
@@ -57,8 +61,7 @@ public:
 
     XpHolder        *xpholder;
 
-    int             weplvls[3] = {STARTATK, STARTATK, STARTATK};
-    int             str = STARTSTR;
+    int             weplvls[3] = {STARTWEPLVL, STARTWEPLVL, STARTWEPLVL};
     int             stmn = STARTSTMN;
 
     int             getMaxMp() const;

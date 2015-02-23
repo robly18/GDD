@@ -195,7 +195,7 @@ void Map::generateMap() {
     generator->populateMap(this);
     DEBUGMSG("Done.\n");
 
-    //player->inventory->addItem(new Armor("TestArmr", 8, -80));
+    //player->inventory->addItem(new Armor("TestArmr", 2, 10));
     player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
     player->inventory->addItem(new Sword("SORD....", 10, 3));
     player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));

@@ -16,6 +16,8 @@ public:
     int                 maxHp;
     int                 hp;
 
+    int                 def = STARTDEF;
+
     Armor               *armor;
     StatusHolder        *statusholder;
 

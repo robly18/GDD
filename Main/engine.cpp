@@ -224,7 +224,8 @@ void Engine::doTick() {
         map->updateFovData();
         if (state != State::ATTACKED &&
             state != State::USED &&
-            map->player->weapon) map->player->weapon->regenMana(map->player->str);
+            map->player->weapon) map->player->weapon->regenMana(
+                                        map->player->weplvls[map->player->weapon->weapontype]);
         if (state == State::USED) state = State::INV;
         else state = State::RUNNING;
     }
