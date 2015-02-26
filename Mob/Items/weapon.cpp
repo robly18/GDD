@@ -63,7 +63,7 @@ Sword::Sword(std::string n, int attack, int maxmana) :
                     ->setName("SPIN");
     defenses[0] = (new SelfBuff(12, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
                                                       0, 30)))->setName("BLOCK");
-    defenses[1] = (new SelfBuff(20, new FixedHpRegen(7, "Regen", 2)))->setName("REGEN");
+    defenses[1] = (new SelfBuff(25, new FixedHpRegen(7, "Regen", 2)))->setName("REGEN");
 }
 
 int Sword::regenMana(int regen) {

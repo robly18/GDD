@@ -49,6 +49,9 @@ public:
 
     std::shared_ptr
         <Status>        counterdebuff;
+
+    bool                gotAttacked = false; //For statuses that change according to
+                                            //if you got attacked or not
 private:
     void                resetStats();
     std::list<Status*>  statuses;

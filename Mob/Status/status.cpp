@@ -54,6 +54,8 @@ void StatusHolder::update(Mob* mob) {
                     mob->name.c_str(), healval, mob->destructible->hp);
         }
     }
+
+    gotAttacked = false;
 }
 
 bool StatusHolder::pushStatus(Status* s) {

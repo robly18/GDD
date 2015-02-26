@@ -2,6 +2,12 @@
 
 
 void Regen::updateHolder(StatusHolder* holder, Mob* user) {
+
+    if (holder->gotAttacked) {
+        timeLeft = 0;
+        return;
+    }
+
     timeLeft--;
     int heals = computeHeals(user);
     holder->healval += heals;

@@ -14,6 +14,7 @@ MobDestructible::MobDestructible(int maxHp, SDL_Rect deadSprite, int xp) :
 }
 
 int Destructible::damage(int dmg) {
+    statusholder->gotAttacked = true;
     int defense = armor ? armor->defense * def / STARTDEF : 0;
     if (!statusholder->hasEffect(SideEffect::BLOCK) &&
         dmg > defense) {
