@@ -44,7 +44,7 @@ public:
     int                 poisondmg = 0;
     int                 healval = 0;
 
-    SideEffect          sideeffect = SideEffect::NONE;
+    int                 sideeffect = SideEffect::NONE;
     bool                hasEffect(SideEffect);
 
     std::shared_ptr

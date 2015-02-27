@@ -6,7 +6,7 @@ Status* SideEffectBuff::clone() {
 
 void SideEffectBuff::updateHolder(StatusHolder* holder, Mob* user) {
     timeLeft--;
-    *(int*)&holder->sideeffect |= (int)sideeffect;
+    holder->sideeffect |= sideeffect;
 }
 
 /**/

@@ -6,5 +6,5 @@ Status* Frozen::clone() {
 
 void Frozen::updateHolder(StatusHolder* holder, Mob* mob) {
     timeLeft--;
-    *(int*)&holder->sideeffect |= (int) SideEffect::FROZEN;
+    holder->sideeffect |= SideEffect::FROZEN;
 }

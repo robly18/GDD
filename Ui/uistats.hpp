@@ -46,7 +46,7 @@ public:
     SDL_Rect        atkicons[6];
     Actor           *atkbuttons[6];
 
-    enum class AtkButtons {
+    enum AtkButtons {
         BLOCK,
         HEAL,
         QUIRKDEF,

@@ -4,13 +4,14 @@
 #include <string.h>
 
 #include "..\mob.hpp"
-
-enum class Itemtype {
-    NONE = -1,
-    USE = 0,
-    ARMOR,
-    WEAPON,
-    RING,
+namespace Itemtype {
+    enum {
+        NONE = -1,
+        USE = 0,
+        ARMOR,
+        WEAPON,
+        RING,
+    };
 };
 
 class Player;
@@ -20,7 +21,7 @@ public:
     Item(std::string n) : name(n) {}
     std::string     name;
     int             size = 1;
-    Itemtype        type = Itemtype::NONE;
+    int             type = Itemtype::NONE;
 
     Uint32          color = 0xAAAAAA;
 

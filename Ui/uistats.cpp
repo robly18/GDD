@@ -90,18 +90,18 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
         if (isInRect((*a)->p, hx, hy)) {
             if (isInRect((*a)->p, x, y))
                 switch ((int) (a - atkbuttons)) {
-                case (int) AtkButtons::TARGETED:
+                case AtkButtons::TARGETED:
                     if (!engine.map->player->weapon) {
                         engine.map->player->attack = engine.map->player->defaultattack;
                     }
-                case (int) AtkButtons::AOE:
+                case AtkButtons::AOE:
                     if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->attacks[a-atkbuttons-3]->select(engine.map->player);
                     }
                     break;
-                case (int) AtkButtons::BLOCK:
-                case (int) AtkButtons::HEAL:
+                case AtkButtons::BLOCK:
+                case AtkButtons::HEAL:
                     if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->defenses[a-atkbuttons]->select(engine.map->player);
