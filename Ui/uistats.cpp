@@ -20,7 +20,7 @@ UiButtons::UiButtons(SDL_Surface* s) :
                         engine.map->player->destructible->maxHp,
                         &engine.map->player->destructible->hp, "HP");
     DEBUGMSG("Creating MPBar\n");
-    mpbar = new NumBar(SDL_Rect{2, 164+11, 96, 10}, 0xFF0000, 0x770000,
+    mpbar = new NumBar(SDL_Rect{2, 164+12, 96, 10}, 0xFF0000, 0x770000,
                        engine.font,
                         engine.map->player->getMaxMp(),
                         engine.map->player->weapon ?
