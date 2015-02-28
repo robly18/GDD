@@ -96,6 +96,8 @@ public:
     Actor           *nextpage, *prevpage;
 
     Actor           *slots[4];
+    FontStr         *slotnames[4];
+    FontStr         *itemnames[4];
 
 
 

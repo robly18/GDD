@@ -178,15 +178,13 @@ UiInv::UiInv(SDL_Surface* s) :
                          SDL_Rect{261, 132, 53, 14});
     nextpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
                          SDL_Rect{261+53+2, 132, 53, 14});
-    SDL_Rect rects [4] = {
-            {0,0,10,10},
-            {10,10,10,10},
-            {10,0,10,10},
-            {0,10,10,10}
-    };
+
+    std::string names[4] = {"USE","ARMOR","WEAPON","MISC"};
     for (int i = 0; i != 4; i++) {
-        slots[i] = new Actor(engine.texture, rects[i],
-                             SDL_Rect {101+67*i, 164, 66, 21});
+        slots[i] = new Actor(engine.texture, SDL_Rect{32 + 8*(i&1), 16 + 8*(i&2)/2 ,8,8},
+                             SDL_Rect {101+67*i, 164, 66, 22});
+        slotnames[i] = new FontStr(engine.font, 6, names[i]);
+        itemnames[i] = new FontStr(engine.font, 8, "-");
     }
 }
 
@@ -207,9 +205,19 @@ SDL_Surface* UiInv::render(bool clicked, int hx, int hy) {
                      (clicked && isInRect((*a)->a->p, hx, hy) ? 0x101010 : 0));
         (*a)->str->render(surface, engine.font->font, (*a)->a->p.x + 2, (*a)->a->p.y + 2);
     }
-    for (int i = 0; i != 4; i++) {
-        SDL_FillRect(surface, &slots[i]->p, 0xDD8822-
-                     (clicked && isInRect(slots[i]->p, hx, hy) ? 0x101010 : 0));
+    {int i = 0;
+        for (auto a : slots) {
+            SDL_FillRect(surface, &a->p, 0xDD8822-
+                         (clicked && isInRect(a->p, hx, hy) ? 0x101010 : 0));
+            SDL_Rect r = {a->p.x + 2, a->p.y + 2, 16, 16};
+            SDL_BlitSurface(engine.texture, &a->r, surface, &r);
+            r.x += 8+2;
+            slotnames[i]->render(surface, engine.font->font, r.x, r.y);
+            r.x -= 8+2;
+            r.y += 8+2;
+            itemnames[i]->render(surface, engine.font->font, r.x, r.y);
+            i++;
+        }
     }
     SDL_FillRect(surface, &prevpage->p, 0xDD8822-
                      (clicked && isInRect(prevpage->p, hx, hy) ? 0x101010 : 0));
@@ -284,12 +292,15 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
         }
     }
     if (selecteditem) {
-        if (isInRect(slots[(int) selecteditem->type]->p, hx, hy) &&
-            isInRect(slots[(int) selecteditem->type]->p, x, y)) {
+        if (isInRect(slots[selecteditem->type]->p, hx, hy) &&
+            isInRect(slots[selecteditem->type]->p, x, y)) {
             if (selecteditem->use(engine.map->player)) {
                 engine.map->player->inventory->removeItem(selecteditem);
                 engine.state = engine.State::USED;
                 engine.ui->dashboard->refreshButtons();
+                if (selecteditem->type != Itemtype::USE) {
+                    itemnames[selecteditem->type]->setText(engine.font, selecteditem->name);
+                }
             }
         }
         selecteditem = NULL;
@@ -298,16 +309,19 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
             if (isInRect(slots[i]->p, hx, hy) &&
                 isInRect(slots[i]->p, x, y)) {
                 switch (i) {
-                case (int) Itemtype::ARMOR:
+                case Itemtype::ARMOR:
                     if (engine.map->player->destructible->armor)
-                        if (engine.map->player->destructible->armor->unequip(engine.map->player))
+                        if (engine.map->player->destructible->armor->unequip(engine.map->player)) {
                             engine.map->player->destructible->armor = NULL;
+                            itemnames[i]->setText(engine.font, "-");
+                        }
                     break;
-                case (int) Itemtype::WEAPON:
+                case Itemtype::WEAPON:
                     if (engine.map->player->weapon) {
                         if (engine.map->player->weapon->unequip(engine.map->player)) {
                             engine.map->player->weapon = NULL;
                             engine.ui->dashboard->refreshButtons();
+                            itemnames[i]->setText(engine.font, "-");
                         }
                     }
                     break;
@@ -331,7 +345,6 @@ void UiInv::updateInventory() {
         (*a)->str->setText(engine.font, i ? i->name : "-");
     }
     finv = engine.map->getInvAt(engine.map->player->x, engine.map->player->y);
-
 
 
     for (int n = 0; n != FINVPGSIZE; n++) {
