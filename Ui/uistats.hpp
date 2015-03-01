@@ -23,6 +23,7 @@ public:
     UiButtons(SDL_Surface*);
 
     Actor           *invbutton;
+    FontStr         *invtext;
 
     SDL_Surface     *render(bool clicked, int hx, int hy);
     void            checkClick(int mb, int hx, int hy);
@@ -94,6 +95,7 @@ public:
     InvActor        *floorinv [FINVPGSIZE];
 
     Actor           *nextpage, *prevpage;
+    FontStr         *nextname, *prevname;
 
     Actor           *slots[4];
     FontStr         *slotnames[4];

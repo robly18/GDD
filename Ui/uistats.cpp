@@ -13,7 +13,8 @@ UiPart::UiPart(SDL_Surface* s) : surface(s) {
 UiButtons::UiButtons(SDL_Surface* s) :
     UiPart(s) {
     DEBUGMSG("Creating Invbutton\n");
-    invbutton = new Actor(surface, SDL_Rect{0, 0, 1, 1}, SDL_Rect{288, 148, 54, 14});
+    invbutton = new Actor(surface, SDL_Rect{16, 8, 8, 8}, SDL_Rect{288, 148, 54, 14});
+    invtext = new FontStr(engine.font, 3, "Inv");
     DEBUGMSG("Creating HPBar\n");
     hpbar = new NumBar(SDL_Rect{2, 164, 96, 10}, 0x0000FF, 0x000077,
                        engine.font,
@@ -36,7 +37,14 @@ SDL_Surface* UiButtons::render(bool clicked, int hx, int hy) {
     mpbar->render(surface);
     mpbar->renderName(surface);
 
-    SDL_FillRect(surface, &invbutton->p, clicked && isInRect(invbutton->p, hx, hy) ? 0x885512 : 0xDDAA22);
+    SDL_Rect p = invbutton->p;
+
+    SDL_FillRect(surface, &p, clicked && isInRect(p, hx, hy) ? 0x885512 : 0xDDAA22);
+    p.x += 5;
+    p.y += 3;
+    SDL_BlitSurface(engine.texture, &invbutton->r, surface, &p);
+    p.x += 8 + 2;
+    invtext->render(surface, engine.font->font, p.x, p.y);
     return surface;
 }
 
@@ -176,8 +184,10 @@ UiInv::UiInv(SDL_Surface* s) :
     }
     prevpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
                          SDL_Rect{261, 132, 53, 14});
+    prevname = new FontStr(engine.font, 3, "<==");
     nextpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
                          SDL_Rect{261+53+2, 132, 53, 14});
+    nextname = new FontStr(engine.font, 3, "==>");
 
     std::string names[4] = {"USE","ARMOR","WEAPON","MISC"};
     for (int i = 0; i != 4; i++) {
@@ -219,10 +229,19 @@ SDL_Surface* UiInv::render(bool clicked, int hx, int hy) {
             i++;
         }
     }
-    SDL_FillRect(surface, &prevpage->p, 0xDD8822-
-                     (clicked && isInRect(prevpage->p, hx, hy) ? 0x101010 : 0));
-    SDL_FillRect(surface, &nextpage->p, 0xDD8822-
-                     (clicked && isInRect(nextpage->p, hx, hy) ? 0x101010 : 0));
+    SDL_Rect p = prevpage->p;
+    SDL_FillRect(surface, &p, 0xDD8822-
+                     (clicked && isInRect(p, hx, hy) ? 0x101010 : 0));
+    p.x += 14;
+    p.y += 3;
+    prevname->render(surface, engine.font->font, p.x, p.y);
+
+    p = nextpage->p;
+    SDL_FillRect(surface, &p, 0xDD8822-
+                     (clicked && isInRect(p, hx, hy) ? 0x101010 : 0));
+    p.x += 15;
+    p.y += 3;
+    nextname->render(surface, engine.font->font, p.x, p.y);
     return surface;
 }
 
