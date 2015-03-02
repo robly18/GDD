@@ -12,6 +12,7 @@
 #include <list>
 
 #define SEEALLMOBS
+#define SEEALLTILES
 
 
 class Inventory;
@@ -27,7 +28,12 @@ struct Tile {
     bool seeThrough = true;
 
     bool isSeen = false;
-    bool hasBeenSeen = false;
+    bool hasBeenSeen =
+    #ifdef SEEALLTILES
+        true;
+    #else
+        false;
+    #endif
 };
 
 #define INBOUNDS(x, y) (0<=x && x<MAPWIDTH && 0<=y && y<MAPHEIGHT)
@@ -57,7 +63,7 @@ public:
     std::list<FloorInventory*>  items;
     std::list<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
 
-    Player*                     player = NULL;
+    Player*                     player = nullptr;
     int                         camerax = 0, cameray = 0;
     void                        resetCamera();
 
