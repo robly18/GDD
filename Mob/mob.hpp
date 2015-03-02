@@ -25,6 +25,8 @@ class Weapon;
 
 class Mob {
 public:
+    Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
+
     Actor           *a;
     int             x, y;
     std::string     name;
@@ -39,13 +41,13 @@ public:
     int             sght = STARTSGHT;
     int             accy = STARTACCY;
 
-    Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
     void            setPos(int, int);
     void            setPos(Pos);
     Pos             getPos();
 
     void            move(int, int);
 
+    const Pos       spawn;
 
     int             getSwiftness(); //Misleading name :( Actually faster if swiftness is lower
 };

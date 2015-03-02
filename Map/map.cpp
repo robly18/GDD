@@ -167,6 +167,7 @@ SDL_Surface* Map::mapview() {
     static SDL_Rect floor = {0,16,4,4};
     static SDL_Rect wall = {0,32,4,4};
     static SDL_Rect unseen = {0, 48, 4, 4};
+    static SDL_Rect enemy = {36, 24, 4, 4};
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         SDL_Rect r = SDL_Rect{x*4, y*4, 4, 4};
@@ -176,6 +177,12 @@ SDL_Surface* Map::mapview() {
         else
             SDL_BlitSurface(engine.texture, &unseen,
                             surface, &r);
+    }
+    for (auto m : mobs2) {
+        if (m != player) {
+            SDL_Rect r = SDL_Rect{m->spawn.x * 4, m->spawn.y * 4, 4, 4};
+            SDL_BlitSurface(engine.texture, &enemy, surface, &r);
+        }
     }
     return surface;
 }

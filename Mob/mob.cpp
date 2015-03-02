@@ -1,7 +1,7 @@
 #include "mob.hpp"
 
 Mob::Mob(int x, int y, SDL_Rect r, SDL_Surface* t, std::string n) :
-    x(x), y(y) {
+    x(x), y(y), spawn(Pos{x, y}) {
     a = new Actor(t, r, POSRECT(x, y));
     name = n;
 }
