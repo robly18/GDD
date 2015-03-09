@@ -5,6 +5,11 @@
 #include "../Misc/posstruct.hpp"
 #include <random>
 
+
+
+#define MAXCLUBGUYS 10
+#define MAXROGUEIMPS 30
+
 class Map;
 struct Tile;
 

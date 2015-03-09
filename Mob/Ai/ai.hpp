@@ -5,6 +5,8 @@
 #include "pathfinder.hpp"
 #include <random>
 
+#define MAXAWAYFROMSPAWN 1
+
 class Ai {
 public:
     virtual void update(Mob*) = 0;

@@ -81,6 +81,8 @@ public:
     SDL_Surface*                render(int mousex, int mousey);
     SDL_Surface*                mapview();
 
+    void                        checkMapData();
+
     void                        generateMap();
     void                        updateFovData();
 
@@ -89,6 +91,9 @@ private:
     MapGenerator                *generator;
 
     SDL_Rect                    renderMobActor(Actor*);
+
+    int                         seeabletiles;
+    int                         seentiles;
 };
 
 #endif

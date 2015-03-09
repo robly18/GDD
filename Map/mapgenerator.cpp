@@ -71,9 +71,6 @@ void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
     }
 }
 
-#define MAXCLUBGUYS 10
-#define MAXROGUEIMPS 20
-
 void MapGenerator::populateMap(Map* map) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
     int posnum = 0; //Number of such
@@ -81,10 +78,6 @@ void MapGenerator::populateMap(Map* map) {
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         if (!map->isWall(x, y) &&
-            !map->isWall(x, y+1) &&
-            !map->isWall(x, y-1) &&
-            !map->isWall(x+1, y) &&
-            !map->isWall(x-1, y) &&
             posDiff({x, y}, map->player->getPos()) >= 5) {
             positions[posnum++] = {x, y};
         }

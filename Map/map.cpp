@@ -178,6 +178,7 @@ SDL_Surface* Map::mapview() {
             SDL_BlitSurface(engine.texture, &unseen,
                             surface, &r);
     }
+    if (seentiles * 2 > seeabletiles)
     for (auto m : mobs2) {
         if (m != player) {
             SDL_Rect r = SDL_Rect{m->spawn.x * 4, m->spawn.y * 4, 4, 4};
@@ -185,6 +186,16 @@ SDL_Surface* Map::mapview() {
         }
     }
     return surface;
+}
+
+void Map::checkMapData() {
+    seentiles = 0;
+    for (Tile t : tiles) {
+        if (t.seeThrough &&
+            t.hasBeenSeen) {
+            seentiles++;
+        }
+    }
 }
 
 /**Map Generation**/
@@ -207,10 +218,15 @@ void Map::generateMap() {
     player->inventory->addItem(new Sword("SORD....", 10, 3));
     player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 
+    seeabletiles = 0; seentiles = 0;
+
     for (int x = 0; x != MAPWIDTH; x++)
     for (int y = 0; y != MAPHEIGHT; y++) {
         fovcomputer->tiledata[x+y*MAPWIDTH] = !canSeeThrough(x, y);
         pathfinder->tiledata[x+y*MAPWIDTH] = !isWall(x, y);
+        if (canSeeThrough(x, y)) {
+            seeabletiles++;
+        }
     }
 
     resetCamera();

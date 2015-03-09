@@ -117,6 +117,7 @@ void Engine::checkEvents() {
                         state = State::MOVED;
                         break;
                     case SDLK_m:
+                        map->checkMapData();
                         state = State::MAP;
                         break;
                     //debugging controls:

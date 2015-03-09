@@ -47,14 +47,22 @@ void BasicAi::update(Mob* mob) {
             if (mob->destructible->isDead()) return;
         }
     } else { //If not, wander randomly
-        Pos movingTo = mob->getPos();
+        if (posDiff(mobpos, mob->spawn) > MAXAWAYFROMSPAWN) {
+            engine.map->pathfinder->computePath(mob->getPos(), mob->spawn, path);
+            mob->setPos(path.front());
+            path.pop_front();
+        } else {
 
-        int randomNum = std::rand();
-        movingTo = addPos(movingTo, (randomNum&1) ? Pos {0, (randomNum & 2) - 1} :
-                                                    Pos {(randomNum & 2) - 1, 0});
+            Pos movingTo = mob->getPos();
 
-        if (engine.map->canMoveTo(movingTo)) {
-            mob->setPos(movingTo);
+            int randomNum = std::rand();
+            movingTo = addPos(movingTo, (randomNum&1) ? Pos {0, (randomNum & 2) - 1} :
+                                                        Pos {(randomNum & 2) - 1, 0});
+
+            if (posDiff(movingTo, mob->spawn) <= MAXAWAYFROMSPAWN &&
+                engine.map->canMoveTo(movingTo)) {
+                mob->setPos(movingTo);
+            }
         }
 
         sawPlayer = false;
