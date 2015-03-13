@@ -50,7 +50,7 @@ bool Map::isBeingSeen(int x, int y) const {
 }
 
 bool Map::canSeeThrough(int x, int y) const {
-    return INBOUNDS(x, y) && tiles[x+y*MAPWIDTH].seeThrough;
+    return INBOUNDS(x, y) && tiles[x+y*MAPWIDTH].properties->seeThrough;
 }
 
 FloorInventory* Map::getInvAt(int x, int y) const {
@@ -191,7 +191,7 @@ SDL_Surface* Map::mapview() {
 void Map::checkMapData() {
     seentiles = 0;
     for (Tile t : tiles) {
-        if (t.seeThrough &&
+        if (t.properties->seeThrough &&
             t.hasBeenSeen) {
             seentiles++;
         }

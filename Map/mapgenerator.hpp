@@ -7,19 +7,27 @@
 
 
 
-#define MAXCLUBGUYS 10
-#define MAXROGUEIMPS 30
+#define MAXCLUBGUYS 1
+#define MAXROGUEIMPS 3
+
+#define ROOMNUM 10
 
 class Map;
 struct Tile;
+struct TileProperties;
 
 class MapGenerator {
 public:
-    void            generateMap(Map*);
-    void            populateMap(Map*);
+    MapGenerator();
+
+    void                    generateMap(Map*);
+    void                    populateMap(Map*);
 
 private:
-    void            makeRect(SDL_Rect, bool, Tile*);
+    void                    makeRect(const SDL_Rect, const TileProperties*, Tile*);
+
+    const TileProperties    *nowall;
+    const TileProperties    *wall;
 };
 
 

@@ -23,17 +23,22 @@ class MapGenerator;
 class FovComputer;
 class Pathfinder;
 
-struct Tile {
-    bool blocking = false;
+struct TileProperties { //what happens when i read shenanigans on design patterns
+    TileProperties(bool b, bool s) : blocking(b), seeThrough(s) {};
+    bool blocking = false; //friday 13th march 2015
     bool seeThrough = true;
+};
 
-    bool isSeen = false;
-    bool hasBeenSeen =
-    #ifdef SEEALLTILES
-        true;
-    #else
-        false;
-    #endif
+struct Tile {
+    const TileProperties    *properties;
+
+    bool                    isSeen = false;
+    bool                    hasBeenSeen =
+                            #ifdef SEEALLTILES
+                                true;
+                            #else
+                                false;
+                            #endif
 };
 
 #define INBOUNDS(x, y) (0<=x && x<MAPWIDTH && 0<=y && y<MAPHEIGHT)
@@ -46,8 +51,7 @@ public:
     Tile                        tiles[MAPWIDTH*MAPHEIGHT];
     bool                        isWall(int x, int y) {return x < 0 || x >= MAPWIDTH ||
                                                                 y < 0 || y >= MAPHEIGHT ||
-                                                                tiles[x+y*MAPWIDTH].blocking;}
-    void                        setWall(int x, int y, bool w) {tiles[x+y*MAPWIDTH].blocking = w;}
+                                                                tiles[x+y*MAPWIDTH].properties->blocking;}
 
     bool                        canSeeThrough(int x, int y) const;
     bool                        hasBeenSeen(int x, int y) const;

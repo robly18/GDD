@@ -1,14 +1,19 @@
 #include "mapgenerator.hpp"
 
-//#define BLANKMAP
+MapGenerator::MapGenerator() :
+    nowall(new TileProperties{false, true}),
+    wall(new TileProperties{true, false}) {
+}
+
+#define NBLANKMAP
 
 void MapGenerator::generateMap(Map* map) {
 
     #ifdef BLANKMAP
-    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, false, map->tiles);
+    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, nowall, map->tiles);
     #else
 
-    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, true, map->tiles);
+    makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, wall, map->tiles);
 
     int prevx, prevy;
     int newx, newy;
@@ -21,11 +26,11 @@ void MapGenerator::generateMap(Map* map) {
 
     newx = r.x + r.w/2;
     newy = r.y + r.h/2;
-    makeRect(r, false, map->tiles);
+    makeRect(r, nowall, map->tiles);
 
     map->player->setPos(newx, newy);
 
-    for (int n = 0; n != 10; n++) {
+    for (int n = 0; n != ROOMNUM-1; n++) {
         prevx = newx;
         prevy = newy;
 
@@ -42,15 +47,14 @@ void MapGenerator::generateMap(Map* map) {
             DEBUGMSG("Rejected room\n");
             goto newpos;
         }
-        makeRect(r, false, map->tiles);
-        for (int x = newx; x != prevx; newx<prevx?x++:x--) {
-            map->tiles[x+MAPWIDTH*newy].blocking = false;
-            map->tiles[x+MAPWIDTH*newy].seeThrough = true;
-        }
-        for (int y = newy; y != prevy; newy<prevy?y++:y--) {
-            map->tiles[prevx+MAPWIDTH*y].blocking = false;
-            map->tiles[prevx+MAPWIDTH*y].seeThrough = true;
-        }
+        makeRect(r, nowall, map->tiles);
+
+        makeRect({newx<prevx ? newx : prevx, prevy,
+                  std::abs(newx-prevx)+1,  1},
+                 nowall, map->tiles);
+        makeRect({newx, newy<prevy ? newy : prevy,
+                 1, std::abs(newy-prevy)+1},
+                 nowall, map->tiles);
     }
     #endif
 }
@@ -63,11 +67,10 @@ First is the player's spawn and last is the exit.
 Addendum: if a room is too close to the previously created one, drop it and try again.
 */
 
-void MapGenerator::makeRect(SDL_Rect r, bool w, Tile* tiles) {
+void MapGenerator::makeRect(const SDL_Rect r, const TileProperties* t, Tile* tiles) {
     for (int x = r.x; x != r.x+r.w; x++)
     for (int y = r.y; y != r.y+r.h; y++) {
-        tiles[x+MAPWIDTH*y].blocking = w;
-        tiles[x+MAPWIDTH*y].seeThrough = !w;
+        tiles[x+MAPWIDTH*y].properties = t;
     }
 }
 
