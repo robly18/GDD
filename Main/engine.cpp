@@ -217,7 +217,13 @@ void Engine::doTick() {
                     mob->ai->update(mob);
                 }
             }
-            map->mobs2.remove_if([](Mob* m){return m->destructible->isDead();});
+            for (auto m = map->mobs2.begin(); m != map->mobs2.end();) {
+                if ((*m)->destructible->isDead()) {
+                    m = map->killMob(m);
+                } else {
+                    m++;
+                }
+            }
             time++;
             if (map->player->destructible->isDead()) return;
         } while (time % map->player->getSwiftness());

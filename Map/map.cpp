@@ -12,6 +12,20 @@ Map::Map () {
     pathfinder = new Pathfinder(MAPWIDTH, MAPHEIGHT);
 };
 
+std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
+    Mob* mob = *m;
+
+    mob->a->r = mob->destructible->deadSprite;
+    delete mob->ai;
+    mob->ai = nullptr;
+
+    mob->destructible->dropItems(mob);
+
+    mobs1.push_back(mob);
+
+    return mobs2.erase(m);
+}
+
 bool Map::canMoveTo(int x, int y) {
     if (isWall(x, y)) return false;
     for (std::list<Mob*>::iterator m = mobs2.begin(); m != mobs2.end(); m++) {
@@ -292,3 +306,4 @@ void Map::inspect(Pos p) const {
         }
     }
 }
+

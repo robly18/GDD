@@ -24,7 +24,7 @@ class FovComputer;
 class Pathfinder;
 
 struct TileProperties { //what happens when i read shenanigans on design patterns
-    TileProperties(bool b, bool s) : blocking(b), seeThrough(s) {};
+        TileProperties(bool b, bool s) : blocking(b), seeThrough(s) {};
     bool blocking = false; //friday 13th march 2015
     bool seeThrough = true;
 };
@@ -45,10 +45,10 @@ struct Tile {
 #define POSINBOUNDS(p) INBOUNDS(p.x, p.y)
 
 class Map {
+    friend class MapGenerator;
 public:
     Map();
 
-    Tile                        tiles[MAPWIDTH*MAPHEIGHT];
     bool                        isWall(int x, int y) {return x < 0 || x >= MAPWIDTH ||
                                                                 y < 0 || y >= MAPHEIGHT ||
                                                                 tiles[x+y*MAPWIDTH].properties->blocking;}
@@ -66,6 +66,8 @@ public:
     std::list<Mob*>             mobs1;
     std::list<FloorInventory*>  items;
     std::list<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
+
+    std::list<Mob*>::iterator   killMob(std::list<Mob*>::iterator);
 
     Player*                     player = nullptr;
     int                         camerax = 0, cameray = 0;
@@ -91,6 +93,9 @@ public:
     void                        updateFovData();
 
 private:
+    Tile                        tiles[MAPWIDTH*MAPHEIGHT];
+
+
     void                        makePlayer();
     MapGenerator                *generator;
 

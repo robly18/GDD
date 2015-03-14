@@ -41,20 +41,10 @@ void Destructible::dropItems(Mob* mob) {
 }
 
 void PlayerDestructible::die(Mob* mob) {
-    mob->a->r = deadSprite;
-    delete mob->ai;
-    mob->ai = nullptr;
     engine.state = engine.State::DEAD;
 }
 
 void MobDestructible::die(Mob* mob) {
-    mob->a->r = deadSprite;
-    delete mob->ai;
-    mob->ai = NULL;
-    dropItems(mob);
-
-    engine.map->mobs1.push_back(mob);
-
     char buffer [64];
     sprintf(buffer, "The %s died!", mob->name.c_str());
     engine.ui->log->addMessage(buffer);
