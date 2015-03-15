@@ -12,7 +12,7 @@ NumBar::NumBar(SDL_Rect barmax, Uint32 fullc, Uint32 emptyc, BmpFont* font,
 void NumBar::render(SDL_Surface* surface) {
     SDL_FillRect(surface, &barmax, emptyc);
     if (valptr) {
-        SDL_Rect r = {barmax.x, barmax.y, barmax.w*((float)(*valptr)/maxval), barmax.h};
+        SDL_Rect r = {barmax.x, barmax.y, barmax.w*(*valptr)/maxval, barmax.h};
         SDL_FillRect(surface, &r, fullc);
     }
 }

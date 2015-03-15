@@ -10,10 +10,10 @@
 #include "mapgenerator.hpp"
 #include "fovcomputer.hpp"
 #include <list>
+#include <memory>
 
 #define SEEALLMOBS
 #define SEEALLTILES
-
 
 class Inventory;
 class FloorInventory;
@@ -24,10 +24,19 @@ class FovComputer;
 class Pathfinder;
 
 struct TileProperties { //what happens when i read shenanigans on design patterns
-        TileProperties(bool b, bool s) : blocking(b), seeThrough(s) {};
-    bool blocking = false; //friday 13th march 2015
-    bool seeThrough = true;
-};
+        TileProperties(bool b, bool s, int f = 0) :
+            blocking(b), seeThrough(s), flags(f) {};
+    bool blocking; //friday 13th march 2015
+    bool seeThrough;
+    int flags;
+};//todo implement exit shenanigans
+//maybe turn blocking and seethrough into flags?
+
+namespace TileProperty {
+    enum {
+        EXIT = 0x01,
+    };
+}
 
 struct Tile {
     const TileProperties    *properties;
@@ -44,6 +53,8 @@ struct Tile {
 #define INBOUNDS(x, y) (0<=x && x<MAPWIDTH && 0<=y && y<MAPHEIGHT)
 #define POSINBOUNDS(p) INBOUNDS(p.x, p.y)
 
+#define POSTOINDEX(p) (p.x + p.y * MAPWIDTH)
+
 class Map {
     friend class MapGenerator;
 public:
@@ -57,6 +68,8 @@ public:
     bool                        hasBeenSeen(int x, int y) const;
     bool                        isBeingSeen(int x, int y) const;
 
+    bool                        hasFlag(int x, int y, int flag) const;
+
     FovComputer                 *fovcomputer;
     Pathfinder                  *pathfinder;
 
@@ -66,6 +79,8 @@ public:
     std::list<Mob*>             mobs1;
     std::list<FloorInventory*>  items;
     std::list<Mob*>             mobs2; //3 layers. Bottommost-mobs1, middlemost-items, topmost-mobs2 (collidable)
+
+    void                        spawnExit(Pos);
 
     std::list<Mob*>::iterator   killMob(std::list<Mob*>::iterator);
 
@@ -103,6 +118,12 @@ private:
 
     int                         seeabletiles;
     int                         seentiles;
+
+
+
+    const TileProperties    *nowall,
+                            *wall,
+                            *exit;
 };
 
 #endif

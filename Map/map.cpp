@@ -1,15 +1,21 @@
 #include "map.hpp"
 
-Map::Map () {
-    surface = SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0);
-    highlightsurface = SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
+Map::Map () :
+    nowall(new TileProperties{false, true}),
+    wall(new TileProperties{true, false}),
+    exit(new TileProperties{false, true, TileProperty::EXIT}),
+
+    fovcomputer(new FovComputer(MAPWIDTH, MAPHEIGHT)),
+    pathfinder(new Pathfinder(MAPWIDTH, MAPHEIGHT)),
+
+    surface(SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0)),
+
+    highlightsurface(SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
                                                     0x0000FF,
                                                     0x00FF00,
                                                     0xFF0000,
-                                                    0xFFFFFF);
+                                                    0xFFFFFF)) {
     SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);
-    fovcomputer = new FovComputer(MAPWIDTH, MAPHEIGHT);
-    pathfinder = new Pathfinder(MAPWIDTH, MAPHEIGHT);
 };
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
@@ -23,7 +29,15 @@ std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
 
     mobs1.push_back(mob);
 
+    if (mobs2.size() - 1 == 1) {
+        spawnExit(mob->getPos());
+    }
+
     return mobs2.erase(m);
+}
+
+void Map::spawnExit(Pos p) {
+    tiles[POSTOINDEX(p)].properties = exit;
 }
 
 bool Map::canMoveTo(int x, int y) {
@@ -65,6 +79,10 @@ bool Map::isBeingSeen(int x, int y) const {
 
 bool Map::canSeeThrough(int x, int y) const {
     return INBOUNDS(x, y) && tiles[x+y*MAPWIDTH].properties->seeThrough;
+}
+
+bool Map::hasFlag(int x, int y, int flag) const {
+    return INBOUNDS(x,y) && (tiles[x+y*MAPWIDTH].properties->flags & flag);
 }
 
 FloorInventory* Map::getInvAt(int x, int y) const {
@@ -112,15 +130,24 @@ SDL_Surface* Map::render(int mousex, int mousey) {
     static SDL_Rect floor = {0,16,16,16}, flooroos = {16,16,16,16};
     static SDL_Rect wall = {0,32,16,16}, walloos = {16,32,16,16};
     static SDL_Rect unseen = {0, 48, 16, 16};
+    static SDL_Rect stairs = {32, 32, 16, 16}, stairsoos = {48, 32, 16, 16};
+    //Ugly hack, do remove in the future
+
     for (int x = 0; x != SCREENTILEW; x++)
     for (int y = 0; y != SCREENTILEH; y++) {
-        SDL_Rect r = SDL_Rect{x*16, y*16, 16, 16};
+        SDL_Rect r = SDL_Rect{x*16, y*16, 16, 16}; //this will need refinement soon
         if (INBOUNDS(x+camerax, y+cameray) && hasBeenSeen(x+camerax, y+cameray)) {
-            if (isBeingSeen(x+camerax, y+cameray)) {
-                SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
-                                surface, &r);
+            if (!hasFlag(x+camerax, y+cameray, TileProperty::EXIT)) {
+                if (isBeingSeen(x+camerax, y+cameray)) {
+                    SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &floor : &wall,
+                                    surface, &r);
+                } else {
+                    SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &flooroos : &walloos,
+                                    surface, &r);
+                }
             } else {
-                SDL_BlitSurface(engine.texture, !isWall(x+camerax,y+cameray) ? &flooroos : &walloos,
+                SDL_BlitSurface(engine.texture,
+                                isBeingSeen(x+camerax, y+cameray) ? &stairs : &stairsoos,
                                 surface, &r);
             }
         } else {
@@ -221,7 +248,7 @@ void Map::generateMap() {
     makePlayer();
 
 
-    generator->generateMap(this);
+    generator->generateMap(this, wall, nowall);
     DEBUGMSG("Populating...\n");
 
     generator->populateMap(this);

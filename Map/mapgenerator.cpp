@@ -1,13 +1,11 @@
 #include "mapgenerator.hpp"
 
-MapGenerator::MapGenerator() :
-    nowall(new TileProperties{false, true}),
-    wall(new TileProperties{true, false}) {
+MapGenerator::MapGenerator() {
 }
 
 #define NBLANKMAP
 
-void MapGenerator::generateMap(Map* map) {
+void MapGenerator::generateMap(Map* map, const TileProperties* wall, const TileProperties* nowall) {
 
     #ifdef BLANKMAP
     makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, nowall, map->tiles);
@@ -93,7 +91,7 @@ void MapGenerator::populateMap(Map* map) {
                          SDL_Rect{16, 64, 16, 16}, engine.texture, "CLUBGUY");
         m->sght = 2;
         m->ai = new BasicAi(130);
-        m->destructible = new MobDestructible(20, SDL_Rect{0, 30, 16, 16}, 14);
+        m->destructible = new MobDestructible(20, SDL_Rect{0, 80, 16, 16}, 14);
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("HPPot", 40));
@@ -109,7 +107,7 @@ void MapGenerator::populateMap(Map* map) {
                          SDL_Rect{32, 64, 16, 16}, engine.texture, "ROGUEIMP");
         m->sght = 4;
         m->ai = new BasicAi(142);
-        m->destructible = new MobDestructible(10, SDL_Rect{0, 30, 16, 16}, 6);
+        m->destructible = new MobDestructible(10, SDL_Rect{0, 80, 16, 16}, 6);
         m->attack = a;
         m->inventory = new MobInventory;
         m->inventory->addItem(new HpPotion("CrapPot", 25));

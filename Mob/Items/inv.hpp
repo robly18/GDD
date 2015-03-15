@@ -58,7 +58,7 @@ private:
 class FloorInventory {
 public:
     FloorInventory(SDL_Surface* s, int x, int y) : x(x), y(y),
-            a(new Actor(s, {0, 16+8, 16, 16},
+            a(new Actor(s, {16, 80, 16, 16},
                         {16*x, 16*y, 16, 16})) {};
 
     MobInventory items;
