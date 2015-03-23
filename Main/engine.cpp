@@ -240,6 +240,10 @@ void Engine::doTick() {
                                         map->player->weplvls[map->player->weapon->weapontype]);
         if (state == State::USED) state = State::INV;
         else state = State::RUNNING;
+
+        if (map->hasFlag(map->player->x, map->player->y, TileProperty::EXIT)) {
+            ui->addPrompt(new NextLevelPrompt);
+        }
     }
 
 }

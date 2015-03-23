@@ -8,6 +8,8 @@ Map::Map () :
     fovcomputer(new FovComputer(MAPWIDTH, MAPHEIGHT)),
     pathfinder(new Pathfinder(MAPWIDTH, MAPHEIGHT)),
 
+    generator(new MapGenerator),
+
     surface(SDL_CreateRGBSurface(0, SCREENTILEW*16, SCREENTILEH*16, 24, 0, 0, 0, 0)),
 
     highlightsurface(SDL_CreateRGBSurface(0, 16*16, 10*16, 24,
@@ -16,6 +18,13 @@ Map::Map () :
                                                     0xFF0000,
                                                     0xFFFFFF)) {
     SDL_SetSurfaceAlphaMod(highlightsurface, 128+64);
+
+    makePlayer();
+
+    //player->inventory->addItem(new Armor("TestArmr", 2, 10));
+    player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
+    player->inventory->addItem(new Sword("SORD....", 10, 3));
+    player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 };
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
@@ -242,22 +251,22 @@ void Map::checkMapData() {
 /**Map Generation**/
 
 void Map::generateMap() {
+    DEBUGMSG("Erasing what was already here\n");
+
+    for (auto m : mobs1) delete m;
+    for (auto i : items) delete i;
+    assert(mobs2.size() == 1); //in principle, there should only be the player...
+
+    mobs1.clear();
+    items.clear();
+
     DEBUGMSG("Generating new map\n");
-
-    generator = new MapGenerator();
-    makePlayer();
-
 
     generator->generateMap(this, wall, nowall);
     DEBUGMSG("Populating...\n");
 
     generator->populateMap(this);
     DEBUGMSG("Done.\n");
-
-    //player->inventory->addItem(new Armor("TestArmr", 2, 10));
-    player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
-    player->inventory->addItem(new Sword("SORD....", 10, 3));
-    player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 
     seeabletiles = 0; seentiles = 0;
 
@@ -268,6 +277,14 @@ void Map::generateMap() {
         if (canSeeThrough(x, y)) {
             seeabletiles++;
         }
+
+        tiles[x+y*MAPWIDTH].isSeen = false;
+        tiles[x+y*MAPWIDTH].hasBeenSeen =
+                            #ifdef SEEALLTILES
+                                true;
+                            #else
+                                false;
+                            #endif
     }
 
     resetCamera();

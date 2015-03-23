@@ -89,6 +89,7 @@ void NextLevelPrompt::doOpt1() {
 
 void NextLevelPrompt::doOpt2() {
     engine.ui->closePrompt();
-    std::cout<<"Todo: generate next level\n";
+
+    engine.map->generateMap();
 }
 
