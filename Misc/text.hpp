@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include <cassert>
+
 class BmpFont {
 private:
     const SDL_Rect* computeChars() const;

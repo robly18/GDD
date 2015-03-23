@@ -6,6 +6,7 @@
 #include "..\Misc\bars.hpp"
 #include "log.hpp"
 #include "uistats.hpp"
+#include "prompt.hpp"
 
 class NumBar;
 class Log;
@@ -15,6 +16,8 @@ class UiButtons;
 class UiDashboard;
 class UiInv;
 class UiXP;
+
+class Prompt;
 
 class Ui {
 public:
@@ -45,9 +48,14 @@ public:
     int hx = 0, hy = 0; //Mouse clicked position
     bool h = false; //Is mouse clicked?
 
-    void render(SDL_Renderer*);
+    void            render(SDL_Renderer*);
 
-    void checkClick(bool, int button, int x, int y);
+    void            checkClick(bool, int button, int x, int y);
+
+    void            addPrompt(Prompt*);
+    void            closePrompt();
+
+    Prompt          *prompt = nullptr;
 };
 
 #endif

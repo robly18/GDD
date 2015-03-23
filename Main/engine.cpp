@@ -57,6 +57,7 @@ int Engine::init() {
     DEBUGMSG("Engine init done\n");
 
     state = State::RUNNING;
+
     return 0;
 }
 
@@ -103,6 +104,9 @@ void Engine::checkEvents() {
             if (e.key.keysym.sym == SDLK_c) {
                 camera = !camera;
                 if (!camera) map->resetCamera();
+            }
+            if (ui->prompt) {
+                break;
             }
             switch (state) {
             case State::RUNNING:
@@ -162,7 +166,8 @@ void Engine::checkEvents() {
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
-            if (state == State::RUNNING) {
+            if (!ui->prompt &&
+                state == State::RUNNING) {
                 int atkx = (mx-2)/16 + map->camerax;
                 int atky = (my-2)/16 + map->cameray; //The pos of mouse on the map
 

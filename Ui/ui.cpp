@@ -36,6 +36,15 @@ void Ui::render(SDL_Renderer* renderer) {
 
     log->render(barsurface);
 
+    if (prompt) {
+        if (h) {
+            Pos mp = {hx, hy};
+            prompt->render(barsurface, &mp);
+        } else {
+            prompt->render(barsurface);
+        }
+    }
+
     SDL_Texture* ui = SDL_CreateTextureFromSurface(renderer, barsurface);
     SDL_RenderCopy(renderer, ui, NULL, NULL);
     SDL_DestroyTexture(ui);
@@ -46,7 +55,7 @@ void Ui::checkClick(bool clicking, int button, int x, int y) {
         if (button == SDL_BUTTON_LEFT) {
             h = true; hx = x; hy = y;
         }
-        if (engine.state != engine.State::LOG) {
+        if (engine.state != engine.State::LOG && !prompt) {
             buttons->checkClick(button, x, y);
             if (engine.state != engine.State::INV) {
                 dashboard->checkClick(button, x, y);
@@ -56,19 +65,34 @@ void Ui::checkClick(bool clicking, int button, int x, int y) {
         }
     } else if (button == SDL_BUTTON_LEFT) {
         h = false;
-        if (engine.state != engine.State::LOG) {
-            buttons->checkUnclick(hx, hy, x, y);
-            if (engine.state != engine.State::INV) {
-                dashboard->checkUnclick(hx, hy, x, y);
-                xp->checkClick(button, x, y);
+        if (!prompt) {
+            if (engine.state != engine.State::LOG) {
+                buttons->checkUnclick(hx, hy, x, y);
+                if (engine.state != engine.State::INV) {
+                    dashboard->checkUnclick(hx, hy, x, y);
+                    xp->checkClick(button, x, y);
+                }
+                else inv->checkUnclick(hx, hy, x, y);
             }
-            else inv->checkUnclick(hx, hy, x, y);
-        }
-        if (log->checkUnclick(hx, hy, x, y)) {
-            engine.state = engine.State::LOG;
+            if (log->checkUnclick(hx, hy, x, y)) {
+                engine.state = engine.State::LOG;
+            } else {
+                if (engine.state == engine.State::LOG)
+                    engine.state = engine.State::RUNNING;
+            }
         } else {
-            if (engine.state == engine.State::LOG)
-                engine.state = engine.State::RUNNING;
+            prompt->unclick({hx, hy}, {x, y});
         }
     } //Ugh would you look at this mess
+}
+
+void Ui::addPrompt(Prompt *p) {
+    assert(prompt==nullptr);
+    prompt = p;
+}
+
+void Ui::closePrompt() {
+    assert(prompt!=nullptr);
+    delete prompt;
+    prompt = nullptr;
 }

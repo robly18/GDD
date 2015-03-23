@@ -20,8 +20,6 @@ class Attack;
 class NumBar;
 class Ui;
 
-
-
 class Engine {
 public:
     enum class State {

@@ -19,8 +19,12 @@ const SDL_Rect* BmpFont::operator[] (int i) const {
 }
 
 FontStr::FontStr(const BmpFont *font, int maxlen, std::string s) {
+    assert(s.size() <= maxlen);
+
     chars = (const SDL_Rect**) calloc(maxlen + 1, sizeof(const SDL_Rect*));
     setText(font, s);
+    if (s == "yo")
+    std::cout<<s<<" "<<chars[0]<<"\n";
 }
 
 FontStr::~FontStr() {
