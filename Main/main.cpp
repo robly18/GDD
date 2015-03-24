@@ -33,3 +33,16 @@ Add map scrolling?
 //its all done now anyway
 //well not all but
 //you get the point
+
+/*
+todo: i = open inv
+fix crash on take inv from full
+on change wep change atk
+hotkeys
+*/
+
+/*
+This comment is a thank you note to Miguel
+Thx bro for helping me test
+I mean it
+*/
