@@ -22,12 +22,10 @@ Ui::Ui() {
     DEBUGMSG("UI Created\n");
 }
 
-void Ui::render(SDL_Renderer* renderer) {
-    SDL_FillRect(barsurface, NULL, 0xFF00FF);
-
-    buttons->render(h, hx, hy);
-
-    if (engine.state != engine.State::INV) {
+void Ui::render(SDL_Renderer* renderer) { //okay next step is this
+        //glhf future self
+/*
+    if (engine.enginestate != engine.inv) {
         dashboard->render(h, hx, hy);
         xp->render(h, hx, hy);
     } else {
@@ -43,56 +41,23 @@ void Ui::render(SDL_Renderer* renderer) {
         } else {
             prompt->render(barsurface);
         }
-    }
+    }*/
 
     SDL_Texture* ui = SDL_CreateTextureFromSurface(renderer, barsurface);
     SDL_RenderCopy(renderer, ui, NULL, NULL);
     SDL_DestroyTexture(ui);
-}
-
-void Ui::checkClick(bool clicking, int button, int x, int y) {
-    if (clicking) {
-        if (button == SDL_BUTTON_LEFT) {
-            h = true; hx = x; hy = y;
-        }
-        if (engine.state != engine.State::LOG && !prompt) {
-            buttons->checkClick(button, x, y);
-            if (engine.state != engine.State::INV) {
-                dashboard->checkClick(button, x, y);
-                xp->checkClick(button, x, y);
-            }
-            else inv->checkClick(button, x, y);
-        }
-    } else if (button == SDL_BUTTON_LEFT) {
-        h = false;
-        if (!prompt) {
-            if (engine.state != engine.State::LOG) {
-                buttons->checkUnclick(hx, hy, x, y);
-                if (engine.state != engine.State::INV) {
-                    dashboard->checkUnclick(hx, hy, x, y);
-                    xp->checkClick(button, x, y);
-                }
-                else inv->checkUnclick(hx, hy, x, y);
-            }
-            if (log->checkUnclick(hx, hy, x, y)) {
-                engine.state = engine.State::LOG;
-            } else {
-                if (engine.state == engine.State::LOG)
-                    engine.state = engine.State::RUNNING;
-            }
-        } else {
-            prompt->unclick({hx, hy}, {x, y});
-        }
-    } //Ugh would you look at this mess
+    SDL_FillRect(barsurface, NULL, 0xFF00FF);
 }
 
 void Ui::addPrompt(Prompt *p) {
-    assert(prompt==nullptr);
-    prompt = p;
+    assert(engine.viewprompt->prompt==nullptr);
+    engine.viewprompt->prompt = p;
+    engine.enginestate = engine.viewprompt;
 }
 
 void Ui::closePrompt() {
-    assert(prompt!=nullptr);
-    delete prompt;
-    prompt = nullptr;
+    assert(engine.viewprompt->prompt!=nullptr);
+    delete engine.viewprompt->prompt;
+    engine.viewprompt->prompt = nullptr;
+    engine.enginestate = engine.running;
 }

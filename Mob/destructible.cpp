@@ -41,7 +41,7 @@ void Destructible::dropItems(Mob* mob) {
 }
 
 void PlayerDestructible::die(Mob* mob) {
-    engine.state = engine.State::DEAD;
+    //engine.state = engine.State::DEAD;
 }
 
 void MobDestructible::die(Mob* mob) {

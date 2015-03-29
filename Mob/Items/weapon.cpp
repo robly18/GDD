@@ -1,6 +1,8 @@
 #include "weapon.hpp"
 
 bool Weapon::use(Player* user) { //tpdo fix this
+    engine.map->player->attack = nullptr;
+
     Weapon* tmpa = user->weapon;
     user->weapon = this;
     if (tmpa) {
@@ -13,6 +15,8 @@ bool Weapon::use(Player* user) { //tpdo fix this
 }
 
 bool Weapon::unequip(Mob* user) {
+    engine.map->player->attack = nullptr;
+
     if (user->inventory->addItem(this)) return true;
     engine.map->dropItem(this, user->x, user->y);
     return false;

@@ -21,10 +21,12 @@ Map::Map () :
 
     makePlayer();
 
-    //player->inventory->addItem(new Armor("TestArmr", 2, 10));
+    player->inventory->addItem(new Armor("TestArmr", 2, 10));
     player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
     player->inventory->addItem(new Sword("SORD....", 10, 3));
-    player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
+    player->inventory->addItem(new HpPotion("t1ck", 10));
+    player->inventory->addItem(new HpPotion("t0ck", 10));
+    //player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 };
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
@@ -133,6 +135,24 @@ FloorInventory* Map::removeInvAt(int x, int y) {
         }
     }
     return NULL;
+}
+
+bool Map::attack (Pos pos) {
+    if (player->attack) { //todo delegate this mess to map class
+        if (0 <= pos.x-camerax && pos.x-camerax < 16 && //ok done
+            0 <= pos.y-cameray && pos.y-cameray < 16) {
+            if (player->attack->target(player, pos.x, pos.y)) {
+                if (!player->attack->select(player))
+                    player->attack = NULL;
+                return true;
+            } else if (player->weapon) {
+                player->weapon->cancelAttack(player);
+            } else {
+                player->attack = NULL;
+            }
+        }
+    }
+    return false;
 }
 
 SDL_Surface* Map::render(int mousex, int mousey) {

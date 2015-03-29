@@ -45,17 +45,11 @@ public:
     UiInv           *inv;
     UiXP            *xp;
 
-    int hx = 0, hy = 0; //Mouse clicked position
-    bool h = false; //Is mouse clicked?
 
     void            render(SDL_Renderer*);
 
-    void            checkClick(bool, int button, int x, int y);
-
     void            addPrompt(Prompt*);
     void            closePrompt();
-
-    Prompt          *prompt = nullptr;
 };
 
 #endif

@@ -52,7 +52,8 @@ void UiButtons::checkClick(int mb, int hx, int hy) {}
 
 void UiButtons::checkUnclick(int hx, int hy, int x, int y) {
     if (isInRect(invbutton->p, x, y)) {
-        engine.state = engine.state == engine.State::INV ? engine.State::RUNNING : engine.State::INV;
+        engine.enginestate = engine.enginestate == engine.inv ?
+                                engine.running : engine.inv;
         engine.ui->inv->page = 0;
         engine.ui->inv->selecteditem = NULL;
         engine.ui->inv->updateInventory();
@@ -103,14 +104,12 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
                         engine.map->player->attack = engine.map->player->defaultattack;
                     }
                 case AtkButtons::AOE:
-                    if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->attacks[a-atkbuttons-3]->select(engine.map->player);
                     }
                     break;
                 case AtkButtons::BLOCK:
                 case AtkButtons::HEAL:
-                    if (engine.state != engine.State::RUNNING) break;
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->defenses[a-atkbuttons]->select(engine.map->player);
                     }
@@ -315,7 +314,7 @@ bool UiInv::checkOtherButtonsClick(int hx, int hy, int x, int y) {
             isInRect(slots[selecteditem->type]->p, x, y)) {
             if (selecteditem->use(engine.map->player)) {
                 engine.map->player->inventory->removeItem(selecteditem);
-                engine.state = engine.State::USED;
+                engine.doTick(engine.USEDFLAG);
                 engine.ui->dashboard->refreshButtons();
                 if (selecteditem->type != Itemtype::USE) {
                     itemnames[selecteditem->type]->setText(engine.font, selecteditem->name);

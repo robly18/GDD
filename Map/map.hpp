@@ -107,6 +107,8 @@ public:
     void                        generateMap();
     void                        updateFovData();
 
+    bool                        attack(Pos);
+
 private:
     Tile                        tiles[MAPWIDTH*MAPHEIGHT];
 

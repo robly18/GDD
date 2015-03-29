@@ -5,6 +5,7 @@
 #include "..\Misc\actor.hpp"
 class Mob;
 class Player;
+#include "state.hpp"
 #include "..\Mob\Items\inv.hpp"
 #include "..\Mob\destructible.hpp"
 #include "..\Mob\Ai\ai.hpp"

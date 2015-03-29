@@ -9,7 +9,10 @@
 #include "..\Misc\text.hpp"
 #include "..\Ui\ui.hpp"
 
+#include "state.hpp"
+
 #include "..\Main\main.hpp"
+
 
 #define SWIDTH (110+6+16*16)
 #define SHEIGHT (10*16+6+46+23)
@@ -20,28 +23,25 @@ class Attack;
 class NumBar;
 class Ui;
 
+struct MouseState {
+    Pos p;
+
+    bool pressed;
+    Pos h; //pos of where was pressed
+};
+
 class Engine {
 public:
-    enum class State {
-        QUIT,
-        INIT,
-        RUNNING,
-        MOVED,
-        ATTACKED,
-        USED,
-        DEAD,
-        INV,
-        MAP,
-        LOG,
-    };
-    State state = State::INIT;
+    //State state = State::INIT;
     bool camera = false;
 
     int init();
 
     void render();
-    void checkEvents();
-    void doTick();
+    int  checkEvents();
+
+    void doTick(int flags);
+    enum {MOVEDFLAG, ATTACKEDFLAG, USEDFLAG};
 
     SDL_Surface* texture;
 
@@ -55,11 +55,22 @@ public:
 
     SDL_KeyboardEvent lastkey;
 
+
+    EngineState::State          *enginestate; //todo rename all enginestate to state
+
+    EngineState::State          *running,
+                                *inv,
+                                *viewmap,
+                                *viewlog;
+    EngineState::Viewprompt     *viewprompt;
+
+
 private:
+
+    MouseState                  mouse;
+
     SDL_Window* window;
     SDL_Renderer* renderer;
-
-    int mx, my;
 
     SDL_Texture* loadTexture(char*, short r = 0xFF, short g = 0x00, short b = 0xFF);
 };

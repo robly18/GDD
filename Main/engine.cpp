@@ -56,194 +56,91 @@ int Engine::init() {
 
     DEBUGMSG("Engine init done\n");
 
-    state = State::RUNNING;
+
+    running = new EngineState::Running;
+    inv = new EngineState::Inv;
+    viewmap = new EngineState::Viewmap;
+    viewlog = new EngineState::Viewlog;
+    viewprompt = new EngineState::Viewprompt;
+
+    enginestate = running;
 
     return 0;
 }
 
 void Engine::render() {
     SDL_RenderClear(renderer);
-    static SDL_Rect maprect = {2*2, 2*2, 16*16*2, 10*16*2};
-    static SDL_Texture* t;
 
-    switch (state) {
-    case State::RUNNING:
-    case State::ATTACKED:
-    case State::MOVED:
-    case State::DEAD:
-        t = SDL_CreateTextureFromSurface(renderer, map->render(mx, my));
-        SDL_RenderCopy(renderer, t, NULL, &maprect);
-        SDL_DestroyTexture(t);
-        break;
-    case State::MAP:
-        t = SDL_CreateTextureFromSurface(renderer, map->mapview());
-        SDL_RenderCopy(renderer, t, NULL, &maprect);
-        SDL_DestroyTexture(t);
-        break;
-    case State::INV:
-        break;
-    default: break;
-    }
-
-    ui->render(renderer);
+    enginestate->render(*this, renderer, mouse);
 
     SDL_RenderPresent(renderer);
 }
 
-void Engine::checkEvents() {
+int Engine::checkEvents() {
     SDL_Event e;
-    SDL_GetMouseState(&mx, &my);
-    mx=mx>>1;
-    my=my>>1;
+    SDL_GetMouseState(&mouse.p.x, &mouse.p.y);
+    mouse.p.x /= 2;
+    mouse.p.y /= 2;
     while (SDL_PollEvent(&e)) {
+        enginestate->actOnEvent(*this, e, mouse);
         switch (e.type) {
         case SDL_QUIT:
-            state = State::QUIT;
-            break;
-        case SDL_KEYDOWN:
-            if (e.key.keysym.sym == SDLK_c) {
-                camera = !camera;
-                if (!camera) map->resetCamera();
-            }
-            if (ui->prompt) {
-                break;
-            }
-            switch (state) {
-            case State::RUNNING:
-                if (!camera) {
-                    switch (e.key.keysym.sym) {
-                    case SDLK_DOWN:
-                    case SDLK_UP:
-                    case SDLK_LEFT:
-                    case SDLK_RIGHT:
-                    case SDLK_SPACE:
-                        lastkey = e.key;
-                        state = State::MOVED;
-                        break;
-                    case SDLK_m:
-                        map->checkMapData();
-                        state = State::MAP;
-                        break;
-                    //debugging controls:
-                    {
-                    static int debug_xp = 1;
-                    case SDLK_p:
-                        map->player->xpholder->levelUp(debug_xp, -1);
-                        break;
-                    case SDLK_o:
-                        std::cin>>debug_xp;
-                        break;
-                    }
-
-                    default:
-                        break;
-                    }
-                } else {
-                    switch (e.key.keysym.sym) {
-                    case SDLK_DOWN: map->cameray++; break;
-                    case SDLK_UP: map->cameray--; break;
-                    case SDLK_LEFT: map->camerax--; break;
-                    case SDLK_RIGHT: map->camerax++; break;
-                    case SDLK_SPACE: lastkey = e.key; state = State::MOVED; break;
-
-                    default: break;
-                    }
-                }
-                break;
-            case State::LOG:
-                switch (e.key.keysym.sym) {
-                case SDLK_UP:   ui->log->moveReadLine(-1);  break;
-                case SDLK_DOWN: ui->log->moveReadLine(1);   break;
-                default: break;
-                }
-                break;
-            case State::MAP:
-                if (e.key.keysym.sym == SDLK_m) {
-                    state = State::RUNNING;
-                }
-                break;
-            default: break;
-            }
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            if (!ui->prompt &&
-                state == State::RUNNING) {
-                int atkx = (mx-2)/16 + map->camerax;
-                int atky = (my-2)/16 + map->cameray; //The pos of mouse on the map
-
-                if (e.button.button == SDL_BUTTON_LEFT) {
-                    if (map->player->attack) { //todo delegate this mess to map class
-                        if (0 <= atkx-map->camerax && atkx-map->camerax < 16 &&
-                            0 <= atky-map->cameray && atky-map->cameray < 16) {
-                            if (map->player->attack->target(map->player, atkx, atky)) {
-                                state = State::ATTACKED;
-                                if (!map->player->attack->select(map->player))
-                                    map->player->attack = NULL;
-                            } else if (map->player->weapon) {
-                                map->player->weapon->cancelAttack(map->player);
-                            } else {
-                                map->player->attack = NULL;
-                            }
-                        }
-                    }
-                } else if (e.button.button == SDL_BUTTON_RIGHT) {
-                    map->inspect(Pos{atkx, atky});
-                }
-            }
-            ui->checkClick(true, e.button.button, mx, my);
+            return 1;
+            break;//todo sort this ALLLLLLLL out
+        case SDL_MOUSEBUTTONDOWN://sorted out :D...mostly
+            mouse.pressed = true;
+            mouse.h = mouse.p;
             break;
         case SDL_MOUSEBUTTONUP:
-            ui->checkClick(false, e.button.button, mx, my);
+            mouse.pressed = false;
             break;
         }
     }
+    return 0;
 }
 
-void Engine::doTick() {
-    if (state == State::MOVED ||
-        state == State::ATTACKED ||
-        state == State::USED) {
+void Engine::doTick(int flag) {
 
-        do {
-            for (auto mob : map->mobs2) {
-                int swiftness = mob->getSwiftness();
-                if (swiftness) {
-                    if (time % swiftness == mob->ai->timeoffset) {
-                        if (mob->destructible)
-                            mob->destructible->statusholder->update(mob);
-                    }
+    if (flag != MOVEDFLAG) lastkey.keysym.sym = SDLK_SPACE;
+
+    do {
+        for (auto mob : map->mobs2) {
+            int swiftness = mob->getSwiftness();
+            if (swiftness) {
+                if (time % swiftness == mob->ai->timeoffset) {
+                    if (mob->destructible)
+                        mob->destructible->statusholder->update(mob);
                 }
             }
-            for (auto mob : map->mobs2) {
-                if (mob->getSwiftness())
-                if (time % mob->getSwiftness() == mob->ai->timeoffset)
-                if (mob->destructible &&
-                    !mob->destructible->statusholder->hasEffect(SideEffect::FROZEN)) {
-                    mob->ai->update(mob);
-                }
+        }
+        for (auto mob : map->mobs2) {
+            if (mob->getSwiftness())
+            if (time % mob->getSwiftness() == mob->ai->timeoffset)
+            if (mob->destructible &&
+                !mob->destructible->statusholder->hasEffect(SideEffect::FROZEN)) {
+                mob->ai->update(mob);
             }
-            for (auto m = map->mobs2.begin(); m != map->mobs2.end();) {
-                if ((*m)->destructible->isDead()) {
-                    m = map->killMob(m);
-                } else {
-                    m++;
-                }
+        }
+        for (auto m = map->mobs2.begin(); m != map->mobs2.end();) {
+            if ((*m)->destructible->isDead()) {
+                m = map->killMob(m);
+            } else {
+                m++;
             }
-            time++;
-            if (map->player->destructible->isDead()) return;
-        } while (time % map->player->getSwiftness());
+        }
+        time++;
+        if (map->player->destructible->isDead()) return;
+    } while (time % map->player->getSwiftness());
 
-        map->updateFovData();
-        if (state != State::ATTACKED &&
-            state != State::USED &&
-            map->player->weapon) map->player->weapon->regenMana(
-                                        map->player->weplvls[map->player->weapon->weapontype]);
-        if (state == State::USED) state = State::INV;
-        else state = State::RUNNING;
+    map->updateFovData();
 
+    if (flag == MOVEDFLAG &&
+        map->player->weapon) map->player->weapon->regenMana(
+                                    map->player->weplvls[map->player->weapon->weapontype]);
+
+    if (flag != USEDFLAG)
         if (map->hasFlag(map->player->x, map->player->y, TileProperty::EXIT)) {
             ui->addPrompt(new NextLevelPrompt);
         }
-    }
 
 }

@@ -5,16 +5,30 @@
 
 Engine engine;
 
+#define NSHOWFPS
+
+#include <time.h>
+
 
 int main(int argn, char* argv []) {
+    #ifdef SHOWFPS
+    time_t t = time(NULL), prevt = t;
+    int frames = 0;
+    #endif
     if (!engine.init())
-    while (engine.state != Engine::State::QUIT) {
-        DEBUGMSG("Ticking\n");
-        engine.doTick();
+    while (engine.checkEvents() == 0) {
+        #ifdef SHOWFPS
+        time(&t);
+        frames++;
+        if (t != prevt) {
+            std::cout<<frames<<"\n";
+            frames = 0;
+            prevt = t;
+        }
+        #endif
         DEBUGMSG("Rendering\n");
         engine.render();
         DEBUGMSG("Checking\n");
-        engine.checkEvents();
     }
     return 0;
 }
@@ -36,8 +50,8 @@ Add map scrolling?
 
 /*
 todo: i = open inv
-fix crash on take inv from full
-on change wep change atk
+fix crash on take inv from full (done)
+on change wep change atk (done)
 hotkeys
 */
 
