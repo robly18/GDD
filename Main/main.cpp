@@ -53,6 +53,8 @@ todo: i = open inv
 fix crash on take inv from full (done)
 on change wep change atk (done)
 hotkeys
+
+reset upon death :T
 */
 
 /*

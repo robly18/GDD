@@ -32,10 +32,10 @@ struct MouseState {
 
 class Engine {
 public:
-    //State state = State::INIT;
     bool camera = false;
 
     int init();
+    void restartGame();
 
     void render();
     int  checkEvents();
@@ -56,7 +56,7 @@ public:
     SDL_KeyboardEvent lastkey;
 
 
-    EngineState::State          *enginestate; //todo rename all enginestate to state
+    EngineState::State          *enginestate;
 
     EngineState::State          *running,
                                 *inv,

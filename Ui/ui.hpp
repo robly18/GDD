@@ -49,7 +49,7 @@ public:
     void            render(SDL_Renderer*);
 
     void            addPrompt(Prompt*);
-    void            closePrompt();
+    void            closePrompt(EngineState::State*);
 };
 
 #endif

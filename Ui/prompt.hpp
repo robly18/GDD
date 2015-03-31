@@ -49,4 +49,12 @@ private:
     void                        doOpt2();
 };
 
+class DeadPrompt : public Prompt {
+public:
+    DeadPrompt();
+private:
+    void                        doOpt1();
+    void                        doOpt2();
+};
+
 #endif

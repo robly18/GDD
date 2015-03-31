@@ -24,24 +24,6 @@ Ui::Ui() {
 
 void Ui::render(SDL_Renderer* renderer) { //okay next step is this
         //glhf future self
-/*
-    if (engine.enginestate != engine.inv) {
-        dashboard->render(h, hx, hy);
-        xp->render(h, hx, hy);
-    } else {
-        inv->render(h, hx, hy);
-    }
-
-    log->render(barsurface);
-
-    if (prompt) {
-        if (h) {
-            Pos mp = {hx, hy};
-            prompt->render(barsurface, &mp);
-        } else {
-            prompt->render(barsurface);
-        }
-    }*/
 
     SDL_Texture* ui = SDL_CreateTextureFromSurface(renderer, barsurface);
     SDL_RenderCopy(renderer, ui, NULL, NULL);
@@ -55,9 +37,9 @@ void Ui::addPrompt(Prompt *p) {
     engine.enginestate = engine.viewprompt;
 }
 
-void Ui::closePrompt() {
+void Ui::closePrompt(EngineState::State *s) {
     assert(engine.viewprompt->prompt!=nullptr);
     delete engine.viewprompt->prompt;
     engine.viewprompt->prompt = nullptr;
-    engine.enginestate = engine.running;
+    engine.enginestate = s;
 }

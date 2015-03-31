@@ -12,8 +12,6 @@
 #include <list>
 #include <memory>
 
-#define SEEALLMOBS
-#define SEEALLTILES
 
 class Inventory;
 class FloorInventory;
@@ -59,6 +57,7 @@ class Map {
     friend class MapGenerator;
 public:
     Map();
+    void                        restartMap();
 
     bool                        isWall(int x, int y) {return x < 0 || x >= MAPWIDTH ||
                                                                 y < 0 || y >= MAPHEIGHT ||

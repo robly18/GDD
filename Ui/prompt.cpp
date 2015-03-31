@@ -84,12 +84,25 @@ NextLevelPrompt::NextLevelPrompt() :
 Do you want to\ngo to the next level?", "Not yet", "Yeah!") {}
 
 void NextLevelPrompt::doOpt1() {
-    engine.ui->closePrompt();
+    engine.ui->closePrompt(engine.running);
 }
 
 void NextLevelPrompt::doOpt2() {
-    engine.ui->closePrompt();
+    engine.ui->closePrompt(engine.running);
 
     engine.map->generateMap();
 }
 
+
+DeadPrompt::DeadPrompt() :
+    Prompt("Whoops. It seems that you've died.\nWould you like to try again?",
+           "Respawn", "Ragequit") {}
+
+void DeadPrompt::doOpt1() {
+    engine.restartGame();
+    engine.ui->closePrompt(engine.running);
+}
+
+void DeadPrompt::doOpt2() {
+    engine.ui->closePrompt(nullptr);
+}

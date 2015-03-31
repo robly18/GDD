@@ -6,6 +6,7 @@ bool Attack::select(Player* user) {
         return false;
     }
     user->weapon->mana -= cost;
+    if (user->attack) user->weapon->cancelAttack(user);
     user->attack = this;
     return true;
 }

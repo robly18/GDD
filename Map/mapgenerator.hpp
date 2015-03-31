@@ -7,10 +7,6 @@
 
 
 
-#define MAXCLUBGUYS 1
-#define MAXROGUEIMPS 0
-
-#define ROOMNUM 10
 
 class Map;
 struct Tile;

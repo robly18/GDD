@@ -68,6 +68,15 @@ int Engine::init() {
     return 0;
 }
 
+void Engine::restartGame() {
+    map->restartMap();
+
+    delete ui;
+    ui = new Ui;
+
+    time = 0;
+}
+
 void Engine::render() {
     SDL_RenderClear(renderer);
 
@@ -83,6 +92,7 @@ int Engine::checkEvents() {
     mouse.p.y /= 2;
     while (SDL_PollEvent(&e)) {
         enginestate->actOnEvent(*this, e, mouse);
+        if (!enginestate) return 1;
         switch (e.type) {
         case SDL_QUIT:
             return 1;

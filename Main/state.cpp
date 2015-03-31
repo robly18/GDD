@@ -27,6 +27,11 @@ void InGame::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
             e.ui->buttons->checkUnclick(MOUSEUNPRESSINFO);
             e.ui->log->checkUnclick(MOUSEUNPRESSINFO);
         }
+    } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_i) {
+        e.enginestate = (e.enginestate == e.inv) ? e.running : e.inv;
+        engine.ui->inv->page = 0;
+        engine.ui->inv->selecteditem = NULL;
+        engine.ui->inv->updateInventory();
     }
 }
 
@@ -61,6 +66,24 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
             e.camera = !e.camera;
             if (!e.camera) e.map->resetCamera();
             break;
+        {
+            static int atknum = 3;
+
+            case SDLK_a: atknum--;
+            case SDLK_s: atknum--;
+            /*case SDLK_d:*/ atknum--;
+            if (e.map->player->weapon) e.map->player->weapon->attacks[atknum]->select(e.map->player);
+            atknum = 3;
+            break;
+
+            case SDLK_q: atknum--;
+            case SDLK_w: atknum--;
+            /*case SDLK_e:*/ atknum--;
+            if (e.map->player->weapon) e.map->player->weapon->defenses[atknum]->select(e.map->player);
+            atknum = 3;
+            break;
+        }
+
         }
         if (!e.camera) {
             switch (ev.key.keysym.sym) {
@@ -73,23 +96,17 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
                     e.doTick(e.MOVEDFLAG);
                     break;
                 //debugging controls:
-                {
-                static int debug_xp = 1;
-                case SDLK_p:
-                    e.map->player->xpholder->levelUp(debug_xp, -1);
-                    break;
-                case SDLK_o:
-                    std::cin>>debug_xp;
-                    break;
-                }
+                {static int debug_xp = 1;
+                case SDLK_p: e.map->player->xpholder->levelUp(debug_xp, -1); break;
+                case SDLK_o: std::cin>>debug_xp; break;}
             }
         } else {
             switch (ev.key.keysym.sym) {
-            case SDLK_DOWN: e.map->cameray++; break;
-            case SDLK_UP: e.map->cameray--; break;
-            case SDLK_LEFT: e.map->camerax--; break;
-            case SDLK_RIGHT: e.map->camerax++; break;
-            case SDLK_SPACE: e.lastkey = ev.key; break;
+                case SDLK_DOWN: e.map->cameray++; break;
+                case SDLK_UP: e.map->cameray--; break;
+                case SDLK_LEFT: e.map->camerax--; break;
+                case SDLK_RIGHT: e.map->camerax++; break;
+                case SDLK_SPACE: e.lastkey = ev.key; break;
             }
         }
         break;

@@ -29,6 +29,22 @@ Map::Map () :
     //player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
 };
 
+void Map::restartMap() {
+    for (auto m : mobs1) delete m;
+    mobs1.clear();
+
+    for (auto m : items) delete m;
+    items.clear();
+
+    for (auto m : mobs2) delete m;
+    mobs2.clear();
+
+    player = nullptr;
+
+    makePlayer();
+    generateMap();
+}
+
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
     Mob* mob = *m;
 
