@@ -23,5 +23,5 @@ class Player;
 #define ROOMNUM 10
 
 
-#define SEEALLMOBS
-#define SEEALLTILES
+#define NSEEALLMOBS
+#define NSEEALLTILES

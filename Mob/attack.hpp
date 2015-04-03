@@ -43,7 +43,7 @@ public:
     bool                select(Player*);
     bool                applyChances(Mob*, char*, const char*, const char*) const;
 
-    virtual bool        isInRange(int, int, int, int, int) const = 0;
+    virtual bool        isInRange(const Pos user, const Pos target, const int) const = 0;
     virtual bool        isHit(Mob*, int, int, int, int) const = 0;
 
     virtual Uint32      highlightColor(Mob*, int mobx, int moby,
@@ -68,7 +68,7 @@ public:
     int                 radius;
     bool                hurtself;
 
-    bool                isInRange(int, int, int, int, int) const;
+    bool                isInRange(const Pos user, const Pos target, const int accy) const;
     bool                isHit(Mob*, int, int, int, int) const;
 
     bool                target(Mob*, int, int) const;
@@ -93,7 +93,7 @@ public:
     bool                target(Mob*, int, int) const;
     bool                hit(Mob*, Mob*) const;
 
-    bool                isInRange(int, int, int, int, int) const;
+    bool                isInRange(Pos, Pos, int) const;
     bool                isHit(Mob*, int, int, int, int) const;
 
     Uint32              highlightColor(Mob*, int mobx, int moby,
@@ -105,6 +105,8 @@ private:
                         validMouseOnColor = 0x2525FF,
                         invalidMouseOnColor = 0x1515CF;
 };
+
+#include "Attacks/swordatks.hpp"
 
 
 #endif

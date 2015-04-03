@@ -22,11 +22,6 @@ bool Weapon::unequip(Mob* user) {
     return false;
 }
 
-bool Weapon::selectAttack(Player* user, int atk) {
-    cancelAttack(user);
-    return attacks[atk]->select(user);
-}
-
 void Weapon::cancelAttack(Player* user) {
     if (user->attack) {
         mana += engine.map->player->attack->cost;
@@ -63,8 +58,10 @@ Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
     attacks[0] = (new TargetedAttack(5, 15, 0, 1))->setName("HIT")->setIcon(SDL_Rect{16,0,8,8});
-    attacks[1] = (new TargetedAttack(3, 20, 0, 0, 0, 0, 3, true, false))
+    attacks[1] = (new TargetedAttack(3, 17, 0, 0, 0, 0, 2, true, false))
                     ->setName("SPIN");
+    attacks[2] = (new HitThru(20, 10, 3))
+                    ->setName("HitThru");
     defenses[0] = (new SelfBuff(12, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
                                                       0, 30)))->setName("BLOCK");
     defenses[1] = (new SelfBuff(25, new FixedHpRegen(7, "Regen", 2)))->setName("REGEN");

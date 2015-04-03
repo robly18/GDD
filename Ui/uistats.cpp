@@ -104,6 +104,7 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
                         engine.map->player->attack = engine.map->player->defaultattack;
                     }
                 case AtkButtons::AOE:
+                case AtkButtons::QUIRKATK:
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->attacks[a-atkbuttons-3]->select(engine.map->player);
                     }
@@ -126,9 +127,10 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
 void UiDashboard::refreshButtons() {
     if (engine.map->player->weapon) {
         for (int x = 0; x != 3; x++) {
-            if (x==2) break; //Because I ain't added 3rd atk or def yet
+            if (x==2) goto bluh; //Because I ain't added 3rd atk or def yet
             atknames[x]->setText(engine.font, engine.map->player->weapon->defenses[x]->name);
             atkicons[x] = engine.map->player->weapon->defenses[x]->icon;
+            bluh:
             atknames[x+3]->setText(engine.font, engine.map->player->weapon->attacks[x]->name);
             atkicons[x+3] = engine.map->player->weapon->attacks[x]->icon;
         }

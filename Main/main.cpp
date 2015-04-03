@@ -55,6 +55,8 @@ on change wep change atk (done)
 hotkeys
 
 reset upon death :T
+
+EDIT: all done
 */
 
 /*

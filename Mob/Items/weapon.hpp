@@ -24,7 +24,6 @@ public:
 
     bool            use(Player*);
     bool            unequip(Mob*);
-    bool            selectAttack(Player*, int);
     void            cancelAttack(Player*);
 
     int             mana = 0;

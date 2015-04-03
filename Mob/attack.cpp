@@ -6,7 +6,6 @@ bool Attack::select(Player* user) {
         return false;
     }
     user->weapon->mana -= cost;
-    if (user->attack) user->weapon->cancelAttack(user);
     user->attack = this;
     return true;
 }
@@ -33,20 +32,20 @@ bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char
 
 Uint32 TargetedAttack::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
-    if (isInRange(user->x, user->y, mousex, mousey, user->accy)) {
+    if (isInRange(user->getPos(), {mousex, mousey}, user->accy)) {
         if (mousex == mx && mousey == my) return validMouseOnColor;
         if (isHit(user, mousex, mousey, mx, my)) return willGetHitColor;
     }
-    if (isInRange(user->x, user->y, mx, my, user->accy)) {
+    if (isInRange(user->getPos(), {mx, my}, user->accy)) {
         return isInRangeColor;
     }
     if (mousex == mx && mousey == my) return invalidMouseOnColor;
     return outOfRangeColor;
 }
 
-bool TargetedAttack::isInRange(int px, int py, int mx, int my, int accy) const {
-    int dx = std::abs(px-mx);
-    int dy = std::abs(py-my);
+bool TargetedAttack::isInRange(Pos user, Pos target, int accy) const {
+    int dx = std::abs(user.x-target.x);
+    int dy = std::abs(user.y-target.y);
 
     int tmpmaxrange; //After accuracy shenanigans have been computed
     if (accy >= maxAccy) {
@@ -58,9 +57,10 @@ bool TargetedAttack::isInRange(int px, int py, int mx, int my, int accy) const {
                         - (maxrange-minrange)*minAccy/(maxAccy-minAccy); //complicated math plz ignore
     }
 
-    return engine.map->hasBeenSeen(mx, my) &&
+    return engine.map->hasBeenSeen(target.x, target.y) &&
             minrange<=(dx+dy) &&
-            engine.map->fovcomputer->isInSight(px, py, mx, my,tmpmaxrange);
+            engine.map->fovcomputer->isInSight(user.x, user.y,
+                                               target.x, target.y,tmpmaxrange);
 }
 
 bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) const {
@@ -69,17 +69,15 @@ bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) 
 }
 
 bool TargetedAttack::target(Mob* src, int x, int y) const {
-    if (!isInRange(src->x, src->y, x, y, src->accy)) return false;
-    bool didhit = false;
+    if (!isInRange(src->getPos(), {x, y}, src->accy)) return false;
     for (std::list<Mob*>::iterator mob = engine.map->mobs2.begin(); mob != engine.map->mobs2.end(); mob++) {
         if (isHit(src, x, y, (*mob)->x, (*mob)->y) &&
             (*mob)->destructible &&
             !(!hurtself && *mob == src)) {
-            didhit = true;
             hit(src, *mob);
         }
     }
-    return didhit;
+    return true;
 }
 
 bool TargetedAttack::hit(Mob* src, Mob* target) const {
@@ -134,7 +132,7 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
 
 Uint32 SelfBuff::highlightColor(Mob* user, int mx, int my,
                               int mousex, int mousey) const {
-    if (isInRange(user->x, user->y, mx, my, user->accy)) {
+    if (isInRange(user->getPos(), {mx, my}, user->accy)) {
         if (user->x == mousex && user->y == mousey) {
             return validMouseOnColor;
         }
@@ -144,8 +142,8 @@ Uint32 SelfBuff::highlightColor(Mob* user, int mx, int my,
     return outOfRangeColor;
 } //MERRY CHRISTMAS FROM 24 DEC 2014
 
-bool SelfBuff::isInRange(int px, int py, int mx, int my, int accy) const {
-    return px == mx && py == my;
+bool SelfBuff::isInRange(Pos p, Pos m, int accy) const {
+    return p.x == m.x && p.y == m.y;
 }
 
 bool SelfBuff::isHit(Mob* user, int targetx, int targety, int mx, int my) const {
@@ -153,7 +151,7 @@ bool SelfBuff::isHit(Mob* user, int targetx, int targety, int mx, int my) const 
 }
 
 bool SelfBuff::target(Mob* src, int x, int y) const {
-    if (!isInRange(src->x, src->y, x, y, src->accy)) return false;
+    if (!isInRange(src->getPos(), {x, y}, src->accy)) return false;
     hit(src, src);
     return true;
 }

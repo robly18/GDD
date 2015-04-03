@@ -72,14 +72,20 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
             case SDLK_a: atknum--;
             case SDLK_s: atknum--;
             /*case SDLK_d:*/ atknum--;
-            if (e.map->player->weapon) e.map->player->weapon->attacks[atknum]->select(e.map->player);
+            if (e.map->player->weapon) {
+                e.map->player->weapon->cancelAttack(e.map->player);
+                e.map->player->weapon->attacks[atknum]->select(e.map->player);
+            }
             atknum = 3;
             break;
 
             case SDLK_q: atknum--;
             case SDLK_w: atknum--;
             /*case SDLK_e:*/ atknum--;
-            if (e.map->player->weapon) e.map->player->weapon->defenses[atknum]->select(e.map->player);
+            if (e.map->player->weapon) {
+                e.map->player->weapon->cancelAttack(e.map->player);
+                e.map->player->weapon->defenses[atknum]->select(e.map->player);
+            }
             atknum = 3;
             break;
         }
