@@ -14,4 +14,15 @@ public:
 
 };
 
+class BashSwp : public TargetedAttack {
+public:
+    BashSwp(int cost, int force);
+
+    int                 force;
+
+
+    bool                hit(Mob*, Mob*) const;
+    bool                target(Mob*, int, int) const;
+};
+
 #endif

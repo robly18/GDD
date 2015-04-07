@@ -111,6 +111,7 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
                     break;
                 case AtkButtons::BLOCK:
                 case AtkButtons::HEAL:
+                case AtkButtons::QUIRKDEF:
                     if (engine.map->player->weapon) {
                         engine.map->player->weapon->defenses[a-atkbuttons]->select(engine.map->player);
                     }
@@ -127,10 +128,8 @@ void UiDashboard::checkUnclick(int hx, int hy, int x, int y) {
 void UiDashboard::refreshButtons() {
     if (engine.map->player->weapon) {
         for (int x = 0; x != 3; x++) {
-            if (x==2) goto bluh; //Because I ain't added 3rd atk or def yet
             atknames[x]->setText(engine.font, engine.map->player->weapon->defenses[x]->name);
             atkicons[x] = engine.map->player->weapon->defenses[x]->icon;
-            bluh:
             atknames[x+3]->setText(engine.font, engine.map->player->weapon->attacks[x]->name);
             atkicons[x+3] = engine.map->player->weapon->attacks[x]->icon;
         }

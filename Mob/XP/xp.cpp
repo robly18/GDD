@@ -51,7 +51,6 @@ int XpBar::addXp(int xp) {
 
             engine.ui->log->addMessage(buffer,
                     "Player leveled up %s to lvl %i!", name.c_str(), lvl);
-
             engine.map->player->levelUp(type);
         } else {
             xpval = maxxp;

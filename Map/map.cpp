@@ -82,11 +82,15 @@ bool Map::canMoveTo(Pos p) {
 }
 
 void Map::updateFovData() {
+    updateFovData(player->getPos());
+}
+
+void Map::updateFovData(const Pos p) {
     int losrange = player->sght;
     for (int x = -losrange-1; x != losrange+2; x++)
     for (int y = -losrange-1; y != losrange+2; y++) {
-        int cx = player->x + x;
-        int cy = player->y + y;
+        int cx = p.x + x;
+        int cy = p.y + y;
         if (INBOUNDS(cx, cy)) {
             tiles[cx+MAPWIDTH*cy].isSeen = fovcomputer->isInSight(cx, cy, player->x, player->y, losrange);
             if (tiles[cx+MAPWIDTH*cy].isSeen) tiles[cx+MAPWIDTH*cy].hasBeenSeen = true;
@@ -154,12 +158,17 @@ FloorInventory* Map::removeInvAt(int x, int y) {
 }
 
 bool Map::attack (Pos pos) {
+    DEBUGMSG("Try attacking");
     if (player->attack) { //todo delegate this mess to map class
+            DEBUGMSG("Has atk");
         if (0 <= pos.x-camerax && pos.x-camerax < 16 && //ok done
             0 <= pos.y-cameray && pos.y-cameray < 16) {
+                DEBUGMSG("In scrn");
             if (player->attack->target(player, pos.x, pos.y)) {
+                DEBUGMSG("Targeted");
                 if (!player->attack->select(player))
                     player->attack = NULL;
+                DEBUGMSG("Yeah");
                 return true;
             } else if (player->weapon) {
                 player->weapon->cancelAttack(player);
@@ -168,6 +177,7 @@ bool Map::attack (Pos pos) {
             }
         }
     }
+    DEBUGMSG("No");
     return false;
 }
 
@@ -357,6 +367,7 @@ void Map::inspect(Pos p) const {
         }
         for (auto mob : mobs2) {
             if (mob->x == p.x && mob->y == p.y) {
+                std::cout<<"Outputting shenanigans\n";
                 /*Important data about a mob:
                  *Name (duh)
                  *Hp

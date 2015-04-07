@@ -5,8 +5,6 @@
 
 Engine engine;
 
-#define NSHOWFPS
-
 #include <time.h>
 
 

@@ -35,6 +35,13 @@ int Mob::getSwiftness() {
     }
 }
 
+bool Mob::swapWith(Mob &m) {
+    Pos thispos = getPos();
+    setPos(m.getPos());
+    m.setPos(thispos);
+    return true;
+}
+
 Player::Player (int x, int y, SDL_Rect r, SDL_Surface *t, std::string n) :
         Mob(x, y, r, t, n) {
     defaultattack = new TargetedAttack(1, 0, 0, 1);

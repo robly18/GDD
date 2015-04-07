@@ -2,6 +2,8 @@
 #define PATHFINDER_H
 
 #include "../../Misc/posstruct.hpp"
+
+#define NLOGGING
 #include "../../Misc/logging.hpp"
 
 #include <list>

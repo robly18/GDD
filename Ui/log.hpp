@@ -13,7 +13,9 @@ class Log {
 public:
     Log(BmpFont*);
 
-    std::vector<FontStr*>   messages; //0 = oldest; messages.size() - 1 = newest
+    int padding[10] = {};
+
+    std::vector<FontStr*>   msgs; //0 = oldest; msgs.size() - 1 = newest
 
     void                    addMessage(const char*);
     void                    addMessage(char*, const char*, ...);

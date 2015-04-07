@@ -105,6 +105,7 @@ public:
 
     void                        generateMap();
     void                        updateFovData();
+    void                        updateFovData(const Pos p); //For use with teleportation shenanigans
 
     bool                        attack(Pos);
 

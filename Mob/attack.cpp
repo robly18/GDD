@@ -69,30 +69,35 @@ bool TargetedAttack::isHit(Mob* user, int targetx, int targety, int mx, int my) 
 }
 
 bool TargetedAttack::target(Mob* src, int x, int y) const {
+    if (src->destructible->isDead()) return true;
     if (!isInRange(src->getPos(), {x, y}, src->accy)) return false;
-    for (std::list<Mob*>::iterator mob = engine.map->mobs2.begin(); mob != engine.map->mobs2.end(); mob++) {
-        if (isHit(src, x, y, (*mob)->x, (*mob)->y) &&
-            (*mob)->destructible &&
-            !(!hurtself && *mob == src)) {
-            hit(src, *mob);
+    for (auto m : engine.map->mobs2) {
+        if (isHit(src, x, y, m->x, m->y) &&
+            m->destructible &&
+            !(!hurtself && m == src)) {
+
+            hit(src, m);
+
         }
     }
     return true;
 }
 
 bool TargetedAttack::hit(Mob* src, Mob* target) const {
-    static char buffer [255];
+    char buffer [255];
+
+    DEBUGMSG("Yo, hit is my name");
 
     if (damage) {
         int dmg = target->destructible->damage(damage * src->atk /STARTATK);
-
+        DEBUGMSG("Damage is my game");
         engine.ui->log->addMessage(buffer, "%s hit %s for %i dmg %s %i hp",
                 src->name.c_str(),
                 src == target ? "themselves in idiocy" : target->name.c_str(),
                 dmg,
                 src == target ? "and now have" : "which now has",
                 target->destructible->hp);
-
+        DEBUGMSG("Logging messages is my fame");
         if (physical) {
             if (target->destructible->statusholder->hasEffect(SideEffect::THORN)) {
                 dmg = src->destructible->damage(dmg);
@@ -116,14 +121,17 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
             }
         }
     }
+    DEBUGMSG("Yeah this is kinda lame");
 
     if (applyChances(target, buffer, "%s was afflicted by", "")) {
         engine.ui->log->addMessage(buffer);
     }
-
+    DEBUGMSG("Real darn shame :\\");
     if (target->destructible->isDead()) {
+        DEBUGMSG("She is dead, this dame");
         target->destructible->die(target);
     }
+    DEBUGMSG("Okay am I insane");
 
     return true;
 }

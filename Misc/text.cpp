@@ -23,8 +23,6 @@ FontStr::FontStr(const BmpFont *font, int maxlen, std::string s) {
 
     chars = (const SDL_Rect**) calloc(maxlen + 1, sizeof(const SDL_Rect*));
     setText(font, s);
-    if (s == "yo")
-    std::cout<<s<<" "<<chars[0]<<"\n";
 }
 
 FontStr::~FontStr() {

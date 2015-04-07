@@ -1,3 +1,21 @@
+
+
+#define MAXCLUBGUYS 10
+#define MAXROGUEIMPS 30
+
+#define ROOMNUM 10
+
+
+#define NSEEALLMOBS
+#define NSEEALLTILES
+
+#define NSHOWFPS
+
+#define NLOGGING
+
+
+
+
 #include <SDL.h>
 #include "..\Misc\gddlist.hpp"
 #include "..\Misc\logging.hpp"
@@ -15,13 +33,3 @@ class Player;
 #include "..\Mob\mob.hpp"
 #include "..\Map\map.hpp"
 #include "engine.hpp"
-
-
-#define MAXCLUBGUYS 10
-#define MAXROGUEIMPS 30
-
-#define ROOMNUM 10
-
-
-#define NSEEALLMOBS
-#define NSEEALLTILES

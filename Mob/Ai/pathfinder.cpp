@@ -39,6 +39,7 @@ void Pathfinder::computePath(const Pos start, const Pos end,
         int mincost = GETCOST(*nextnode, end);
 
         //This selects the minimum possible cost node
+        DEBUGMSG("Getting mincost\n");
         for (std::list<PosNode>::iterator p = std::next(nextnode);
                     p != availablenodes.end(); p++) {
             int tempcost = GETCOST(*p, end);
@@ -47,6 +48,7 @@ void Pathfinder::computePath(const Pos start, const Pos end,
                 mincost = tempcost;
             }
         }
+        DEBUGMSG("Done\n");
 
         nodes.push_front(*nextnode);
         availablenodes.erase(nextnode);

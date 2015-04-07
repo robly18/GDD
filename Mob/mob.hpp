@@ -47,6 +47,8 @@ public:
 
     void            move(int, int);
 
+    bool            swapWith(Mob&);
+
     const Pos       spawn;
 
     int             getSwiftness(); //Misleading name :( Actually faster if swiftness is lower

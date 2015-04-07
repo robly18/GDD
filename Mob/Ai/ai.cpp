@@ -33,8 +33,24 @@ void PlayerAi::tryMoving(Mob* mob, int dx, int dy) {
 BasicAi::BasicAi(int s) :
     Ai(s, std::rand() % s) {}
 
+void BasicAi::lookForPlayer(Mob* mob) {
+    if (engine.map->fovcomputer->isInSight(mob->x, mob->y,
+                                           engine.map->player->x,
+                                           engine.map->player->y,
+                                           mob->sght)) {
+        seekingPos = engine.map->player->getPos();
+        path.clear();
+        engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
+        sawPlayer = true;
+    }
+}
+
 void BasicAi::update(Mob* mob) {
+
+    lookForPlayer(mob);
+
     Pos mobpos = mob->getPos();
+
 
     if (path.size()) { //If we have places to go, go there
         if (engine.map->canMoveTo(path.front())) {
@@ -66,14 +82,5 @@ void BasicAi::update(Mob* mob) {
         sawPlayer = false;
     }
 
-    mobpos = mob->getPos();
-    if (engine.map->fovcomputer->isInSight(mobpos.x, mobpos.y,
-                                           engine.map->player->x,
-                                           engine.map->player->y,
-                                           mob->sght)) {
-        seekingPos = engine.map->player->getPos();
-        path.clear();
-        engine.map->pathfinder->computePath(mob->getPos(), seekingPos, path);
-        sawPlayer = true;
-    }
+    lookForPlayer(mob);
 }

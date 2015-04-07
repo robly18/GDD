@@ -65,6 +65,7 @@ int Engine::init() {
 
     enginestate = running;
 
+
     return 0;
 }
 
@@ -114,6 +115,7 @@ void Engine::doTick(int flag) {
     if (flag != MOVEDFLAG) lastkey.keysym.sym = SDLK_SPACE;
 
     do {
+        DEBUGMSG("Checking mobs status");
         for (auto mob : map->mobs2) {
             int swiftness = mob->getSwiftness();
             if (swiftness) {
@@ -123,6 +125,7 @@ void Engine::doTick(int flag) {
                 }
             }
         }
+        DEBUGMSG("Checking mobs update");
         for (auto mob : map->mobs2) {
             if (mob->getSwiftness())
             if (time % mob->getSwiftness() == mob->ai->timeoffset)
@@ -131,6 +134,7 @@ void Engine::doTick(int flag) {
                 mob->ai->update(mob);
             }
         }
+        DEBUGMSG("Checking dead mobs");
         for (auto m = map->mobs2.begin(); m != map->mobs2.end();) {
             if ((*m)->destructible->isDead()) {
                 m = map->killMob(m);
@@ -138,6 +142,7 @@ void Engine::doTick(int flag) {
                 m++;
             }
         }
+        DEBUGMSG("Rip.");
         time++;
         if (map->player->destructible->isDead()) return;
     } while (time % map->player->getSwiftness());

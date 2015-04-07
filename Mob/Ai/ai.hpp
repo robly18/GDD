@@ -38,6 +38,8 @@ protected:
     bool            sawPlayer;
 
     std::list<Pos>  path;
+
+    void            lookForPlayer(Mob*);
 };
 
 #endif

@@ -5,6 +5,11 @@
 
 //Remember to recompile the project...
 
-#define DEBUGMSG(msg) /*std::cout<<msg<<'\n'*/
+#ifndef NLOGGING
+#define DEBUGMSG(msg)           \
+        std::cout<<msg<<'\n'
+#else
+#define DEBUGMSG(msg)
+#endif
 
 #endif

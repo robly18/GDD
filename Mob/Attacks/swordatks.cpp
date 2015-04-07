@@ -22,3 +22,32 @@ bool HitThru::isHit(Mob* src, int tx, int ty, int hx, int hy) const {
                 hdiff.x * tdiff.x > 0;
     }
 }
+
+BashSwp::BashSwp(int cost, int force) :
+        TargetedAttack(0, cost, 1, 1), force(force) {
+}
+
+bool BashSwp::target(Mob *user, int x, int y) const {
+    if (!isInRange(user->getPos(), {x, y}, user->accy)) return false;
+    Pos diff = {x-user->x, y-user->y};
+    for (int i = 0; i != force; i++) {
+        bool hitSomeone = false;
+        for (auto m : engine.map->mobs2) {
+            if (isHit(user, x, y, m->x, m->y)) {
+                if (hit(user, m)) {
+                    hitSomeone = true;
+                    x+=diff.x; y+=diff.y;
+                }
+            }
+        }
+        if (!hitSomeone) break;
+    }
+    return true;
+}
+
+bool BashSwp::hit(Mob *user, Mob *target) const {
+    return target->swapWith(*user);
+}
+
+
+
