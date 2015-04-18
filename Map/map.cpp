@@ -46,6 +46,7 @@ void Map::restartMap() {
 }
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
+
     Mob* mob = *m;
 
     mob->a->r = mob->destructible->deadSprite;
@@ -86,6 +87,7 @@ void Map::updateFovData() {
 }
 
 void Map::updateFovData(const Pos p) {
+    for (int n = 0; n != MAPWIDTH*MAPHEIGHT; n++) tiles[n].isSeen = false;
     int losrange = player->sght;
     for (int x = -losrange-1; x != losrange+2; x++)
     for (int y = -losrange-1; y != losrange+2; y++) {

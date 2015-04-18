@@ -64,7 +64,6 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
             break;
         case SDLK_c:
             e.camera = !e.camera;
-            if (!e.camera) e.map->resetCamera();
             break;
         {
             static int atknum = 3;
@@ -138,6 +137,7 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
         }
         break;
     }
+    if (!e.camera) e.map->resetCamera();
     InGame::actOnEvent(e, ev, mouse);
 }
 

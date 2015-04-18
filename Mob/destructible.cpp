@@ -9,6 +9,7 @@ PlayerDestructible::PlayerDestructible(int maxHp, SDL_Rect deadSprite) :
     Destructible(maxHp, deadSprite) {
 }
 
+
 MobDestructible::MobDestructible(int maxHp, SDL_Rect deadSprite, int xp) :
     Destructible(maxHp, deadSprite), xp(xp) {
 }

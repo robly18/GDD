@@ -6,13 +6,14 @@
 #define ROOMNUM 10
 
 
-#define NSEEALLMOBS
-#define NSEEALLTILES
+#define SEEALLMOBS
+#define SEEALLTILES
 
 #define NSHOWFPS
 
 #define NLOGGING
 
+#define RANDSEED 2 /*::time(NULL)*/
 
 
 

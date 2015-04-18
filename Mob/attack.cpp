@@ -86,11 +86,8 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
 bool TargetedAttack::hit(Mob* src, Mob* target) const {
     char buffer [255];
 
-    DEBUGMSG("Yo, hit is my name");
-
     if (damage) {
         int dmg = target->destructible->damage(damage * src->atk /STARTATK);
-        DEBUGMSG("Damage is my game");
         engine.ui->log->addMessage(buffer, "%s hit %s for %i dmg %s %i hp",
                 src->name.c_str(),
                 src == target ? "themselves in idiocy" : target->name.c_str(),
@@ -121,17 +118,13 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
             }
         }
     }
-    DEBUGMSG("Yeah this is kinda lame");
 
     if (applyChances(target, buffer, "%s was afflicted by", "")) {
         engine.ui->log->addMessage(buffer);
     }
-    DEBUGMSG("Real darn shame :\\");
     if (target->destructible->isDead()) {
-        DEBUGMSG("She is dead, this dame");
         target->destructible->die(target);
     }
-    DEBUGMSG("Okay am I insane");
 
     return true;
 }

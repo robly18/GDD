@@ -105,6 +105,7 @@ void XpHolder::setFocus(int bar) {
 }
 
 void XpHolder::levelUp(int val, int weapontype) {
+    std::cout<<"XP Shenanigans: "<<val<<", "<<weapontype<<"\n";
     if (weapontype != -1) bars[weapontype]->addXp(val);
 
     for (XpBar **bar = bars+3; bar != bars+10; bar++) {

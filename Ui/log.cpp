@@ -42,7 +42,12 @@ void Log::addMessage(char* buffer, const char* msg, ...) {
 }
 
 void Log::addLine(const char* msg) {
+    std::cout<<"Begin printing out padding:\n";
+    for (char *i = (char*)&msgs; i != (char*)&msgs + sizeof(msgs); i++) {
+        std::cout<<i-(char*)&msgs<<": "<<(int)*i<<((i-(char*)&msgs+1)%5==0?"\n":"; ");
+    }
     msgs.push_back(new FontStr(font, 47, std::string(msg)));
+    std::cout<<"\nDone\n";
 }
 
 void Log::render(SDL_Surface* surface) {

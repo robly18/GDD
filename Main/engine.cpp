@@ -19,7 +19,7 @@ int Engine::init() {
 
     if (SDL_Init( SDL_INIT_EVERYTHING )) LOGERROR()
 
-    std::srand(::time(NULL));
+    std::srand(RANDSEED);
 
     window = SDL_CreateWindow("Generic Dungeon Dweller", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                               SWIDTH*2, SHEIGHT*2, SDL_WINDOW_SHOWN);
@@ -64,7 +64,6 @@ int Engine::init() {
     viewprompt = new EngineState::Viewprompt;
 
     enginestate = running;
-
 
     return 0;
 }
