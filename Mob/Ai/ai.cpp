@@ -51,15 +51,17 @@ void BasicAi::update(Mob* mob) {
     Pos mobpos = mob->getPos();
 
 
-    if (path.size()) { //If we have places to go, go there
+    if (path.size() && hasntMovedIn < 3) { //If we have places to go, go there
         if (engine.map->canMoveTo(path.front())) {
             mob->setPos(path.front());
             path.pop_front();
+            hasntMovedIn = 0;
         } else if (posEq(path.front(), engine.map->player->getPos())) {
             mob->attack->target(mob, path.front());
             if (mob->destructible->isDead()) return;
-        }
+        } else hasntMovedIn++;
     } else { //If not, wander randomly
+        path.clear();
         if (posDiff(mobpos, mob->spawn) > MAXAWAYFROMSPAWN) {
             engine.map->pathfinder->computePath(mob->getPos(), mob->spawn, path);
             mob->setPos(path.front());
@@ -82,4 +84,5 @@ void BasicAi::update(Mob* mob) {
     }
 
     lookForPlayer(mob);
+
 }

@@ -11,6 +11,7 @@
 #include <iostream>
 
 #include <cassert>
+#include <vector>
 
 class BmpFont {
 private:
@@ -27,10 +28,10 @@ public:
 
 class FontStr {
 public:
-    const SDL_Rect** chars;
+    std::vector<const SDL_Rect*> chars;
     std::string str;
 
-    FontStr(const BmpFont*, int maxlen, std::string);
+    FontStr(const BmpFont*, std::string);
     ~FontStr();
 
     void render(SDL_Surface* targetsurface , SDL_Surface* texture, int x, int y);

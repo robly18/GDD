@@ -7,7 +7,7 @@
 
 #ifndef NLOGGING
 #define DEBUGMSG(msg)           \
-        std::cout<<msg<<'\n'
+        engine.ui->log->addMessage(msg)
 #else
 #define DEBUGMSG(msg)
 #endif

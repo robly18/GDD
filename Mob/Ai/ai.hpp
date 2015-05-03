@@ -39,6 +39,8 @@ protected:
 
     std::list<Pos>  path;
 
+    int             hasntMovedIn = 0;
+
     void            lookForPlayer(Mob*);
 };
 

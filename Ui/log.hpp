@@ -13,8 +13,6 @@ class Log {
 public:
     Log(BmpFont*);
 
-    int padding[10] = {};
-
     std::vector<FontStr*>   msgs; //0 = oldest; msgs.size() - 1 = newest
 
     void                    addMessage(const char*);
@@ -25,6 +23,7 @@ public:
     void                    render(SDL_Surface*);
 
     bool                    checkUnclick(int, int, int, int);
+
     void                    moveReadLine(int);
 private:
     void                    addLine(const char*);

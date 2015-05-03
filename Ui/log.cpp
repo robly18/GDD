@@ -6,8 +6,7 @@ Log::Log(BmpFont* font) :
 }
 
 void Log::addMessage(const char* msg) {
-    std::cout<<msg<<"\n";
-    std::cout<<padding[0]<<"\n";
+    assert(msg[0]!=NULL);
 
     if (strlen(msg) >= 47) {
         char buffer [47] = {};
@@ -15,11 +14,9 @@ void Log::addMessage(const char* msg) {
             buffer[i] = msg[i];
         }
         int i = 47;
-        for (char* c = buffer+46; c != buffer; c--) {
-            if (*c == ' ') {
-                *c = '\0';
-                std::cout<<"\nBuffer is: ";
-                std::cout<<buffer<<"\n";
+        for (int j = sizeof(buffer)-1; j != 0; j--) {
+            if (buffer[j] == ' ') {
+                buffer[j] = '\0';
                 break;
             }
             i--;
@@ -42,12 +39,7 @@ void Log::addMessage(char* buffer, const char* msg, ...) {
 }
 
 void Log::addLine(const char* msg) {
-    std::cout<<"Begin printing out padding:\n";
-    for (char *i = (char*)&msgs; i != (char*)&msgs + sizeof(msgs); i++) {
-        std::cout<<i-(char*)&msgs<<": "<<(int)*i<<((i-(char*)&msgs+1)%5==0?"\n":"; ");
-    }
-    msgs.push_back(new FontStr(font, 47, std::string(msg)));
-    std::cout<<"\nDone\n";
+    msgs.push_back(new FontStr(font, std::string(msg)));
 }
 
 void Log::render(SDL_Surface* surface) {

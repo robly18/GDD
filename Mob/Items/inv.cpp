@@ -12,6 +12,8 @@ bool PlayerInventory::addItem(Item* i) {
 }
 
 Item* PlayerInventory::removeItem(Item* i) {
+    std::cout<<"OKAY THIS IS 8EING CALLED AND I SWEAR I'M GONNA KILL SOME8ODY\n";
+
     for (int n = 0; n != 30; n++) {
         if (getItem(n) == i) {
             removeItem(n);
@@ -28,7 +30,7 @@ Item* PlayerInventory::removeItem(int index) {
     while (placeindex <= filled) {
         if (getindex >= 30) {
             items[placeindex] = nullptr;
-            break;
+            goto end;
         }
         items[placeindex] = items[getindex];
         if (items[placeindex] == nullptr) break;
@@ -38,6 +40,8 @@ Item* PlayerInventory::removeItem(int index) {
     }
 
     items[getindex] = NULL;
+
+    end:
     filled -= retitem->size;
     return retitem;
 }

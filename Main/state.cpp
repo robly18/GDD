@@ -25,7 +25,9 @@ void InGame::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
     } else if (ev.type == SDL_MOUSEBUTTONUP) {
         if (ev.button.button == SDL_BUTTON_LEFT) {
             e.ui->buttons->checkUnclick(MOUSEUNPRESSINFO);
-            e.ui->log->checkUnclick(MOUSEUNPRESSINFO);
+            if (e.ui->log->checkUnclick(MOUSEUNPRESSINFO)) {
+                e.enginestate = e.viewlog;
+            }
         }
     } else if (ev.type == SDL_KEYDOWN && ev.key.keysym.sym == SDLK_i) {
         e.enginestate = (e.enginestate == e.inv) ? e.running : e.inv;
@@ -65,6 +67,10 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
         case SDLK_c:
             e.camera = !e.camera;
             break;
+        case SDLK_SPACE:
+            e.lastkey = ev.key;
+            e.doTick(e.MOVEDFLAG);
+            break;
         {
             static int atknum = 3;
 
@@ -96,7 +102,6 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
                 case SDLK_UP:
                 case SDLK_LEFT:
                 case SDLK_RIGHT:
-                case SDLK_SPACE:
                     e.lastkey = ev.key;
                     e.doTick(e.MOVEDFLAG);
                     break;
@@ -139,10 +144,6 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
     }
     if (!e.camera) e.map->resetCamera();
     InGame::actOnEvent(e, ev, mouse);
-}
-
-void InGame::doTick(Engine &e, int flag) {
-
 }
 
 /**Map**/
@@ -240,16 +241,24 @@ void Viewprompt::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
 
 void Viewlog::render(Engine &e, SDL_Renderer* renderer, const MouseState mouse) {
 
-    e.ui->buttons->render(MOUSEINFO);
+    e.ui->log->render(e.ui->barsurface);
     e.ui->render(renderer);
 
 }
 
 void Viewlog::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
 
-    switch (ev.key.keysym.sym) {
-    case SDLK_UP:   e.ui->log->moveReadLine(-1);  break;
-    case SDLK_DOWN: e.ui->log->moveReadLine(1);   break;
+    if (ev.type == SDL_KEYDOWN) {
+        switch (ev.key.keysym.sym) {
+        case SDLK_UP:   e.ui->log->moveReadLine(-1);  break;
+        case SDLK_DOWN: e.ui->log->moveReadLine(1);   break;
+        }
+    } else if (ev.type == SDL_MOUSEBUTTONUP) {
+        if (ev.button.button == SDL_BUTTON_LEFT) {
+            if (e.ui->log->checkUnclick(MOUSEUNPRESSINFO) == false) {
+                e.enginestate = e.running;
+            }
+        }
     }
 }
 

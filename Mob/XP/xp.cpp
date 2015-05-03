@@ -5,7 +5,7 @@ XpBar::XpBar(SDL_Rect r, std::string name, int type, int startmaxval, int namele
     bar(new NumBar(r, BARCOLF, BARCOLE, engine.font,
                      startmaxval, &xpval, name+":", false)),
     name(name),
-    screenname(new FontStr(engine.font, 4, "0")),
+    screenname(new FontStr(engine.font, "0")),
     type(type),
     maxxp(startmaxval) {
 
@@ -105,7 +105,6 @@ void XpHolder::setFocus(int bar) {
 }
 
 void XpHolder::levelUp(int val, int weapontype) {
-    std::cout<<"XP Shenanigans: "<<val<<", "<<weapontype<<"\n";
     if (weapontype != -1) bars[weapontype]->addXp(val);
 
     for (XpBar **bar = bars+3; bar != bars+10; bar++) {

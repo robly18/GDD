@@ -5,29 +5,24 @@
 /***/
 
 UiPart::UiPart(SDL_Surface* s) : surface(s) {
-    DEBUGMSG("\n\nCreating new part\n");
 }
 
 /***/
 
 UiButtons::UiButtons(SDL_Surface* s) :
     UiPart(s) {
-    DEBUGMSG("Creating Invbutton\n");
     invbutton = new Actor(surface, SDL_Rect{16, 8, 8, 8}, SDL_Rect{288, 148, 54, 14});
-    invtext = new FontStr(engine.font, 3, "Inv");
-    DEBUGMSG("Creating HPBar\n");
+    invtext = new FontStr(engine.font, "Inv");
     hpbar = new NumBar(SDL_Rect{2, 164, 96, 10}, 0x0000FF, 0x000077,
                        engine.font,
                         engine.map->player->destructible->maxHp,
                         &engine.map->player->destructible->hp, "HP");
-    DEBUGMSG("Creating MPBar\n");
     mpbar = new NumBar(SDL_Rect{2, 164+12, 96, 10}, 0xFF0000, 0x770000,
                        engine.font,
                         engine.map->player->getMaxMp(),
                         engine.map->player->weapon ?
                         &engine.map->player->weapon->mana : NULL,
                         "MP");
-    DEBUGMSG("Done\n");
 }
 
 SDL_Surface* UiButtons::render(bool clicked, int hx, int hy) {
@@ -70,12 +65,11 @@ void UiButtons::updatePlayerData() {
 
 UiDashboard::UiDashboard(SDL_Surface* s) :
     UiPart(s) {
-    DEBUGMSG("Creating dashboard\n");
     for (int x = 0; x != 3; x++)
     for (int y = 0; y != 2; y++) {
         atkbuttons[x+3*y] = new Actor(engine.texture, SDL_Rect{0,0,1,1},
                                       SDL_Rect{101+68*x, 164+12*y, 67, 10});
-        atknames[x+3*y] = new FontStr(engine.font, 7, "");
+        atknames[x+3*y] = new FontStr(engine.font, "");
     }
 }
 
@@ -172,29 +166,29 @@ UiInv::UiInv(SDL_Surface* s) :
         plrinv[y+10*x] = new InvActor {
                             new Actor(engine.texture, SDL_Rect{0,0,1,1},
                                       SDL_Rect{6 + 86*x, 4 + 16*y, 80, 14}),
-                            new FontStr(engine.font, 8, "Nothing"),
+                            new FontStr(engine.font, "Nothing"),
                             NOITEMCOL};
     }
     for (int y = 0; y != FINVPGSIZE; y++) {
         floorinv[y] = new InvActor {
                             new Actor(engine.texture, SDL_Rect{0,0,1,1},
                                       SDL_Rect{261, 4 + 16*y, 108, 14}),
-                            new FontStr(engine.font, 8, "Nothing"),
+                            new FontStr(engine.font, "Nothing"),
                             NOITEMCOL};
     }
     prevpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
                          SDL_Rect{261, 132, 53, 14});
-    prevname = new FontStr(engine.font, 3, "<==");
+    prevname = new FontStr(engine.font, "<==");
     nextpage = new Actor(engine.texture, SDL_Rect{0,16, 52, 14},
                          SDL_Rect{261+53+2, 132, 53, 14});
-    nextname = new FontStr(engine.font, 3, "==>");
+    nextname = new FontStr(engine.font, "==>");
 
     std::string names[4] = {"USE","ARMOR","WEAPON","MISC"};
     for (int i = 0; i != 4; i++) {
         slots[i] = new Actor(engine.texture, SDL_Rect{32 + 8*(i&1), 16 + 8*(i&2)/2 ,8,8},
                              SDL_Rect {101+67*i, 164, 66, 22});
-        slotnames[i] = new FontStr(engine.font, 6, names[i]);
-        itemnames[i] = new FontStr(engine.font, 8, "-");
+        slotnames[i] = new FontStr(engine.font, names[i]);
+        itemnames[i] = new FontStr(engine.font, "-");
     }
 }
 

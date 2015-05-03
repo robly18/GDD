@@ -6,7 +6,7 @@ NumBar::NumBar(SDL_Rect barmax, Uint32 fullc, Uint32 emptyc, BmpFont* font,
     barmax(barmax), emptyc(emptyc), fullc(fullc), name(name),
     showval(showval), maxval(maxval), valptr(valptr),
     font(font) {
-    fontname = new FontStr(font, MAXSTRLEN, name);
+    fontname = new FontStr(font, name);
 }
 
 void NumBar::render(SDL_Surface* surface) {

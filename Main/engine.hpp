@@ -23,6 +23,9 @@ class Attack;
 class NumBar;
 class Ui;
 
+class Database;
+class Interpreter;
+
 struct MouseState {
     Pos p;
 
@@ -64,6 +67,8 @@ public:
                                 *viewlog;
     EngineState::Viewprompt     *viewprompt;
 
+    Database                    *database;
+    Interpreter                 *interpreter;
 
 private:
 

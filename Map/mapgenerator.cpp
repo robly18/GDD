@@ -42,7 +42,6 @@ void MapGenerator::generateMap(Map* map, const TileProperties* wall, const TileP
         newy = r.y + r.h/2;
         if ((newx - prevx < 16 && newx - prevx > -16) ||
             (newy - prevy < 10 && newy - prevy > -10)) {
-            DEBUGMSG("Rejected room\n");
             goto newpos;
         }
         makeRect(r, nowall, map->tiles);

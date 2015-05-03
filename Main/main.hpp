@@ -1,5 +1,4 @@
 
-
 #define MAXCLUBGUYS 10
 #define MAXROGUEIMPS 30
 
@@ -18,6 +17,8 @@
 
 
 #include <SDL.h>
+#include "../Data/interpreter.hpp"
+
 #include "..\Misc\gddlist.hpp"
 #include "..\Misc\logging.hpp"
 #include "..\Misc\posstruct.hpp"
@@ -33,4 +34,7 @@ class Player;
 #include "..\Mob\XP\xp.hpp"
 #include "..\Mob\mob.hpp"
 #include "..\Map\map.hpp"
+
+
 #include "engine.hpp"
+

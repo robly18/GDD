@@ -28,8 +28,6 @@ public:
     STATEFUNCS();
 
 protected:
-    void                doTick(Engine&, int flag);
-
     enum {MOVED, ATTACKED, USED};
 
 };

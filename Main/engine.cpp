@@ -15,7 +15,6 @@ SDL_Texture* Engine::loadTexture(char* filename, short r, short g, short b) {
     }
 
 int Engine::init() {
-    DEBUGMSG("Initializing engine\n");
 
     if (SDL_Init( SDL_INIT_EVERYTHING )) LOGERROR()
 
@@ -41,14 +40,20 @@ int Engine::init() {
     SDL_SetColorKey(s, SDL_TRUE, SDL_MapRGB(s->format, 0, 0, 0));
     font = new BmpFont(s);
 
-    DEBUGMSG("Images and fonts loaded\n");
 
+    database = new Database;
+    interpreter = new Interpreter;
+    if (!interpreter->open("mobs.data")) {
+        std::cout<<"Failed to open mobs.data file\n";
+        return 1;
+    }
+
+    interpreter->parseToDatabase(*database);
 
     map = new Map();
     map->generateMap();
 
 
-    DEBUGMSG("Map and player made\n");
 
     ui = new Ui();
 
@@ -114,7 +119,6 @@ void Engine::doTick(int flag) {
     if (flag != MOVEDFLAG) lastkey.keysym.sym = SDLK_SPACE;
 
     do {
-        DEBUGMSG("Checking mobs status");
         for (auto mob : map->mobs2) {
             int swiftness = mob->getSwiftness();
             if (swiftness) {
@@ -124,16 +128,15 @@ void Engine::doTick(int flag) {
                 }
             }
         }
-        DEBUGMSG("Checking mobs update");
         for (auto mob : map->mobs2) {
             if (mob->getSwiftness())
             if (time % mob->getSwiftness() == mob->ai->timeoffset)
             if (mob->destructible &&
-                !mob->destructible->statusholder->hasEffect(SideEffect::FROZEN)) {
+                !mob->destructible->statusholder->hasEffect(SideEffect::FROZEN) &&
+                !mob->destructible->isDead()) {
                 mob->ai->update(mob);
             }
         }
-        DEBUGMSG("Checking dead mobs");
         for (auto m = map->mobs2.begin(); m != map->mobs2.end();) {
             if ((*m)->destructible->isDead()) {
                 m = map->killMob(m);
@@ -141,16 +144,16 @@ void Engine::doTick(int flag) {
                 m++;
             }
         }
-        DEBUGMSG("Rip.");
         time++;
         if (map->player->destructible->isDead()) return;
     } while (time % map->player->getSwiftness());
 
     map->updateFovData();
 
-    if (flag == MOVEDFLAG &&
-        map->player->weapon) map->player->weapon->regenMana(
-                                    map->player->weplvls[map->player->weapon->weapontype]);
+    if (flag == MOVEDFLAG && map->player->weapon) {
+            map->player->weapon->regenMana(
+                            map->player->weplvls[map->player->weapon->weapontype]);
+    }
 
     if (flag != USEDFLAG)
         if (map->hasFlag(map->player->x, map->player->y, TileProperty::EXIT)) {

@@ -42,7 +42,6 @@ void Destructible::dropItems(Mob* mob) {
 }
 
 void PlayerDestructible::die(Mob* mob) {
-    //engine.state = engine.State::DEAD;
     engine.ui->addPrompt(new DeadPrompt);
 }
 
