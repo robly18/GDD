@@ -299,7 +299,6 @@ void Map::checkMapData() {
 /**Map Generation**/
 
 void Map::generateMap() {
-    DEBUGMSG("Erasing what was already here\n");
 
     for (auto m : mobs1) delete m;
     for (auto i : items) delete i;
@@ -308,13 +307,10 @@ void Map::generateMap() {
     mobs1.clear();
     items.clear();
 
-    DEBUGMSG("Generating new map\n");
 
     generator->generateMap(this, wall, nowall);
-    DEBUGMSG("Populating...\n");
 
     generator->populateMap(this);
-    DEBUGMSG("Done.\n");
 
     seeabletiles = 0; seentiles = 0;
 
@@ -369,7 +365,6 @@ void Map::inspect(Pos p) const {
         }
         for (auto mob : mobs2) {
             if (mob->x == p.x && mob->y == p.y) {
-                std::cout<<"Outputting shenanigans\n";
                 /*Important data about a mob:
                  *Name (duh)
                  *Hp

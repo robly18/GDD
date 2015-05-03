@@ -5,7 +5,7 @@ Prompt::Prompt(std::string text, std::string opt1, std::string opt2) {
     figureOutButtons(opt1, opt2);
 }
 
-void Prompt::figureOutText(std::string s) {
+void Prompt::figureOutText(std::string s) { //ARGHHHH
 
     std::vector <std::string> lines;
 
@@ -26,7 +26,7 @@ void Prompt::figureOutText(std::string s) {
     for (auto &line : lines) {
         text.push_back(FontStrPos(
                             std::unique_ptr<FontStr>
-                                (new FontStr(engine.font, line.size(), line)),
+                                (new FontStr(engine.font, line)),
                             Pos{(SWIDTH-line.size()*8)/2,
                             (SHEIGHT-lines.size()*8)/2 + i*9 - 1}));
         maxlinew = std::max(maxlinew, (int)line.size());
@@ -43,13 +43,13 @@ void Prompt::figureOutButtons(std::string o1, std::string o2) {
     int maxsize = std::max(o1.size(), o2.size());
     button1 = SDL_Rect {midx - 1 - TEXTMARGIN*2 - maxsize*8, y,
                         maxsize*8 + TEXTMARGIN*2, 8 + TEXTMARGIN*2};
-    opt1 = FontStrPos(std::unique_ptr<FontStr>(new FontStr(engine.font, o1.size(), o1)),
+    opt1 = FontStrPos(std::unique_ptr<FontStr>(new FontStr(engine.font, o1)),
                       Pos{button1.x + TEXTMARGIN + (maxsize - o1.size())*4,
                             button1.y + TEXTMARGIN});
 
     button2 = SDL_Rect {midx + 1, y,
                         maxsize*8 + TEXTMARGIN*2, 8 + TEXTMARGIN*2};
-    opt2 = FontStrPos(std::unique_ptr<FontStr>(new FontStr(engine.font, o2.size(), o2)),
+    opt2 = FontStrPos(std::unique_ptr<FontStr>(new FontStr(engine.font, o2)),
                       Pos{button2.x + TEXTMARGIN + (maxsize - o2.size())*4,
                             button2.y + TEXTMARGIN});
 }
