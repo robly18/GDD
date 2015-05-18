@@ -1,6 +1,14 @@
 
-#testcomment
+
 
 Mob {
-	name:"ROGUEIMP" #sup
+	name : "ROGUEIMP";
+	hp : 5;
+}
+
+Mob {
+	name : "CLUBGUY";
+	hp : 1;
+	texture : 1, 4;
+	deadtexture : 0, 5;
 }

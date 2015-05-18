@@ -103,7 +103,7 @@ public:
 
     void                        checkMapData();
 
-    void                        generateMap();
+    void                        generateMap(Database&);
     void                        updateFovData();
     void                        updateFovData(const Pos p); //For use with teleportation shenanigans
 

@@ -50,8 +50,14 @@ int Engine::init() {
 
     interpreter->parseToDatabase(*database);
 
+    interpreter->close();
+
+    for (auto m : database->mobdefs) {
+        std::cout<<"\nThere's a mobdef here with name "<<m.second.name<<" and "<<m.second.hp<<" hp\n";
+    }
+
     map = new Map();
-    map->generateMap();
+    map->generateMap(*database);
 
 
 

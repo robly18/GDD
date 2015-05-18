@@ -90,7 +90,7 @@ void NextLevelPrompt::doOpt1() {
 void NextLevelPrompt::doOpt2() {
     engine.ui->closePrompt(engine.running);
 
-    engine.map->generateMap();
+    engine.map->generateMap(*engine.database);
 }
 
 

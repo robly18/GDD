@@ -5,7 +5,8 @@ MapGenerator::MapGenerator() {
 
 #define NBLANKMAP
 
-void MapGenerator::generateMap(Map* map, const TileProperties* wall, const TileProperties* nowall) {
+void MapGenerator::generateMap(Map* map, const Database &d,
+                               const TileProperties* wall, const TileProperties* nowall) {
 
     #ifdef BLANKMAP
     makeRect(SDL_Rect{0, 0, MAPWIDTH, MAPHEIGHT}, nowall, map->tiles);
@@ -71,7 +72,7 @@ void MapGenerator::makeRect(const SDL_Rect r, const TileProperties* t, Tile* til
     }
 }
 
-void MapGenerator::populateMap(Map* map) {
+void MapGenerator::populateMap(Map* map, const Database &d) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
     int posnum = 0; //Number of such
 
@@ -84,16 +85,11 @@ void MapGenerator::populateMap(Map* map) {
     }
 
     TargetedAttack* a = new TargetedAttack(7, 0, 0, 10, 0, 0, 0, true, false);
+
+    Mobdef def = d.getMobDef("CLUBGUY");
     for (int n = 0; n != MAXCLUBGUYS; n++) {
         int pos = std::rand() % posnum;
-        Mob* m = new Mob(positions[pos].x, positions[pos].y,
-                         SDL_Rect{16, 64, 16, 16}, engine.texture, "CLUBGUY");
-        m->sght = 2;
-        m->ai = new BasicAi(130);
-        m->destructible = new MobDestructible(20, SDL_Rect{0, 80, 16, 16}, 14);
-        m->attack = a;
-        m->inventory = new MobInventory;
-        m->inventory->addItem(new HpPotion("HPPot", 40));
+        Mob* m = d.makeMob(positions[pos], def);
         map->mobs2.push_back(m);
 
         positions[pos] = positions[--posnum];

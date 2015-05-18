@@ -28,6 +28,7 @@ int main(int argn, char* argv []) {
         engine.render();
         DEBUGMSG("Checking\n");
     }
+    SDL_Quit();
     return 0;
 }
 
