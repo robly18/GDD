@@ -22,11 +22,12 @@ Map::Map () :
     makePlayer();
 
     player->inventory->addItem(new Armor("TestArmr", 2, 10));
-    player->inventory->addItem(new Staff("Tststaff", 10, 10, -10, 10));
-    player->inventory->addItem(new Sword("SORD....", 10, 3));
     player->inventory->addItem(new HpPotion("t1ck", 10));
     player->inventory->addItem(new HpPotion("t0ck", 10));
     //player->inventory->addItem(new Bow("BowB4Me", 10, 7, 10, 20));
+
+    player->inventory->addItem(engine.database->makeItem(
+                                    engine.database->getItemDef("SORD....")));
 };
 
 void Map::restartMap() {

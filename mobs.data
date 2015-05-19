@@ -1,14 +1,29 @@
 
-
+Item {
+	name : "SORD....";
+	color : 255;
+}
 
 Mob {
 	name : "ROGUEIMP";
-	hp : 5;
+	hp : 10;
+	texture : 2, 4;
+	deadtexture : 0, 5;
+	swiftness : 100;
+	atk : 5;
+	def : 0;
+	sght : 3;
+	xp : 10;
 }
 
 Mob {
 	name : "CLUBGUY";
-	hp : 1;
+	hp : 30;
 	texture : 1, 4;
 	deadtexture : 0, 5;
+	swiftness : 200;
+	atk : 10;
+	def : 10;
+	sght : 1;
+	xp : 50;
 }

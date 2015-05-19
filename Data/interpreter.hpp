@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include <array>
 
 #include "../Main/main.hpp"
 
@@ -17,11 +18,33 @@ struct Mobdef {
     int                 hp;
     Pos                 texture,
                         deadtexture;
-    int                 swiftness = 100,
-                        atk = 10,
-                        def = 10,
-                        sght = 10,
-                        xp = 10;
+    int                 swiftness = 0,
+                        atk = 0,
+                        def = 0,
+                        sght = 0,
+                        xp = 0;
+};
+
+struct Atkdef {
+};
+
+struct Itemdef {
+    std::string         name;
+    int                 itemtype;
+    Uint32              color;
+
+    union data {
+        struct pot {
+            int         heals; //subject to change in the future
+        };
+        struct wep {
+            int         weapontype;
+            std::array<Atkdef*, 6>
+                        atks;
+            int         atk,
+                        maxmana;
+        };
+    };
 };
 
 class Database {
@@ -32,6 +55,13 @@ public:
 
     Mobdef              getMobDef(std::string name) const;
     Mob                 *makeMob(Pos, Mobdef) const;
+
+
+    std::unordered_map<std::string, Itemdef>
+                        itemdefs;
+
+    Itemdef             getItemDef(std::string name) const;
+    Item                *makeItem(Itemdef) const;
 
 };
 
@@ -48,11 +78,11 @@ private:
     void                interpretDef(const std::string);
     void                makeDef(const char* def, const std::string);
 
-
-    Mobdef              makeMobDef(const std::string);
+    template <class C>
+    C                   makeDef(const std::string);
 
     void                parseProperty(char* propertyname, char* property, Mobdef &def);
-
+    void                parseProperty(char* pname, char* p, Itemdef &def);
 
     Pos                 parseCoordinates(char* coords);
 
@@ -60,9 +90,10 @@ private:
     Database            *d; //so I don't have to pass it around in all functions, i store it here
 };
 
-#define ACTONPROPERTY(name, func) \
-    if (strcmp(propertyname, #name) == 0) { \
-        def. name = func (property); \
+#define ACTONPROPERTY(n, func) \
+    if (strcmp(propertyname, #n) == 0) { \
+        def. n = func (property); \
+        std::cout<<"Got "<<#n<<": "<<property<<"\n"; \
     } else
 
 #endif

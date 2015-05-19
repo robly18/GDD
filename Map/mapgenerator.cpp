@@ -95,17 +95,11 @@ void MapGenerator::populateMap(Map* map, const Database &d) {
         positions[pos] = positions[--posnum];
     }
 
-    a = new TargetedAttack(5, 0, 0, 10);
+    def = d.getMobDef("ROGUEIMP");
+
     for (int n = 0; n != MAXROGUEIMPS; n++) {
         int pos = std::rand() % posnum;
-        Mob* m = new Mob(positions[pos].x, positions[pos].y,
-                         SDL_Rect{32, 64, 16, 16}, engine.texture, "ROGUEIMP");
-        m->sght = 4;
-        m->ai = new BasicAi(142);
-        m->destructible = new MobDestructible(10, SDL_Rect{0, 80, 16, 16}, 6);
-        m->attack = a;
-        m->inventory = new MobInventory;
-        m->inventory->addItem(new HpPotion("CrapPot", 25));
+        Mob* m = d.makeMob(positions[pos], def);
         map->mobs2.push_back(m);
 
         positions[pos] = positions[--posnum];

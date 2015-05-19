@@ -24,6 +24,17 @@ Mob *Database::makeMob(Pos p, Mobdef def) const {
     return m;
 }
 
+Itemdef Database::getItemDef(std::string name) const {
+    return itemdefs.find(name)->second;
+}
+
+Item *Database::makeItem(Itemdef def) const {
+
+    auto i = new Sword(def.name, 10, 3);
+    i->color = def.color;
+    return i;
+}
+
 
 bool Interpreter::open(std::string filename) {
     file.open(filename);
@@ -77,14 +88,18 @@ void Interpreter::interpretDef(const std::string str) {
 void Interpreter::makeDef(const char* id, const std::string str) {
     std::cout<<"MakeDef called with arguments:\nID: "<<id<<"\nString: "<<str<<"\n\n";
     if (strcmp(id, "Mob") == 0) {
-        Mobdef m = makeMobDef(str);
+        Mobdef m = makeDef<Mobdef>(str);
         d->mobdefs[m.name] = m;
+    } else if (strcmp(id, "Item") == 0) {
+        Itemdef i = makeDef<Itemdef>(str);
+        d->itemdefs[i.name] = i;
     } else {
         assert(false);
     }
 }
 
-Mobdef Interpreter::makeMobDef(const std::string str) {
+template <class C>
+C Interpreter::makeDef(const std::string str) {
     char propertyname [MAXPROPERTYNAMECHARS] = {}; //this is a mess wee
     char property [MAXPROPERTYCHARS] = {};
     int i = 0;
@@ -93,7 +108,7 @@ Mobdef Interpreter::makeMobDef(const std::string str) {
     bool comment = false;
     bool inquotes = false;
 
-    Mobdef returnvalue;
+    C returnvalue;
 
     for (char c : str) {
         if (!inquotes) {
@@ -126,6 +141,8 @@ Mobdef Interpreter::makeMobDef(const std::string str) {
     //ugh todo finish
 }
 
+/****/
+
 void Interpreter::parseProperty(char* propertyname, char* property, Mobdef &def) {
 
     ACTONPROPERTY(name, std::string)
@@ -143,6 +160,17 @@ void Interpreter::parseProperty(char* propertyname, char* property, Mobdef &def)
     }
 }
 
+void Interpreter::parseProperty(char *propertyname, char *property, Itemdef &def) {
+
+    ACTONPROPERTY(name, std::string)
+    ACTONPROPERTY(color, atoi) //temp
+    {
+        std::cout<<propertyname;
+        assert(false);
+    }
+}
+
+/****/
 
 Pos Interpreter::parseCoordinates(char *coords) {
     Pos p;
