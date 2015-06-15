@@ -17,16 +17,18 @@ struct StatusChance {
 
 class Attack {
 public:
-    Attack(int cost, bool physical, int minAccy = 0, int maxAccy = 0) :
-        cost(cost), physical(physical),
-        minAccy(minAccy), maxAccy(maxAccy) {};
+    Attack(int cost, std::string name = "", SDL_Rect icon = {0,0,0,0},
+                                bool physical = true, int minAccy = 0, int maxAccy = 0,
+                                                std::vector<StatusChance*> chances = {}) :
+        cost(cost), name(name), icon(icon),
+        physical(physical),
+        minAccy(minAccy), maxAccy(maxAccy),
+        chances(chances) {};
     virtual             ~Attack() {};
 
     std::string         name = "";
-    Attack* setName(std::string n) {name = n; return this;}
 
     SDL_Rect            icon = {0, 0, 0, 0};
-    Attack* setIcon(SDL_Rect i) {icon = i; return this;}
 
     int                 cost;
     bool                physical;
@@ -40,7 +42,7 @@ public:
 
     virtual bool        hit(Mob*, Mob*) const = 0;
 
-    bool                select(Player*);
+    bool                select(Player*) const;
     bool                applyChances(Mob*, char*, const char*, const char*) const;
 
     virtual bool        isInRange(const Pos user, const Pos target, const int) const = 0;
@@ -55,10 +57,12 @@ public:
 
 class TargetedAttack : public Attack {
 public:
-    TargetedAttack(int damage, int cost,
+    TargetedAttack(int damage, int cost, std::string name, SDL_Rect icon,
               int minrange, int maxrange, int minAccy = 0, int maxAccy = 0,
-              int radius = 0, bool physical = true, bool hurtself = false) :
-        Attack(cost, physical, minAccy, maxAccy), damage(damage), minrange(minrange), maxrange(maxrange),
+              int radius = 0, bool physical = true, bool hurtself = false,
+                                    std::vector<StatusChance*> chances = {}) :
+        Attack(cost, name, icon, physical, minAccy, maxAccy, chances),
+        damage(damage), minrange(minrange), maxrange(maxrange),
         radius(radius), hurtself(hurtself) {}
 
     int                 damage;
@@ -87,8 +91,8 @@ private:
 
 class SelfBuff : public Attack {
 public:
-    SelfBuff(int cost, Status* s) :
-        Attack(cost, false) {chances.push_back(new StatusChance{s, 100});}
+    SelfBuff(int cost, std::string name, SDL_Rect icon, Status* s) :
+        Attack(cost, name, icon, false) {chances.push_back(new StatusChance{s, 100});}
 
     bool                target(Mob*, int, int) const;
     bool                hit(Mob*, Mob*) const;

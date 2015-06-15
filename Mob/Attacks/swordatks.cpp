@@ -1,7 +1,7 @@
 #include "swordatks.hpp"
 
-HitThru::HitThru(int dmg, int cost, int length) :
-    TargetedAttack(dmg, cost, 1, 1), length(length) {
+HitThru::HitThru(int dmg, std::string name, SDL_Rect icon, int cost, int length) :
+    TargetedAttack(dmg, cost, name, icon, 1, 1), length(length) {
 }
 
 bool HitThru::isInRange(const Pos user, const Pos target, const int accy) const {
@@ -23,8 +23,8 @@ bool HitThru::isHit(Mob* src, int tx, int ty, int hx, int hy) const {
     }
 }
 
-BashSwp::BashSwp(int cost, int force) :
-        TargetedAttack(0, cost, 1, 1), force(force) {
+BashSwp::BashSwp(int cost, std::string name, SDL_Rect icon, int force) :
+        TargetedAttack(0, cost, name, icon, 1, 1), force(force) {
 }
 
 bool BashSwp::target(Mob *user, int x, int y) const {

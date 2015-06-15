@@ -5,12 +5,13 @@
 #include <sstream>
 #include <unordered_map>
 #include <array>
+#include <cctype>
 
 #include "../Main/main.hpp"
 
 
 #define MAXIDCHARS 16
-#define MAXPROPERTYNAMECHARS 16
+#define MAXPROPERTYNAMECHARS 64
 #define MAXPROPERTYCHARS 256
 
 struct Mobdef {
@@ -26,25 +27,39 @@ struct Mobdef {
 };
 
 struct Atkdef {
+    enum {
+        TARGETED,
+        SELFBUFF,
+        HITTHRU,
+        BASHSWP,
+    };
+
+    int                 atktype;
+    std::string         name;
+    int                 minrange, maxrange;
+    int                 minaccy = 0, maxaccy = 0;
+    int                 radius = 0;
+    bool                hurtself = false, physical = true;
 };
+
+typedef std::array<const Atkdef*, 6> atkdefarr;
 
 struct Itemdef {
     std::string         name;
     int                 itemtype;
     Uint32              color;
 
-    union data {
-        struct pot {
+    union {
+        struct {
             int         heals; //subject to change in the future
-        };
-        struct wep {
+        } use;
+        struct {
             int         weapontype;
-            std::array<Atkdef*, 6>
-                        atks;
+            atkdefarr   atks;
             int         atk,
                         maxmana;
-        };
-    };
+        } wep;
+    } data;
 };
 
 class Database {
@@ -53,15 +68,24 @@ public:
     std::unordered_map<std::string, Mobdef>
                         mobdefs;
 
-    Mobdef              getMobDef(std::string name) const;
+    const Mobdef        &getMobDef(std::string name) const;
     Mob                 *makeMob(Pos, Mobdef) const;
 
 
     std::unordered_map<std::string, Itemdef>
                         itemdefs;
 
-    Itemdef             getItemDef(std::string name) const;
-    Item                *makeItem(Itemdef) const;
+    const Itemdef       &getItemDef(const std::string name) const;
+    Item                *makeItem(Itemdef);
+
+
+    std::unordered_map<std::string, Atkdef>
+                        atkdefs;
+    std::unordered_map<std::string, const Attack*>
+                        atksingletons;
+
+    const Atkdef        &getAtkDef(std::string name) const;
+    const Attack        *getAtk(Atkdef);
 
 };
 
@@ -83,18 +107,27 @@ private:
 
     void                parseProperty(char* propertyname, char* property, Mobdef &def);
     void                parseProperty(char* pname, char* p, Itemdef &def);
+    void                parseProperty(char* pname, char* p, Atkdef &def);
 
     Pos                 parseCoordinates(char* coords);
+    Uint32              charsToColors(char* colors);
+    int                 itemtypeToInt(char *type);
+    int                 atktypeToInt(char *type);
+
+    atkdefarr           parseAttacks(char *atks);
 
 
     Database            *d; //so I don't have to pass it around in all functions, i store it here
+    Itemdef             *thisdef; //Okay this is gonna come back to bite me someday u_u
 };
 
 #define ACTONPROPERTY(n, func) \
     if (strcmp(propertyname, #n) == 0) { \
         def. n = func (property); \
-        std::cout<<"Got "<<#n<<": "<<property<<"\n"; \
+        /*std::cout<<"Got "<<#n<<": "<<property<<"\n";*/ \
     } else
+
+int hexchartoint(char c);
 
 #endif
 

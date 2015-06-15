@@ -1,6 +1,6 @@
 #include "attack.hpp"
 
-bool Attack::select(Player* user) {
+bool Attack::select(Player* user) const {
     if (cost == 0) return true;
     if (user->weapon->mana < cost) {
         return false;

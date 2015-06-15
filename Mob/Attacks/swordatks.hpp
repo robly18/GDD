@@ -5,7 +5,7 @@
 
 class HitThru : public TargetedAttack {
 public:
-    HitThru(int dmg, int cost, int length);
+    HitThru(int dmg, std::string, SDL_Rect, int cost, int length);
 
     int                 length;
 
@@ -16,7 +16,7 @@ public:
 
 class BashSwp : public TargetedAttack {
 public:
-    BashSwp(int cost, int force);
+    BashSwp(int cost, std::string, SDL_Rect, int force);
 
     int                 force;
 

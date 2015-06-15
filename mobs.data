@@ -1,7 +1,21 @@
+Attack {
+	name : "BLUHATK";
+	atktype : "TARGETED";
+}
+
+Attack {
+	name : "SLFBUFF";
+	atktype : "SELFBUFF";
+}
+
 
 Item {
 	name : "SORD....";
-	color : 255;
+	color : FF0000;
+	itemtype : "WEAPON";
+	
+	data.wep.maxmana : 30;
+	data.wep.atks : 1-BLUHATK|2-BLUHATK|3-BLUHATK|4-BLUHATK|5-SLFBUFF|6-BLUHATK;
 }
 
 Mob {

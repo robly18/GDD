@@ -14,6 +14,7 @@
 
 #define RANDSEED 2 /*::time(NULL)*/
 
+#define NOICON SDL_Rect{0,0,0,0}
 
 
 #include <SDL.h>

@@ -84,7 +84,7 @@ void MapGenerator::populateMap(Map* map, const Database &d) {
         }
     }
 
-    TargetedAttack* a = new TargetedAttack(7, 0, 0, 10, 0, 0, 0, true, false);
+    TargetedAttack* a = new TargetedAttack(7, 0, "ayy", NOICON, 0, 10, 0, 0, 0, true, false);
 
     Mobdef def = d.getMobDef("CLUBGUY");
     for (int n = 0; n != MAXCLUBGUYS; n++) {

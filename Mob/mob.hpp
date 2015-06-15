@@ -33,7 +33,7 @@ public:
 
     Ai              *ai = NULL;
     Destructible    *destructible = NULL;
-    Attack          *attack = NULL;
+    const Attack    *attack = NULL;
     Inventory       *inventory = NULL;
 
 
@@ -61,7 +61,7 @@ public:
 
     Weapon          *weapon = NULL;
 
-    Attack          *defaultattack;
+    const Attack    *defaultattack;
 
     XpHolder        *xpholder;
 

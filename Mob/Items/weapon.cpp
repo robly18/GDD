@@ -37,11 +37,11 @@ void Weapon::cancelAttack(Player* user) {
 Staff::Staff(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     Weapon(n, attack, maxmana, WEAPONSTFF) {
     color = 0xFFCC88;
-    attacks[0] = new TargetedAttack(10, 10, 0, 6, minaccy, maxaccy, 0, false, true);
-    attacks[1] = new TargetedAttack(4, 5, 0, 5, minaccy, maxaccy, 3, false, true);
-    defenses[0] = new SelfBuff(10, new SideEffectBuff("Thorn", 5, SideEffect::THORN,
+    attacks[0] = new TargetedAttack(10, 10, "ayy", NOICON, 0, 6, minaccy, maxaccy, 0, false, true);
+    attacks[1] = new TargetedAttack(4, 5, "ayy", NOICON, 0, 5, minaccy, maxaccy, 3, false, true);
+    defenses[0] = new SelfBuff(10, "ayy", NOICON, new SideEffectBuff("Thorn", 5, SideEffect::THORN,
                                                       14, 32));
-    defenses[1] = new SelfBuff(20, new FixedHpRegen(5, "Regen", 8));
+    defenses[1] = new SelfBuff(20, "ayy", NOICON, new FixedHpRegen(5, "Regen", 8));
 }
 
 int Staff::regenMana(int regen) {
@@ -57,15 +57,13 @@ int Staff::regenMana(int regen) {
 Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     color = 0x2222DD;
-    attacks[0] = (new TargetedAttack(30, 15, 0, 1))->setName("HIT")->setIcon(SDL_Rect{16,0,8,8});
-    attacks[1] = (new TargetedAttack(30, 17, 0, 0, 0, 0, 2, true, false))
-                    ->setName("SPIN");
-    attacks[2] = (new HitThru(20, 10, 3))
-                    ->setName("HITTHRU");
-    defenses[0] = (new SelfBuff(12, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
-                                                      0, 30)))->setName("BLOCK");
-    defenses[1] = (new SelfBuff(25, new FixedHpRegen(7, "Regen", 2)))->setName("REGEN");
-    defenses[2] = (new BashSwp(10, -1))->setName("BASHSWP");
+    attacks[0] = (new TargetedAttack(30, 15, "HIT", SDL_Rect{16,0,8,8}, 0, 1));
+    attacks[1] = (new TargetedAttack(30, 17, "SPIN", NOICON, 0, 0, 0, 0, 2, true, false));
+    attacks[2] = (new HitThru(20, "HITTHRU", NOICON, 10, 3));
+    defenses[0] = (new SelfBuff(12, "BLOCK", NOICON, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
+                                                      0, 30)));
+    defenses[1] = (new SelfBuff(25, "REGEN", NOICON, new FixedHpRegen(7, "Regen", 2)));
+    defenses[2] = (new BashSwp(10, "BASHSWP", NOICON, -1));
 }
 
 int Sword::regenMana(int regen) {
@@ -86,13 +84,13 @@ int Sword::regenMana(int regen) {
 Bow::Bow(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     Weapon(n, attack, maxmana, WEAPONBOW) {
     color = 0x12DD12;
-    attacks[0] = new TargetedAttack(2, 3, 3, 10, minaccy, maxaccy, 0, false, false);
-    attacks[0]->chances.push_back(new StatusChance{new FixedHpPoison(10,"Poison",3), 100});
-    attacks[1] = new TargetedAttack(15, 10, 3, 9, minaccy, maxaccy, 2, false, true);
-    defenses[0] = new SelfBuff(35, new CounterDebuffBuff("IceSkin", 5,
+    attacks[0] = new TargetedAttack(2, 3, "ayy", NOICON, 3, 10, minaccy, maxaccy, 0, false, false,
+                                    {new StatusChance{new FixedHpPoison(10,"Poison",3), 100}});
+    attacks[1] = new TargetedAttack(15, 10, "ayy", NOICON, 3, 9, minaccy, maxaccy, 2, false, true);
+    defenses[0] = new SelfBuff(35, "ayy", NOICON, new CounterDebuffBuff("IceSkin", 5,
                                         std::shared_ptr<Status>(new Frozen("Freeze", 5)),
                                         0, 0));
-    defenses[1] = new SelfBuff(40, new FixedHpRegen(1, "Regen", 20));
+    defenses[1] = new SelfBuff(40, "ayy", NOICON, new FixedHpRegen(1, "Regen", 20));
 }
 
 int Bow::regenMana(int regen) {
