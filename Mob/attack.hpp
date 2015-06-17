@@ -11,7 +11,7 @@
 class Status;
 
 struct StatusChance {
-    Status              *status;
+    const Status        *status;
     int                 chance; //As a percent
 };
 
@@ -19,8 +19,8 @@ class Attack {
 public:
     Attack(int cost, std::string name = "", SDL_Rect icon = {0,0,0,0},
                                 bool physical = true, int minAccy = 0, int maxAccy = 0,
-                                                std::vector<StatusChance*> chances = {}) :
-        cost(cost), name(name), icon(icon),
+                                                std::vector<StatusChance> chances = {}) :
+        name(name), icon(icon), cost(cost),
         physical(physical),
         minAccy(minAccy), maxAccy(maxAccy),
         chances(chances) {};
@@ -52,7 +52,7 @@ public:
                                        int mousex, int mousey) const = 0;
 
     std::vector
-        <StatusChance*> chances;
+        <StatusChance> chances;
 };
 
 class TargetedAttack : public Attack {
@@ -60,7 +60,7 @@ public:
     TargetedAttack(int damage, int cost, std::string name, SDL_Rect icon,
               int minrange, int maxrange, int minAccy = 0, int maxAccy = 0,
               int radius = 0, bool physical = true, bool hurtself = false,
-                                    std::vector<StatusChance*> chances = {}) :
+                                    std::vector<StatusChance> chances = {}) :
         Attack(cost, name, icon, physical, minAccy, maxAccy, chances),
         damage(damage), minrange(minrange), maxrange(maxrange),
         radius(radius), hurtself(hurtself) {}
@@ -91,8 +91,8 @@ private:
 
 class SelfBuff : public Attack {
 public:
-    SelfBuff(int cost, std::string name, SDL_Rect icon, Status* s) :
-        Attack(cost, name, icon, false) {chances.push_back(new StatusChance{s, 100});}
+    SelfBuff(int cost, std::string name, SDL_Rect icon, const Status* s) :
+        Attack(cost, name, icon, false) {chances.push_back(StatusChance{s, 100});}
 
     bool                target(Mob*, int, int) const;
     bool                hit(Mob*, Mob*) const;

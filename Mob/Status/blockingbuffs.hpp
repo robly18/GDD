@@ -10,7 +10,7 @@ public:
         Status(name, timeLeft, SDL_Rect{spritex, spritey, 4, 4}, 3, 0, false),
         sideeffect((SideEffect)effects) {}
 
-    Status              *clone();
+    Status              *clone() const;
 
     void                updateHolder(StatusHolder*, Mob*);
 private:
@@ -24,7 +24,7 @@ public:
                           Status(name, timeLeft, SDL_Rect{spritex, spritey, 4, 4},
                                  3, 0, false), debf(debf) {}
 
-    Status                      *clone();
+    Status                      *clone() const;
 
     void                        updateHolder(StatusHolder*, Mob*);
 

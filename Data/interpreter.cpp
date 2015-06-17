@@ -28,7 +28,7 @@ const Itemdef &Database::getItemDef(const std::string name) const {
     return itemdefs.at(name);
 }
 
-Item *Database::makeItem(Itemdef def) {
+Item *Database::makeItem(Itemdef def) const {
 
     Item *i;
 
@@ -51,21 +51,42 @@ const Atkdef &Database::getAtkDef(std::string name) const {
     return atkdefs.at(name);
 }
 
-const Attack *Database::getAtk(Atkdef def) {
+const Attack *Database::getAtk(Atkdef def) const {
 
     std::unordered_map<std::string, const Attack*>::const_iterator atk = atksingletons.find(def.name);
     if (atk != atksingletons.end()) return atk->second;
-    std::cout<<"bluhh";
+
     const Attack *a;
 
     if (def.atktype == Atkdef::TARGETED) {
-        a = new TargetedAttack(100, 3, def.name, NOICON, 0, 2);
+        a = new TargetedAttack(def.damage, def.cost, def.name, NOICON, def.minrange, def.maxrange,
+                                    def.minaccy, def.maxaccy, def.radius, def.physical, def.hurtself,
+                                    def.addstatus);
     } else if (def.atktype == Atkdef::SELFBUFF) {
-        a = new SelfBuff(10, def.name, NOICON, new FixedHpRegen(10, "bluh", 3));
+        a = new SelfBuff(def.cost, def.name, NOICON, def.buff);
+    } else if (def.atktype == Atkdef::HITTHRU) {
+        a = new HitThru(def.damage, def.name, NOICON, def.cost, def.maxrange);
+    } else if (def.atktype == Atkdef::BASHSWP) {
+        a = new BashSwp(def.cost, def.name, NOICON, def.damage);
     }
 
     atksingletons[def.name] = a;
     return a;
+}
+
+const Statusdef &Database::getStatusdef(std::string name) const {
+    return statusdefs.at(name);
+}
+
+const Status *Database::getStatus(Statusdef def) const {
+    return new FixedHpRegen(def.str, def.name, def.time);
+}
+
+StatusChance Database::getStatusChance(std::string name, int chance) {
+    return {
+            getStatus(getStatusdef(name)),
+            chance
+            };
 }
 
 
@@ -126,8 +147,13 @@ void Interpreter::makeDef(const char* id, const std::string str) {
         Itemdef i = makeDef<Itemdef>(str);
         d->itemdefs[i.name] = i;
     } else if (strcmp(id, "Attack") == 0) {
-        Atkdef i = makeDef<Atkdef>(str);
-        d->atkdefs[i.name] = i;
+        Atkdef a = makeDef<Atkdef>(str);
+        if (a.id == "") a.id = a.name;
+        d->atkdefs[a.id] = a;
+    } else if (strcmp(id, "Status") == 0) {
+        Statusdef s = makeDef<Statusdef>(str);
+        if (s.id == "") s.id = s.name;
+        d->statusdefs[s.id] = s;
     } else {
         assert(false);
     }
@@ -199,7 +225,7 @@ void Interpreter::parseProperty(char* propertyname, char* property, Mobdef &def)
 
 void Interpreter::parseProperty(char *propertyname, char *property, Itemdef &def) {
 
-    thisdef = &def;
+    thisitemdef = &def;
 
 
     ACTONPROPERTY(name, std::string)
@@ -218,9 +244,39 @@ void Interpreter::parseProperty(char *propertyname, char *property, Itemdef &def
 
 void Interpreter::parseProperty(char *propertyname, char *property, Atkdef &def) {
 
+    thisatkdef = &def;
 
+    ACTONPROPERTY(id, std::string)
     ACTONPROPERTY(name, std::string)
     ACTONPROPERTY(atktype, atktypeToInt)
+    ACTONPROPERTY(damage, atoi)
+    ACTONPROPERTY(cost, atoi)
+    ACTONPROPERTY(minrange, atoi)
+    ACTONPROPERTY(maxrange, atoi)
+    ACTONPROPERTY(minaccy, atoi)
+    ACTONPROPERTY(maxaccy, atoi)
+    ACTONPROPERTY(radius, atoi)
+    ACTONPROPERTY(hurtself, parseBool)
+    ACTONPROPERTY(physical, atoi)
+    ACTONPROPERTY(buff, parseStatus)
+    ACTONPROPERTY(addstatus, addChance)
+    {
+        std::cout<<"\n----\nError: This property doesn't exist!\n-"
+                    <<propertyname
+                    <<"\n----\n";
+        assert(false);
+    }
+}
+
+void Interpreter::parseProperty(char *propertyname, char *property, Statusdef &def) {
+
+
+    ACTONPROPERTY(id, std::string)
+    ACTONPROPERTY(name, std::string)
+    ACTONPROPERTY(statustype, statustypeToInt)
+    ACTONPROPERTY(str, atoi)
+    ACTONPROPERTY(time, atoi)
+    ACTONPROPERTY(pos, parseCoordinates)
     {
         std::cout<<"\n----\nError: This property doesn't exist!\n-"
                     <<propertyname
@@ -273,36 +329,43 @@ Uint32 Interpreter::charsToColors (char *hexcol) { //RGB
         }
     }
 
-    r = ((r%(1<<8))<<16) + (((r>>8)%(1<<8))<<8) + (r>>16); //reversing byte order from BGR to RGB
-    //i'm so sorry
+    r = ((r&0xFF)<<16) + (r&0xFF00) + (r>>16); //reversing byte order from BGR to RGB
     return r;
 }
 
-int Interpreter::itemtypeToInt(char *type) {
-    if (strcmp(type, "WEAPON") == 0) {
-        return Itemtype::WEAPON;
-    } else if (strcmp(type, "USE") == 0) {
-        return Itemtype::USE;
+bool Interpreter::parseBool(char *b) {
+    if (strcmp(b, "0") == 0) return false;
+    for (char c : "FALSE") {
+        if (toupper(*b++) != c) return true;
     }
+    return false;
+}
+
+int Interpreter::itemtypeToInt(char *type) {
+    IFRETURNENUM(type, Itemtype::, WEAPON)
+    IFRETURNENUM(type, Itemtype::, USE)
     assert(false);
 }
 
 int Interpreter::atktypeToInt(char *type) {
-    if (strcmp(type, "TARGETED") == 0) {
-        return Atkdef::TARGETED;
-    } else if (strcmp(type, "SELFBUFF") == 0) {
-        return Atkdef::SELFBUFF;
-    } else if (strcmp(type, "HITTHRU") == 0) {
-        return Atkdef::HITTHRU;
-    }else if (strcmp(type, "BASHSWP") == 0) {
-        return Atkdef::BASHSWP;
-    }
+    IFRETURNENUM(type, Atkdef::, TARGETED)
+    IFRETURNENUM(type, Atkdef::, SELFBUFF)
+    IFRETURNENUM(type, Atkdef::, HITTHRU)
+    IFRETURNENUM(type, Atkdef::, BASHSWP)
+    assert(false);
+}
+
+int Interpreter::statustypeToInt(char *type) {
+    IFRETURNENUM(type, Statusdef::, BLOCK)
+    IFRETURNENUM(type, Statusdef::, THORN)
+    IFRETURNENUM(type, Statusdef::, FROZEN)
+    IFRETURNENUM(type, Statusdef::, REGEN)
     assert(false);
 }
 
 atkdefarr Interpreter::parseAttacks(char *atks) {
     char atkname[8];
-    atkdefarr arr = thisdef->data.wep.atks;
+    atkdefarr arr = thisitemdef->data.wep.atks;
     for (char *c = atks; *c != '\0'; c++) {
         int atk = *c++ - '1';
         assert(*c++ == '-' && atk >= 0 && atk <= 5);
@@ -317,3 +380,18 @@ atkdefarr Interpreter::parseAttacks(char *atks) {
     return arr;
 }
 
+std::vector<StatusChance> Interpreter::addChance(char *ch) {
+    std::vector<StatusChance> v = thisatkdef->addstatus;
+    int chance = 0;
+    char *c;
+    for (c = ch; *c != '%'; c++) {
+        chance *= 10;
+        chance += *c - '0';
+    }
+    v.push_back(d->getStatusChance(std::string(++c), chance));
+    return v;
+}
+
+const Status *Interpreter::parseStatus(char *c) {
+    return d->getStatus(d->getStatusdef(std::string(c)));
+}

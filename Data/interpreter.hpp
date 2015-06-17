@@ -26,6 +26,25 @@ struct Mobdef {
                         xp = 0;
 };
 
+struct Statusdef {
+    enum {
+        BLOCK,
+        THORN,
+        FROZEN,
+        REGEN,
+    };
+    std::string         id;
+
+    std::string         name;
+
+    int                 statustype;
+    Pos                 pos;
+    int                 time;
+
+    int                 str;
+};
+struct StatusChance;
+
 struct Atkdef {
     enum {
         TARGETED,
@@ -33,14 +52,23 @@ struct Atkdef {
         HITTHRU,
         BASHSWP,
     };
+    std::string         id;
 
-    int                 atktype;
-    std::string         name;
-    int                 minrange, maxrange;
+    int                 atktype = TARGETED;
+    std::string         name = "";
+
+    int                 damage, cost;
+
+    int                 minrange = 0, maxrange = 1;
     int                 minaccy = 0, maxaccy = 0;
     int                 radius = 0;
     bool                hurtself = false, physical = true;
-};
+
+    const Status        *buff;
+
+    std::vector
+        <StatusChance>  addstatus = {}; //This varname may not seem to make much sense,
+};                                      //but it does for the interpreter
 
 typedef std::array<const Atkdef*, 6> atkdefarr;
 
@@ -76,16 +104,23 @@ public:
                         itemdefs;
 
     const Itemdef       &getItemDef(const std::string name) const;
-    Item                *makeItem(Itemdef);
+    Item                *makeItem(Itemdef) const;
 
 
     std::unordered_map<std::string, Atkdef>
                         atkdefs;
-    std::unordered_map<std::string, const Attack*>
+    mutable std::unordered_map<std::string, const Attack*>
                         atksingletons;
 
     const Atkdef        &getAtkDef(std::string name) const;
-    const Attack        *getAtk(Atkdef);
+    const Attack        *getAtk(Atkdef) const;
+
+    std::unordered_map<std::string, Statusdef>
+                        statusdefs;
+
+    const Statusdef     &getStatusdef(std::string name) const;
+    const Status        *getStatus(Statusdef) const;
+    StatusChance        getStatusChance(std::string name, int chance);
 
 };
 
@@ -108,24 +143,34 @@ private:
     void                parseProperty(char* propertyname, char* property, Mobdef &def);
     void                parseProperty(char* pname, char* p, Itemdef &def);
     void                parseProperty(char* pname, char* p, Atkdef &def);
+    void                parseProperty(char* pname, char* p, Statusdef &def);
 
     Pos                 parseCoordinates(char* coords);
     Uint32              charsToColors(char* colors);
+    bool                parseBool(char* b);
+
     int                 itemtypeToInt(char *type);
     int                 atktypeToInt(char *type);
+    int                 statustypeToInt(char *type);
 
     atkdefarr           parseAttacks(char *atks);
+    std::vector
+        <StatusChance>  addChance(char *c);
+    const Status        *parseStatus(char *c);
 
 
     Database            *d; //so I don't have to pass it around in all functions, i store it here
-    Itemdef             *thisdef; //Okay this is gonna come back to bite me someday u_u
+    Itemdef             *thisitemdef; //Okay this is gonna come back to bite me someday u_u
+    Atkdef              *thisatkdef;
 };
 
 #define ACTONPROPERTY(n, func) \
     if (strcmp(propertyname, #n) == 0) { \
         def. n = func (property); \
-        /*std::cout<<"Got "<<#n<<": "<<property<<"\n";*/ \
     } else
+
+#define IFRETURNENUM(var, nspace, num) \
+    if (strcmp(var, #num) == 0) return nspace num;
 
 int hexchartoint(char c);
 

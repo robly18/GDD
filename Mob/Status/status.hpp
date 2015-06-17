@@ -66,7 +66,7 @@ public:
                 timeLeft(timeLeft), stackable(stackable) {}
     virtual             ~Status() {}
 
-    virtual Status      *clone() = 0;
+    virtual Status      *clone() const = 0;
 
     SDL_Rect            sprite;
     int                 xpos, ypos; //The position of the sprite in a 4*4 grid

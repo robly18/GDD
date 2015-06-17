@@ -10,6 +10,6 @@ int FixedHpPoison::computePoisonDmg(Mob* mob) {
     return str;
 }
 
-Status* FixedHpPoison::clone() {
+Status* FixedHpPoison::clone() const {
     return new FixedHpPoison(str, name, timeLeft);
 }

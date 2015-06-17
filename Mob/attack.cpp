@@ -14,14 +14,14 @@ bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char
     if (!chances.size()) return false;
     bool affected = false;
     sprintf(buffer, begin, user->name.c_str());
-    for (std::vector<StatusChance*>::const_iterator s = chances.begin();
+    for (std::vector<StatusChance>::const_iterator s = chances.begin();
                                                     s != chances.end(); s++) {
         int num = std::rand() % 100;
-        if (num < (*s)->chance) {
+        if (num < s->chance) {
             sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
-                    (*s)->status->name.c_str());
+                    s->status->name.c_str());
             affected = true;
-            user->destructible->statusholder->pushStatus((*s)->status->clone());
+            user->destructible->statusholder->pushStatus(s->status->clone());
         }
     }
     sprintf(buffer, "%s %s", buffer, end);

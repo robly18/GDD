@@ -17,7 +17,7 @@ class FixedHpPoison : public Poison {
 public:
     FixedHpPoison(int str, std::string name, int timeLeft) :
         Poison(name, timeLeft), str(str) {}
-    Status             *clone();
+    Status             *clone() const;
 
     int                 computePoisonDmg(Mob*);
 private:

@@ -1,21 +1,70 @@
-Attack {
-	name : "BLUHATK";
-	atktype : "TARGETED";
+Status {
+	name : "REGEN";
+	statustype : "REGEN";
+	time : 3;
+	str : 5;
 }
 
 Attack {
-	name : "SLFBUFF";
+	name : "HIT";
+	damage : 1;
+	cost : 15;
+	
+	addstatus : 100% "REGEN";
+}
+
+Attack {
+	name : "SPIN";
+	damage : 7;
+	cost : 17;
+	
+	maxrange : 0;
+	radius : 2;
+}
+
+Attack {
+	name : "REGEN";
 	atktype : "SELFBUFF";
+	cost : 25;
+	buff : "REGEN";
+}
+
+Attack {
+	name : "HITTHRU";
+	atktype : "HITTHRU";
+	damage : 10;
+	cost : 5;
+	maxrange : 3;
+}
+
+Attack {
+	name : "BASHSWP";
+	atktype : "BASHSWP";
+	damage : -1;
+	cost : 5;
+}
+
+Attack {
+	name : "BLOCK";
+	#yeah i need to do this one
+	atktype : "SELFBUFF";
+	cost : 15;
+	buff : "REGEN";
 }
 
 
 Item {
 	name : "SORD....";
-	color : FF0000;
+	color : DD2222;
 	itemtype : "WEAPON";
-	
+
 	data.wep.maxmana : 30;
-	data.wep.atks : 1-BLUHATK|2-BLUHATK|3-BLUHATK|4-BLUHATK|5-SLFBUFF|6-BLUHATK;
+	data.wep.atks :  1-HIT
+					|2-SPIN
+					|3-HITTHRU
+					|4-BLOCK
+					|5-REGEN
+					|6-BASHSWP;
 }
 
 Mob {

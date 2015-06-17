@@ -17,7 +17,7 @@ class FixedHpRegen : public Regen {
 public:
     FixedHpRegen(int str, std::string name, int timeLeft) :
         Regen(name, timeLeft, SDL_Rect{12,14,4,4}), str(str) {}
-    Status*             clone();
+    Status*             clone() const;
 
     int                 computeHeals(Mob*);
 private:

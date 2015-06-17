@@ -1,6 +1,6 @@
 #include "frozen.hpp"
 
-Status* Frozen::clone() {
+Status* Frozen::clone() const {
     return new Frozen(name, timeLeft);
 }
 

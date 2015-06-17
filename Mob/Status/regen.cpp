@@ -14,7 +14,7 @@ void Regen::updateHolder(StatusHolder* holder, Mob* user) {
 }
 
 
-Status* FixedHpRegen::clone() {
+Status* FixedHpRegen::clone() const {
     return new FixedHpRegen(str, name, timeLeft);
 }
 
