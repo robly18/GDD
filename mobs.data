@@ -5,19 +5,48 @@ Status {
 	str : 5;
 }
 
+Status {
+	name : "BLOCK";
+	statustype : "BLOCK";
+	time : 2;
+	pos : 3,1;
+	spritepos : 28, 52;
+}
+
+Status {
+	name : "POISON";
+	statustype : "POISON";
+	time : 3;
+	str : 3;
+}
+
+Attack {
+	name : "PSNARRW";
+	damage : 1;
+	cost : 5;
+	minrange : 2;
+	maxrange : 6;
+	maxaccy : 10;
+	minaccy : -2;
+	
+	physical : false;
+	
+	addstatus : 80% "POISON";
+}
+
 Attack {
 	name : "HIT";
-	damage : 1;
+	damage : 10;
 	cost : 15;
-	
-	addstatus : 100% "REGEN";
+
+	hurtself : true; #gotta allow seppuku
 }
 
 Attack {
 	name : "SPIN";
 	damage : 7;
 	cost : 17;
-	
+
 	maxrange : 0;
 	radius : 2;
 }
@@ -33,7 +62,7 @@ Attack {
 	name : "HITTHRU";
 	atktype : "HITTHRU";
 	damage : 10;
-	cost : 5;
+	cost : 25;
 	maxrange : 3;
 }
 
@@ -49,7 +78,7 @@ Attack {
 	#yeah i need to do this one
 	atktype : "SELFBUFF";
 	cost : 15;
-	buff : "REGEN";
+	buff : "BLOCK";
 }
 
 
@@ -69,12 +98,14 @@ Item {
 
 Mob {
 	name : "ROGUEIMP";
+	desc : "This is an imp that has gone rogue. Contrary to popular belief, it is a mask, not a fish, on his face.";
+	
 	hp : 10;
 	texture : 2, 4;
 	deadtexture : 0, 5;
 	swiftness : 100;
 	atk : 5;
-	def : 0;
+	def : 2;
 	sght : 3;
 	xp : 10;
 }
