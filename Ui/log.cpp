@@ -6,26 +6,31 @@ Log::Log(BmpFont* font) :
 }
 
 void Log::addMessage(const char* msg) {
-    assert(msg[0]!=NULL);
-
-    if (strlen(msg) >= 47) {
-        char buffer [47] = {};
-        for (int i = 0; i != 47; i++) {
-            buffer[i] = msg[i];
+    char buffer [47] = {};
+    for (int i = 0; i != 47; i++) {
+        buffer[i] = msg[i];
+        if (msg[i] == '\0') {
+            addLine(msg);
+            return;
         }
-        int i = 47;
-        for (int j = sizeof(buffer)-1; j != 0; j--) {
-            if (buffer[j] == ' ') {
-                buffer[j] = '\0';
-                break;
-            }
-            i--;
+        if (msg[i] == '\n') {
+            buffer[i] = '\0';
+            addLine(buffer);
+            addMessage(msg+i+1);
+            return;
         }
-        addLine(buffer);
-        addMessage(msg+i);
-    } else {
-        addLine(msg);
     }
+
+    int i = 47;
+    for (int j = sizeof(buffer)-1; j != 0; j--) {
+        if (buffer[j] == ' ') {
+            buffer[j] = '\0';
+            break;
+        }
+        i--;
+    }
+    addLine(buffer);
+    addMessage(msg+i);
 }
 
 void Log::addMessage(char* buffer, const char* msg, ...) {
