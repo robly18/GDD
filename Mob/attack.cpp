@@ -10,21 +10,17 @@ bool Attack::select(Player* user) const {
     return true;
 }
 
-bool Attack::applyChances(Mob* user, char* buffer, const char* begin, const char* end) const {
+bool Attack::applyChances(Mob* user) const {
     if (!chances.size()) return false;
     bool affected = false;
-    sprintf(buffer, begin, user->name.c_str());
     for (std::vector<StatusChance>::const_iterator s = chances.begin();
                                                     s != chances.end(); s++) {
         int num = std::rand() % 100;
         if (num < s->chance) {
-            sprintf(buffer, "%s%s %s", buffer, affected ? "," : "",
-                    s->status->name.c_str());
             affected = true;
             user->destructible->statusholder->pushStatus(s->status->clone());
         }
     }
-    sprintf(buffer, "%s %s", buffer, end);
     return affected;
 }
 
@@ -84,25 +80,13 @@ bool TargetedAttack::target(Mob* src, int x, int y) const {
 }
 
 bool TargetedAttack::hit(Mob* src, Mob* target) const {
-    char buffer [255];
 
     if (damage) {
         int dmg = target->destructible->damage(damage * src->atk /STARTATK);
-        engine.ui->log->addMessage(buffer, "%s hit %s for %i dmg %s %i hp",
-                src->name.c_str(),
-                src == target ? "themselves in idiocy" : target->name.c_str(),
-                dmg,
-                src == target ? "and now have" : "which now has",
-                target->destructible->hp);
         DEBUGMSG("Logging messages is my fame");
         if (physical) {
             if (target->destructible->statusholder->hasEffect(SideEffect::THORN)) {
                 dmg = src->destructible->damage(dmg);
-                engine.ui->log->addMessage(buffer,
-                        "%s's thorns caused %s to be damaged for %i hp",
-                        target->name.c_str(),
-                        src->name.c_str(),
-                        dmg);
                 if (src->destructible->isDead()) {
                     src->destructible->die(src);
                 }
@@ -111,16 +95,12 @@ bool TargetedAttack::hit(Mob* src, Mob* target) const {
             std::shared_ptr<Status>
                 counterdebuff = target->destructible->statusholder->counterdebuff;
             if (counterdebuff) {
-                engine.ui->log->addMessage(buffer,
-                        "%s was Frozen by %s's IceSkin",
-                        src->name.c_str(), target->name.c_str());
                 src->destructible->statusholder->pushStatus(counterdebuff->clone());
             }
         }
     }
 
-    if (applyChances(target, buffer, "%s was afflicted by", "")) {
-        engine.ui->log->addMessage(buffer);
+    if (applyChances(target)) {
     }
     if (target->destructible->isDead()) {
         target->destructible->die(target);
@@ -158,8 +138,6 @@ bool SelfBuff::target(Mob* src, int x, int y) const {
 }
 
 bool SelfBuff::hit(Mob* src, Mob* target) const {
-    char buffer [255];
-    if (applyChances(src, buffer, "%s has applied", "on themselves"))
-                    engine.ui->log->addMessage(buffer);
+    applyChances(src);
     return true;
 }

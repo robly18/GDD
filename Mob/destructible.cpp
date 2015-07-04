@@ -38,7 +38,7 @@ void Destructible::dropItems(Mob* mob) {
     if (!mob->inventory) return;
     if (mob->inventory->itemNo() > 0)
         engine.map->addInvTo(mob->inventory, mob->x, mob->y);
-    delete mob->inventory;
+    mob->inventory.reset();
 }
 
 void PlayerDestructible::die(Mob* mob) {

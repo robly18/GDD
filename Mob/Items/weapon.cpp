@@ -40,7 +40,7 @@ Staff::Staff(std::string n, int attack, int maxmana, int minaccy, int maxaccy) :
     attacks[0] = new TargetedAttack(10, 10, "ayy", NOICON, 0, 6, minaccy, maxaccy, 0, false, true);
     attacks[1] = new TargetedAttack(4, 5, "ayy", NOICON, 0, 5, minaccy, maxaccy, 3, false, true);
     defenses[0] = new SelfBuff(10, "ayy", NOICON, new SideEffectBuff("Thorn", 5, SideEffect::THORN,
-                                                      14, 32));
+                                                      {14, 32}));
     defenses[1] = new SelfBuff(20, "ayy", NOICON, new FixedHpRegen(5, "Regen", 8));
 }
 
@@ -57,7 +57,7 @@ int Staff::regenMana(int regen) {
 Sword::Sword(std::string n, int attack, int maxmana) :
     Weapon(n, attack, maxmana, WEAPONSWRD) {
     defenses[0] = (new SelfBuff(12, "BLOCK", NOICON, new SideEffectBuff("Block", 2, SideEffect::BLOCK,
-                                                      0, 30)));
+                                                      {0, 30})));
 }
 
 int Sword::regenMana(int regen) {

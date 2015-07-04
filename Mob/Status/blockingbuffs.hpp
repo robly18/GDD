@@ -6,8 +6,8 @@
 
 class SideEffectBuff : public Status {
 public:
-    SideEffectBuff(std::string name, int timeLeft, int effects, int spritex, int spritey) :
-        Status(name, timeLeft, SDL_Rect{spritex, spritey, 4, 4}, 3, 0, false),
+    SideEffectBuff(std::string name, int timeLeft, int effects, Pos spritepos) :
+        Status(name, timeLeft, SDL_Rect{spritepos.x, spritepos.y, 4, 4}, 3, 0, false),
         sideeffect((SideEffect)effects) {}
 
     Status              *clone() const;

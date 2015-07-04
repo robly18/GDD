@@ -12,10 +12,12 @@
 
 #define MAXIDCHARS 16
 #define MAXPROPERTYNAMECHARS 64
-#define MAXPROPERTYCHARS 256
+#define MAXPROPERTYCHARS 512
 
 struct Mobdef {
     std::string         name;
+    std::string         desc;
+
     int                 hp;
     Pos                 texture,
                         deadtexture;
@@ -32,6 +34,7 @@ struct Statusdef {
         THORN,
         FROZEN,
         REGEN,
+        POISON,
     };
     std::string         id;
 
@@ -39,6 +42,7 @@ struct Statusdef {
 
     int                 statustype;
     Pos                 pos;
+    Pos                 spritepos;
     int                 time;
 
     int                 str;

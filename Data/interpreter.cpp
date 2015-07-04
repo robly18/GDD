@@ -10,11 +10,12 @@ Mob *Database::makeMob(Pos p, Mobdef def) const {
                         SDL_Rect{def.texture.x * 16, def.texture.y * 16, 16, 16},
                         engine.texture, def.name);
     m->sght = def.sght;
-    m->ai = new BasicAi(def.swiftness);
-    m->destructible = new MobDestructible(def.hp, SDL_Rect{def.deadtexture.x * 16,
-                                                            def.deadtexture.y * 16, 16, 16}, def.xp);
+    m->ai = std::shared_ptr<Ai>(new BasicAi(def.swiftness));
+    m->destructible = std::shared_ptr<Destructible>(
+                                    new MobDestructible(def.hp, SDL_Rect{def.deadtexture.x * 16,
+                                                            def.deadtexture.y * 16, 16, 16}, def.xp));
     m->attack = new TargetedAttack(def.atk, 0, "ayy", NOICON, 0, 10, 0, 0, 0, true, false);
-    m->inventory = new MobInventory;
+    m->inventory = std::shared_ptr<Inventory>(new MobInventory);
     m->inventory->addItem(new HpPotion("HPPot", 40));
 
     if (def.def) {
@@ -79,7 +80,18 @@ const Statusdef &Database::getStatusdef(std::string name) const {
 }
 
 const Status *Database::getStatus(Statusdef def) const {
-    return new FixedHpRegen(def.str, def.name, def.time);
+    switch (def.statustype) {
+    case Statusdef::REGEN:
+        return new FixedHpRegen(def.str, def.name, def.time);
+        break;
+    case Statusdef::BLOCK:
+        return new SideEffectBuff(def.name, def.time, SideEffect::BLOCK, def.spritepos);
+        break;
+    case Statusdef::POISON:
+        return new FixedHpPoison(def.str, def.name, def.time);
+        break;
+    }
+    assert(false);
 }
 
 StatusChance Database::getStatusChance(std::string name, int chance) {
@@ -190,12 +202,11 @@ C Interpreter::makeDef(const std::string str) {
             } else if (!std::isspace(c) && c != '{') {
                 addtoprop:
                 if (c == '"') {
-                    inquotes = false;
+                    inquotes = !inquotes;
                     continue;
                 }
                 (checkingproperty ? property : propertyname)[i++] = c; //oh my god what did i do
             }
-            if (c == '"') inquotes = true;
         }
     }
 
@@ -209,6 +220,7 @@ void Interpreter::parseProperty(char* propertyname, char* property, Mobdef &def)
 
 
     ACTONPROPERTY(name, std::string)
+    ACTONPROPERTY(desc, std::string)
     ACTONPROPERTY(hp, atoi)
     ACTONPROPERTY(texture, parseCoordinates)
     ACTONPROPERTY(deadtexture, parseCoordinates)
@@ -277,6 +289,7 @@ void Interpreter::parseProperty(char *propertyname, char *property, Statusdef &d
     ACTONPROPERTY(str, atoi)
     ACTONPROPERTY(time, atoi)
     ACTONPROPERTY(pos, parseCoordinates)
+    ACTONPROPERTY(spritepos, parseCoordinates)
     {
         std::cout<<"\n----\nError: This property doesn't exist!\n-"
                     <<propertyname
@@ -360,6 +373,7 @@ int Interpreter::statustypeToInt(char *type) {
     IFRETURNENUM(type, Statusdef::, THORN)
     IFRETURNENUM(type, Statusdef::, FROZEN)
     IFRETURNENUM(type, Statusdef::, REGEN)
+    IFRETURNENUM(type, Statusdef::, POISON)
     assert(false);
 }
 

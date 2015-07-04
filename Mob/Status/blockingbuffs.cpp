@@ -1,7 +1,7 @@
 #include "blockingbuffs.hpp"
 
 Status* SideEffectBuff::clone() const {
-    return new SideEffectBuff(name, timeLeft, sideeffect, sprite.x, sprite.y);
+    return new SideEffectBuff(name, timeLeft, sideeffect, {sprite.x, sprite.y});
 }
 
 void SideEffectBuff::updateHolder(StatusHolder* holder, Mob* user) {

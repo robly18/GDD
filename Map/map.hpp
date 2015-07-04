@@ -90,7 +90,7 @@ public:
     void                        inspect(Pos) const;
 
     FloorInventory*             getInvAt(int, int) const;
-    FloorInventory*             addInvTo(Inventory*, int, int);
+    FloorInventory*             addInvTo(std::shared_ptr<Inventory>, int, int);
     FloorInventory*             dropItem(Item*, int, int);
 
     FloorInventory*             removeInvAt(int, int);

@@ -51,8 +51,7 @@ std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
     Mob* mob = *m;
 
     mob->a->r = mob->destructible->deadSprite;
-    delete mob->ai;
-    mob->ai = nullptr;
+    mob->ai.reset();
 
     mob->destructible->dropItems(mob);
 
@@ -128,7 +127,7 @@ FloorInventory* Map::getInvAt(int x, int y) const {
     return NULL;
 }
 
-FloorInventory* Map::addInvTo(Inventory* inv, int x, int y) {
+FloorInventory* Map::addInvTo(std::shared_ptr<Inventory> inv, int x, int y) {
     FloorInventory* finv = getInvAt(x, y);
     if (!finv) {
         finv = new FloorInventory(engine.texture, x,y);
@@ -338,11 +337,12 @@ void Map::generateMap(Database &d) {
 }
 
 void Map::makePlayer() {
-    if (!player ) {
+    if (!player) {
         player = new Player(5,5,SDL_Rect{0, 64, 16, 16}, engine.texture,"Player");
-        player->ai = new PlayerAi;
-        player->destructible = new PlayerDestructible(50, SDL_Rect{0,8,4,4});
-        player->inventory = new PlayerInventory;
+        player->ai = std::shared_ptr<Ai>(new PlayerAi);
+        player->destructible = std::shared_ptr<Destructible>(
+                                            new PlayerDestructible(50, SDL_Rect{0,8,4,4}));
+        player->inventory = std::shared_ptr<Inventory>(new PlayerInventory);
         mobs2.push_back(player);
     }
 }
@@ -375,7 +375,7 @@ void Map::inspect(Pos p) const {
                  *Offset
                  *Sight
                  **Maybe more later... TODO make some of these shenanigans up to the mob
-                **/
+                **//*
                 char buffer[255];
                 engine.ui->log->addMessage(buffer,
                             "Inspecting mob: %s", mob->name.c_str());
@@ -390,7 +390,9 @@ void Map::inspect(Pos p) const {
                 engine.ui->log->addMessage(buffer,//I'll be honest with you:
                             "Time until next move: %i", //I'm not completely sure what
                             mob->getSwiftness() - //this does but it works so keep it
-                            (engine.time - mob->ai->timeoffset - 1) % mob->getSwiftness() - 1);
+                            (engine.time - mob->ai->timeoffset - 1) % mob->getSwiftness() - 1);*/
+                mob->logInfo(*engine.ui->log);
+
             }
         }
     }

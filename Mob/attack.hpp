@@ -43,7 +43,7 @@ public:
     virtual bool        hit(Mob*, Mob*) const = 0;
 
     bool                select(Player*) const;
-    bool                applyChances(Mob*, char*, const char*, const char*) const;
+    bool                applyChances(Mob*) const;
 
     virtual bool        isInRange(const Pos user, const Pos target, const int) const = 0;
     virtual bool        isHit(Mob*, int, int, int, int) const = 0;

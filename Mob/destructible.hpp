@@ -35,8 +35,7 @@ public:
 class PlayerDestructible : public Destructible {
 public:
     PlayerDestructible(int, SDL_Rect);
-
-    void die(Mob*);
+    void            die(Mob*);
 };
 
 class MobDestructible : public Destructible {

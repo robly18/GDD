@@ -23,7 +23,7 @@ class PlayerAi : public Ai {
 public:
     PlayerAi();
 
-    void update(Mob*);
+    void            update(Mob*);
 protected:
     void tryMoving(Mob*, int, int);
 };
