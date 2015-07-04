@@ -1,18 +1,18 @@
 
 #define MAXCLUBGUYS 10
-#define MAXROGUEIMPS 30
+#define MAXROGUEIMPS 20
 
-#define ROOMNUM 10
+#define ROOMNUM 7
 
 
-#define SEEALLMOBS
-#define SEEALLTILES
+#define NSEEALLMOBS
+#define NSEEALLTILES
 
 #define NSHOWFPS
 
 #define NLOGGING
 
-#define RANDSEED 2 /*::time(NULL)*/
+#define RANDSEED ::time(NULL)
 
 #define NOICON SDL_Rect{0,0,0,0}
 

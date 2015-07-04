@@ -11,6 +11,7 @@
 #define FOCUSCOL (0x222222)
 
 class NumBar;
+class Log;
 
 class XpBar {
 public:
@@ -70,6 +71,7 @@ public:
     XpBar           *bars[10];
 
     void            setFocus(int);
+    void            log(Log&, int);
 
     void            levelUp(int val, int weapontype);
 

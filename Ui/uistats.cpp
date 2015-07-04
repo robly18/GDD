@@ -145,12 +145,14 @@ SDL_Surface* UiXP::render(bool clicked, int hx, int hy) {
 }
 
 void UiXP::checkClick(int mb, int hx, int hy) {
-    if (mb == SDL_BUTTON_LEFT) {
-        for (int i = 0; i != 10; i++) {
-            if (isInRect(holder->bars[i]->bar->barmax, hx, hy)) {
+    for (int i = 0; i != 10; i++) {
+        if (isInRect(holder->bars[i]->bar->barmax, hx, hy)) {
+            if (mb == SDL_BUTTON_LEFT) {
                 holder->setFocus(i);
-                break;
+            } else if (mb == SDL_BUTTON_RIGHT) {
+                holder->log(*engine.ui->log, i);
             }
+            break;
         }
     }
 }
@@ -239,7 +241,8 @@ SDL_Surface* UiInv::render(bool clicked, int hx, int hy) {
     return surface;
 }
 
-void UiInv::checkClick(int mb, int hx, int hy) {}
+void UiInv::checkClick(int mb, int hx, int hy) {
+}
 
 void UiInv::checkUnclick(int hx, int hy, int x, int y) {
     if (!checkPlrInvClick(hx, hy, x, y))

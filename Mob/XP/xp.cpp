@@ -112,4 +112,61 @@ void XpHolder::levelUp(int val, int weapontype) {
     }
 }
 
+void XpHolder::log(Log &l, int i) {
+    char buffer[255];
+    XpBar &bar = *bars[i];
+    l.addMessage(buffer, "%s XP bar: Level %i (%i/%i)", bars[i]->name.c_str(),
+                 bar.lvl, bar.xpval, bar.maxxp);
+    switch (i) {
+    case SWRD:
+        l.addMessage(
+"Weapon XP linked to swords.\n\
+ Weapon XP boosts mana regeneration when using certain types of weapons.");
+        break;
+    case BOW:
+        l.addMessage(
+"Weapon XP linked to bows.\
+ Weapon XP boosts mana regeneration when using certain types of weapons.");
+        break;
+    case STFF:
+        l.addMessage(
+"Weapon XP linked to staffs.\
+ Weapon XP boosts mana regeneration when using certain types of weapons.");
+        break;
+    case ATK:
+        l.addMessage(
+"Directly linked to how much damage you deal. Applies a multiplier on your attacks,\
+ ranging from 1 to nearly 11 at max level.");
+        break;
+    case DEF:
+        l.addMessage(
+"Related to how much health you have. Each level adds a certain amount of health to your bar.\
+ Subject to change. In fact all of these are. This one is just the most.");
+        break;
+    case STR:
+        l.addMessage(
+"Directly linked to how effective your armor is. Applies a multiplier on your armor's defense,\
+ ranging from 1 to nearly 11 at max level. Effectively useless if wearing none.");
+        break;
+    case STMN:
+        l.addMessage(
+"Related to how much mana you have. Applies a multiplier on the mana granted by your weapon.");
+        break;
+    case SPD:
+        l.addMessage(
+"Linked to your swiftness. Swiftness, quite counterintuitively, makes you faster the lower it is.");
+        break;
+    case SGHT:
+        l.addMessage(
+"Come on, do you really need to know what this one does? Allows you to see one tile further\
+ every 14 levels.");
+        break;
+    case ACCY:
+        l.addMessage(
+"Related to your accuracy. Useless when using swords, but necessary to attack using certain\
+ bows and staffs. On those, the more accuracy you have, the further you can shoot.");
+        break;
+    }
+}
+
 

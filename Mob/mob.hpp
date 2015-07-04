@@ -22,19 +22,27 @@ class Destructible;
 class Attack;
 class Inventory;
 class Weapon;
+class Log;
 
 class Mob {
 public:
     Mob(int, int, SDL_Rect, SDL_Surface*, std::string);
+    virtual ~Mob() {};
 
     Actor           *a;
     int             x, y;
     std::string     name;
 
-    Ai              *ai = NULL;
-    Destructible    *destructible = NULL;
-    const Attack    *attack = NULL;
-    Inventory       *inventory = NULL;
+    std::shared_ptr<Ai>
+                    ai = nullptr;
+
+    std::shared_ptr<Destructible>
+                    destructible = nullptr;
+
+    const Attack    *attack = nullptr;
+
+    std::shared_ptr<Inventory>
+                    inventory = nullptr;
 
 
     int             atk = STARTATK;
@@ -51,12 +59,16 @@ public:
 
     const Pos       spawn;
 
-    int             getSwiftness(); //Misleading name :( Actually faster if swiftness is lower
+    int             getSwiftness() const; //Misleading name :( Actually faster if swiftness is lower
+
+
+    virtual void    logInfo(Log&) const;
 };
 
 class Player : public Mob {
 public:
     Player(int x, int y, SDL_Rect r, SDL_Surface *t, std::string n);
+    ~Player() {};
 
 
     Weapon          *weapon = NULL;
@@ -71,6 +83,8 @@ public:
     int             getMaxMp() const;
 
     void            levelUp(int type);
+
+    void            logInfo(Log&) const;
 };
 
 #endif

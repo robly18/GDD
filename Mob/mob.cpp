@@ -26,7 +26,7 @@ void Mob::move(int mx, int my) {
     setPos(x+mx, y+my);
 }
 
-int Mob::getSwiftness() {
+int Mob::getSwiftness() const {
     if (!ai) return 0;
     if (destructible && destructible->armor) {
         return ai->swiftness + destructible->armor->swiftness;
@@ -90,4 +90,36 @@ void Player::levelUp(int type) {
         accy++;
         break;
     }
+}
+
+
+/**log infos**/
+
+void Mob::logInfo(Log &log) const {
+    char buffer [255];
+    Mobdef def = engine.database->getMobDef(name);
+    log.addMessage(buffer, "%s Description: %s", name.c_str(), def.desc.c_str());
+    log.addMessage(buffer, "Inspecting mob: %s", name.c_str());
+    log.addMessage(buffer, "HP: %i/%i; ATK: %i; DEF: %i; XP: %i",
+                        destructible->hp, def.hp,
+                        def.atk, def.def, def.xp);
+    log.addMessage(buffer, "SGHT: %i", def.sght);
+    log.addMessage(buffer, "Swiftness: %i (%i)",
+                                    getSwiftness(),
+                                    engine.map->player->getSwiftness() - getSwiftness());
+    log.addMessage(buffer, "Time until next move: %i",
+                            getSwiftness() -
+                            (engine.time - ai->timeoffset - 1) % getSwiftness() - 1);
+}
+
+void Player::logInfo(Log &log) const {
+    char buffer [255];
+    log.addMessage("This is you! Here's a few stats:");
+    if (destructible->armor)
+        log.addMessage(buffer, "DEF: %i", destructible->armor->defense);
+    else
+        log.addMessage("DEF: N/A");
+    log.addMessage(buffer, "SGHT: %i", sght);
+    log.addMessage(buffer, "Swiftness: %i", getSwiftness());
+
 }
