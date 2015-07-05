@@ -22,6 +22,11 @@ void InGame::render(Engine &e, SDL_Renderer* renderer, const MouseState mouse) {
 void InGame::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
     if (ev.type == SDL_MOUSEBUTTONDOWN) {
         e.ui->buttons->checkClick(ev.button.button, MOUSEPRESSINFO);
+        if (ev.button.button == SDL_BUTTON_RIGHT) {
+            if (e.ui->log->checkClick(MOUSEPRESSINFO)) {
+                e.ui->log->logHelp();
+            }
+        }
     } else if (ev.type == SDL_MOUSEBUTTONUP) {
         if (ev.button.button == SDL_BUTTON_LEFT) {
             e.ui->buttons->checkUnclick(MOUSEUNPRESSINFO);

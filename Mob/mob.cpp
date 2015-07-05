@@ -98,7 +98,7 @@ void Player::levelUp(int type) {
 void Mob::logInfo(Log &log) const {
     char buffer [255];
     Mobdef def = engine.database->getMobDef(name);
-    log.addMessage(buffer, "%s Description: %s", name.c_str(), def.desc.c_str());
+    log.addMessage(buffer, "\n%s Description: %s", name.c_str(), def.desc.c_str());
     log.addMessage(buffer, "Inspecting mob: %s", name.c_str());
     log.addMessage(buffer, "HP: %i/%i; ATK: %i; DEF: %i; XP: %i",
                         destructible->hp, def.hp,
@@ -114,7 +114,7 @@ void Mob::logInfo(Log &log) const {
 
 void Player::logInfo(Log &log) const {
     char buffer [255];
-    log.addMessage("This is you! Here's a few stats:");
+    log.addMessage("\nThis is you! Here's a few stats:");
     if (destructible->armor)
         log.addMessage(buffer, "DEF: %i", destructible->armor->defense);
     else

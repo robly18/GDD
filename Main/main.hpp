@@ -16,6 +16,10 @@
 
 #define NOICON SDL_Rect{0,0,0,0}
 
+#define GREETINGMESSAGE \
+"Hello! Welcome to the game.\nRight click on anything to know more about it!\
+\nTry it now, on me!"
+
 
 #include <SDL.h>
 #include "../Data/interpreter.hpp"

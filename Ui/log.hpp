@@ -23,8 +23,11 @@ public:
     void                    render(SDL_Surface*);
 
     bool                    checkUnclick(int, int, int, int);
+    bool                    checkClick(int, int);
 
     void                    moveReadLine(int);
+
+    void                    logHelp();
 private:
     void                    addLine(const char*);
     BmpFont                 *font;

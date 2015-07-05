@@ -16,6 +16,7 @@ Ui::Ui() {
 
 
     log = new Log(engine.font);
+    log->addMessage(GREETINGMESSAGE);
 }
 
 void Ui::render(SDL_Renderer* renderer) { //okay next step is this

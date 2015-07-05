@@ -5,6 +5,12 @@ Log::Log(BmpFont* font) :
     font(font) {
 }
 
+void Log::logHelp() {
+    addMessage("\nHello! I'm the Log.\
+ Here you can see any important messages that come up.\
+\nLeft click me to expand, and press up and down to scroll. Try it now!");
+}
+
 void Log::addMessage(const char* msg) {
     char buffer [47] = {};
     for (int i = 0; i != 47; i++) {
@@ -73,6 +79,10 @@ bool Log::checkUnclick(int hx, int hy, int mx, int my) {
         readline = msgs.size() - 1;
     }
     return fullscreen;
+}
+bool Log::checkClick(int x, int y) {
+    SDL_Rect r = fullscreen ? fullrect : minrect;
+    return isInRect(r, x, y);
 }
 
 void Log::moveReadLine(int dir) {
