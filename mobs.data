@@ -28,9 +28,9 @@ Attack {
 	maxrange : 6;
 	maxaccy : 10;
 	minaccy : -2;
-	
+
 	physical : false;
-	
+
 	addstatus : 80% "POISON";
 }
 
@@ -99,7 +99,7 @@ Item {
 Mob {
 	name : "ROGUEIMP";
 	desc : "This is an imp that has gone rogue. Contrary to popular belief, it is a mask, not a fish, on his face.";
-	
+
 	hp : 10;
 	texture : 2, 4;
 	deadtexture : 0, 5;
@@ -120,4 +120,16 @@ Mob {
 	def : 10;
 	sght : 1;
 	xp : 50;
+}
+
+
+Level {
+	addenemy : 2x"ROGUEIMP";
+	roomnum : 3;
+	addflag : "FIRSTLEVEL";
+}
+
+Level {
+	addenemy : 10x"ROGUEIMP";
+	roomnum : 5;
 }

@@ -57,7 +57,7 @@ const Attack *Database::getAtk(Atkdef def) const {
     std::unordered_map<std::string, const Attack*>::const_iterator atk = atksingletons.find(def.name);
     if (atk != atksingletons.end()) return atk->second;
 
-    const Attack *a;
+    const Attack *a = nullptr;
 
     if (def.atktype == Atkdef::TARGETED) {
         a = new TargetedAttack(def.damage, def.cost, def.name, NOICON, def.minrange, def.maxrange,
@@ -99,6 +99,10 @@ StatusChance Database::getStatusChance(std::string name, int chance) {
             getStatus(getStatusdef(name)),
             chance
             };
+}
+
+const Leveldef &Database::getLeveldef(int lvl) const {
+    return levels[lvl];
 }
 
 
@@ -166,6 +170,9 @@ void Interpreter::makeDef(const char* id, const std::string str) {
         Statusdef s = makeDef<Statusdef>(str);
         if (s.id == "") s.id = s.name;
         d->statusdefs[s.id] = s;
+    } else if (strcmp(id, "Level") == 0) {
+        Leveldef l = makeDef<Leveldef>(str);
+        d->levels.push_back(l);
     } else {
         assert(false);
     }
@@ -298,6 +305,20 @@ void Interpreter::parseProperty(char *propertyname, char *property, Statusdef &d
     }
 }
 
+void Interpreter::parseProperty(char *propertyname, char *property, Leveldef &def) {
+
+
+    MODIFYPROPERTYWITHDEF(addenemy, addEnemy)
+    ACTONPROPERTY(roomnum, atoi)
+    MODIFYPROPERTYWITHDEF(addflag, toggleFlag)
+    {
+        std::cout<<"\n----\nError: This property doesn't exist!\n-"
+                    <<propertyname
+                    <<"\n----\n";
+        assert(false);
+    }
+}
+
 /****/
 
 Pos Interpreter::parseCoordinates(char *coords) {
@@ -408,4 +429,21 @@ std::vector<StatusChance> Interpreter::addChance(char *ch) {
 
 const Status *Interpreter::parseStatus(char *c) {
     return d->getStatus(d->getStatusdef(std::string(c)));
+}
+
+void Interpreter::addEnemy(char *id, Leveldef &lvl) {
+    int num = 0;
+    char *c;
+    for (c = id; *c != 'x'; c++) {
+        num *= 10;
+        num += *c - '0';
+    }
+    lvl.mobs.push_back(std::make_pair(d->getMobDef(std::string(++c)), num));
+}
+
+void Interpreter::toggleFlag(char *id, Leveldef &lvl) {
+    lvl.flags ^= [](char *id){
+                    IFRETURNENUM(id, Leveldef::, FIRSTLEVEL)
+                    IFRETURNENUM(id, Leveldef::, LASTLEVEL)
+                    assert(false);}(id);
 }

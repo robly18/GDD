@@ -94,6 +94,20 @@ struct Itemdef {
     } data;
 };
 
+struct Leveldef {
+    std::vector<std::pair<Mobdef, int>>
+                        mobs;
+    //a pair of a mobdef and the number of times that mob should appear
+
+    int                 roomnum;
+
+    int                 flags = 0;
+    enum {
+        FIRSTLEVEL = 0x01,
+        LASTLEVEL = 0x02,
+    };
+};
+
 class Database {
 public:
 
@@ -120,12 +134,15 @@ public:
     const Attack        *getAtk(Atkdef) const;
 
     std::unordered_map<std::string, Statusdef>
-                        statusdefs;
+                        statusdefs; //todo add singletons
 
     const Statusdef     &getStatusdef(std::string name) const;
     const Status        *getStatus(Statusdef) const;
     StatusChance        getStatusChance(std::string name, int chance);
 
+    std::vector<Leveldef>
+                        levels;
+    const Leveldef      &getLeveldef(int lvl) const;
 };
 
 class Interpreter {
@@ -144,10 +161,11 @@ private:
     template <class C>
     C                   makeDef(const std::string);
 
-    void                parseProperty(char* propertyname, char* property, Mobdef &def);
+    void                parseProperty(char* pname, char* p, Mobdef &def);
     void                parseProperty(char* pname, char* p, Itemdef &def);
     void                parseProperty(char* pname, char* p, Atkdef &def);
     void                parseProperty(char* pname, char* p, Statusdef &def);
+    void                parseProperty(char* pname, char* p, Leveldef &def);
 
     Pos                 parseCoordinates(char* coords);
     Uint32              charsToColors(char* colors);
@@ -162,6 +180,8 @@ private:
         <StatusChance>  addChance(char *c);
     const Status        *parseStatus(char *c);
 
+    void                addEnemy(char *id, Leveldef &lvl);
+    void                toggleFlag(char *id, Leveldef &lvl);
 
     Database            *d; //so I don't have to pass it around in all functions, i store it here
     Itemdef             *thisitemdef; //Okay this is gonna come back to bite me someday u_u
@@ -171,6 +191,11 @@ private:
 #define ACTONPROPERTY(n, func) \
     if (strcmp(propertyname, #n) == 0) { \
         def. n = func (property); \
+    } else
+
+#define MODIFYPROPERTYWITHDEF(n, func) \
+    if (strcmp(propertyname, #n) == 0) { \
+        func (property, def); \
     } else
 
 #define IFRETURNENUM(var, nspace, num) \

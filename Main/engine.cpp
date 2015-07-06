@@ -15,7 +15,6 @@ SDL_Texture* Engine::loadTexture(char* filename, short r, short g, short b) {
     }
 
 int Engine::init() {
-
     if (SDL_Init( SDL_INIT_EVERYTHING )) LOGERROR()
 
     std::srand(RANDSEED);
@@ -56,8 +55,10 @@ int Engine::init() {
         std::cout<<"\nThere's a mobdef here with name "<<m.second.name<<" and "<<m.second.hp<<" hp\n";
     }
 
+    Leveldef l = database->getLeveldef(0);
+
     map = new Map();
-    map->generateMap(*database);
+    map->generateMap(*database, l);
 
 
 

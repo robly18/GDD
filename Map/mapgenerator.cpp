@@ -5,7 +5,7 @@ MapGenerator::MapGenerator() {
 
 #define NBLANKMAP
 
-void MapGenerator::generateMap(Map* map, const Database &d,
+void MapGenerator::generateMap(Map* map, const Leveldef lvl, const Database &d,
                                const TileProperties* wall, const TileProperties* nowall) {
 
     #ifdef BLANKMAP
@@ -29,7 +29,7 @@ void MapGenerator::generateMap(Map* map, const Database &d,
 
     map->player->setPos(newx, newy);
 
-    for (int n = 0; n != ROOMNUM-1; n++) {
+    for (int n = 0; n != lvl.roomnum-1; n++) {
         prevx = newx;
         prevy = newy;
 
@@ -72,7 +72,7 @@ void MapGenerator::makeRect(const SDL_Rect r, const TileProperties* t, Tile* til
     }
 }
 
-void MapGenerator::populateMap(Map* map, const Database &d) {
+void MapGenerator::populateMap(Map* map, const Leveldef lvl, const Database &d) {
     Pos positions [MAPWIDTH*MAPHEIGHT]; //Will hold available positions to place mobs
     int posnum = 0; //Number of such
 
@@ -84,25 +84,15 @@ void MapGenerator::populateMap(Map* map, const Database &d) {
         }
     }
 
-    TargetedAttack* a = new TargetedAttack(7, 0, "ayy", NOICON, 0, 10, 0, 0, 0, true, false);
+    for (const auto m : lvl.mobs) {
+        Mobdef def = m.first;
+        for (int i = 0; i != m.second; i++) {
+            int pos = std::rand() % posnum;
+            Mob *m = d.makeMob(positions[pos], def);
+            map->mobs2.push_back(m);
 
-    Mobdef def = d.getMobDef("CLUBGUY");
-    for (int n = 0; n != MAXCLUBGUYS; n++) {
-        int pos = std::rand() % posnum;
-        Mob* m = d.makeMob(positions[pos], def);
-        map->mobs2.push_back(m);
-
-        positions[pos] = positions[--posnum];
-    }
-
-    def = d.getMobDef("ROGUEIMP");
-
-    for (int n = 0; n != MAXROGUEIMPS; n++) {
-        int pos = std::rand() % posnum;
-        Mob* m = d.makeMob(positions[pos], def);
-        map->mobs2.push_back(m);
-
-        positions[pos] = positions[--posnum];
+            positions[pos] = positions[--posnum];
+        }
     }
 }
 

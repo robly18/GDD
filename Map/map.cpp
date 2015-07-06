@@ -43,7 +43,7 @@ void Map::restartMap() {
     player = nullptr;
 
     makePlayer();
-    generateMap(*engine.database);
+    //generateMap(*engine.database);
 }
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {
@@ -298,7 +298,7 @@ void Map::checkMapData() {
 
 /**Map Generation**/
 
-void Map::generateMap(Database &d) {
+void Map::generateMap(Database &d, const Leveldef lvl) {
 
     for (auto m : mobs1) delete m;
     for (auto i : items) delete i;
@@ -308,9 +308,9 @@ void Map::generateMap(Database &d) {
     items.clear();
 
 
-    generator->generateMap(this, d, wall, nowall);
+    generator->generateMap(this, lvl, d, wall, nowall);
 
-    generator->populateMap(this, d);
+    generator->populateMap(this, lvl, d);
 
     seeabletiles = 0; seentiles = 0;
 

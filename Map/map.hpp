@@ -103,11 +103,13 @@ public:
 
     void                        checkMapData();
 
-    void                        generateMap(Database&);
+    void                        generateMap(Database&, const Leveldef);
     void                        updateFovData();
     void                        updateFovData(const Pos p); //For use with teleportation shenanigans
 
     bool                        attack(Pos);
+
+    int                         level = 0;
 
 private:
     Tile                        tiles[MAPWIDTH*MAPHEIGHT];

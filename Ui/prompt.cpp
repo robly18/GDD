@@ -90,7 +90,9 @@ void NextLevelPrompt::doOpt1() {
 void NextLevelPrompt::doOpt2() {
     engine.ui->closePrompt(engine.running);
 
-    engine.map->generateMap(*engine.database);
+    Leveldef lvl = engine.database->getLeveldef(++engine.map->level);
+
+    engine.map->generateMap(*engine.database, lvl);
 }
 
 

@@ -13,15 +13,16 @@ class Map;
 struct Tile;
 struct TileProperties;
 class Database;
+class Leveldef;
 
 class MapGenerator {
 public:
     MapGenerator();
 
-    void                    generateMap(Map*, const Database&,
+    void                    generateMap(Map*, const Leveldef, const Database&,
                                         const TileProperties *wall,
                                         const TileProperties *nowall);
-    void                    populateMap(Map*, const Database&);
+    void                    populateMap(Map*, const Leveldef, const Database&);
 
 private:
     void                    makeRect(const SDL_Rect, const TileProperties*, Tile*);
