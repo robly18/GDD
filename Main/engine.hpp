@@ -68,7 +68,6 @@ public:
     EngineState::Viewprompt     *viewprompt;
 
     Database                    *database;
-    Interpreter                 *interpreter;
 
 private:
 

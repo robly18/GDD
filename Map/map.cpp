@@ -31,6 +31,8 @@ Map::Map () :
 };
 
 void Map::restartMap() {
+    level = 0;
+
     for (auto m : mobs1) delete m;
     mobs1.clear();
 
@@ -43,7 +45,7 @@ void Map::restartMap() {
     player = nullptr;
 
     makePlayer();
-    //generateMap(*engine.database);
+    generateMap(*engine.database, engine.database->getLeveldef(level));
 }
 
 std::list<Mob*>::iterator Map::killMob(std::list<Mob*>::iterator m) {

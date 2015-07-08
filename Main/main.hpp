@@ -1,8 +1,5 @@
 
-#define MAXCLUBGUYS 10
-#define MAXROGUEIMPS 20
-
-#define ROOMNUM 7
+#define LOADFILES {"attacks.data", "items.data", "mobs.data", "level.data"}
 
 
 #define NSEEALLMOBS
@@ -19,7 +16,6 @@
 #define GREETINGMESSAGE \
 "Hello! Welcome to the game.\nRight click on anything to know more about it!\
 \nTry it now, on me!"
-
 
 #include <SDL.h>
 #include "../Data/interpreter.hpp"

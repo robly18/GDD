@@ -58,7 +58,6 @@ void Running::render(Engine &e, SDL_Renderer* renderer, const MouseState mouse) 
     e.ui->dashboard->render(MOUSEINFO);
 
     InGame::render(e, renderer, mouse);
-
 }
 
 void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
@@ -78,7 +77,6 @@ void Running::actOnEvent(Engine &e, SDL_Event &ev, const MouseState mouse) {
             break;
         {
             static int atknum = 3;
-
             case SDLK_a: atknum--;
             case SDLK_s: atknum--;
             case SDLK_d: atknum--;

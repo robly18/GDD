@@ -1,0 +1,82 @@
+Status {
+	name : "REGEN";
+	statustype : "REGEN";
+	time : 3;
+	str : 5;
+}
+
+Status {
+	name : "BLOCK";
+	statustype : "BLOCK";
+	time : 2;
+	pos : 3,1;
+	spritepos : 28, 52;
+}
+
+Status {
+	name : "POISON";
+	statustype : "POISON";
+	time : 3;
+	str : 3;
+}
+
+Attack {
+	name : "PSNARRW";
+	damage : 1;
+	cost : 5;
+	minrange : 2;
+	maxrange : 6;
+	maxaccy : 10;
+	minaccy : -2;
+
+	physical : false;
+
+	addstatus : 80% "POISON";
+}
+
+Attack {
+	name : "HIT";
+	damage : 10;
+	cost : 15;
+
+	hurtself : true; #gotta allow seppuku
+}
+
+Attack {
+	name : "SPIN";
+	damage : 7;
+	cost : 17;
+
+	maxrange : 0;
+	radius : 2;
+}
+
+Attack {
+	name : "REGEN";
+	atktype : "SELFBUFF";
+	cost : 25;
+	buff : "REGEN";
+}
+
+Attack {
+	name : "HITTHRU";
+	atktype : "HITTHRU";
+	damage : 10;
+	cost : 25;
+	maxrange : 3;
+}
+
+Attack {
+	name : "BASHSWP";
+	atktype : "BASHSWP";
+	damage : -1;
+	cost : 5;
+}
+
+Attack {
+	name : "BLOCK";
+	#yeah i need to do this one
+	atktype : "SELFBUFF";
+	cost : 15;
+	buff : "BLOCK";
+}

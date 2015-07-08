@@ -76,7 +76,7 @@ public:
     void            levelUp(int val, int weapontype);
 
 private:
-    int             f = ATK; //If it is SWRD, it applies to all the first 3
+    int             f = SWRD; //If it is SWRD, it applies to all the first 3
 };
 
 #endif

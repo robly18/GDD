@@ -1,0 +1,10 @@
+Level {
+	addenemy : 2x"ROGUEIMP";
+	roomnum : 3;
+	addflag : "FIRSTLEVEL";
+}
+
+Level {
+	addenemy : 10x"ROGUEIMP";
+	roomnum : 5;
+}

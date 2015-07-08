@@ -80,20 +80,21 @@ XpHolder::XpHolder() {
     }
 
     bars[3] = new XpBar(SDL_Rect{261, 4+16*3, 108/2-1, 14}, names[ATK], ATK, 10, 4);
-    bars[3]->focus(true);
 
     bars[4] = new XpBar(SDL_Rect{261+108/2+1, 4+16*3, 108/2-1, 14}, names[DEF], DEF, 10, 4);
 
     for (int i = 5; i != 10; i++) {
         bars[i] = new XpBar(SDL_Rect{261, 4+16*(i-1), 108, 14}, names[i], i, 10, 5);
     }
+
+    setFocus(f);
 }
 
 void XpHolder::setFocus(int bar) {
     bars[f]->focus(false);
     if (f == SWRD) {
-        bars[BOW]->focus(false);
         bars[STFF]->focus(false);
+        bars[BOW]->focus(false);
     }
     bar = bar>BOW ? bar : SWRD;
     f = bar;

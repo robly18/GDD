@@ -41,15 +41,16 @@ int Engine::init() {
 
 
     database = new Database;
-    interpreter = new Interpreter;
-    if (!interpreter->open("mobs.data")) {
-        std::cout<<"Failed to open mobs.data file\n";
-        return 1;
+    Interpreter interpreter;
+
+    for (auto f : LOADFILES) {
+        if (!interpreter.open(f)) {
+            std::cout<<"Failed to open "<<f<<" file\n";
+            return 1;
+        }
+        interpreter.parseToDatabase(*database);
+        interpreter.close();
     }
-
-    interpreter->parseToDatabase(*database);
-
-    interpreter->close();
 
     for (auto m : database->mobdefs) {
         std::cout<<"\nThere's a mobdef here with name "<<m.second.name<<" and "<<m.second.hp<<" hp\n";

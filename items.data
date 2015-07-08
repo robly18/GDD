@@ -1,0 +1,13 @@
+Item {
+	name : "SORD....";
+	color : DD2222;
+	itemtype : "WEAPON";
+
+	data.wep.maxmana : 30;
+	data.wep.atks :  1-HIT
+					|2-SPIN
+					|3-HITTHRU
+					|4-BLOCK
+					|5-REGEN
+					|6-BASHSWP;
+}
